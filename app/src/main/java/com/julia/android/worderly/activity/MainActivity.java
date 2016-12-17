@@ -101,8 +101,7 @@ public class MainActivity extends AppCompatActivity
 
         // New child entries
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
-        mFirebaseAdapter = new FirebaseRecyclerAdapter<Message,
-                MessageViewHolder>(
+        mFirebaseAdapter = new FirebaseRecyclerAdapter<Message, MessageViewHolder>(
                 Message.class,
                 R.layout.item_message,
                 MessageViewHolder.class,
@@ -110,18 +109,17 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             protected void populateViewHolder(MessageViewHolder viewHolder,
-                                              Message friendlyMessage, int position) {
+                                              Message message, int position) {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-                viewHolder.messageTextView.setText(friendlyMessage.getText());
-                viewHolder.messengerTextView.setText(friendlyMessage.getName());
-                if (friendlyMessage.getPhotoUrl() == null) {
+                viewHolder.messageTextView.setText(message.getText());
+                viewHolder.messengerTextView.setText(message.getName());
+                if (message.getPhotoUrl() == null) {
                     viewHolder.messengerImageView
-                            .setImageDrawable(ContextCompat
-                                    .getDrawable(MainActivity.this,
-                                            R.drawable.ic_account_circle_black_36dp));
+                            .setImageDrawable(ContextCompat.getDrawable(MainActivity.this,
+                                    R.drawable.ic_account_circle_black_36dp));
                 } else {
                     Glide.with(MainActivity.this)
-                            .load(friendlyMessage.getPhotoUrl())
+                            .load(message.getPhotoUrl())
                             .into(viewHolder.messengerImageView);
                 }
             }
@@ -174,7 +172,13 @@ public class MainActivity extends AppCompatActivity
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Send messages on click.
+                Message message = new
+                        Message(mMessageEditText.getText().toString(),
+                        mUsername,
+                        mPhotoUrl);
+                mFirebaseDatabaseReference.child(MESSAGES_CHILD)
+                        .push().setValue(message);
+                mMessageEditText.setText("");
             }
         });
 
