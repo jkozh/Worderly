@@ -36,6 +36,8 @@ import com.julia.android.worderly.R;
 import com.julia.android.worderly.WorderlyPreferences;
 import com.julia.android.worderly.model.Message;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity
@@ -45,19 +47,22 @@ public class MainActivity extends AppCompatActivity
     public static final int DEFAULT_MSG_LENGTH_LIMIT = 10;
     public static final String ANONYMOUS = "anonymous";
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
-    private static final int REQUEST_INVITE = 1;
-    private static final String MESSAGE_SENT_EVENT = "message_sent";
-    private static final String MESSAGE_URL = "https://worderly-206fe.firebaseio.com/message/";
+    @BindView(R.id.progressBar)
+    ProgressBar mProgressBar;
+    @BindView(R.id.messageRecyclerView)
+    RecyclerView mMessageRecyclerView;
+    @BindView(R.id.messageEditText)
+    EditText mMessageEditText;
+    @BindView(R.id.sendButton)
+    Button mSendButton;
+//    private static final int REQUEST_INVITE = 1;
+//    private static final String MESSAGE_SENT_EVENT = "message_sent";
+//    private static final String MESSAGE_URL = "https://worderly-206fe.firebaseio.com/messages/";
     private String mUsername;
     private String mPhotoUrl;
     private SharedPreferences mSharedPreferences;
     private GoogleApiClient mGoogleApiClient;
-    private Button mSendButton;
-    private RecyclerView mMessageRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
-    private ProgressBar mProgressBar;
-    private EditText mMessageEditText;
-
     // Firebase instance variables
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
@@ -68,6 +73,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         // Set default username is anonymous.
         mUsername = ANONYMOUS;
@@ -92,9 +98,6 @@ public class MainActivity extends AppCompatActivity
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 .build();
 
-        // Initialize ProgressBar and RecyclerView.
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-        mMessageRecyclerView = (RecyclerView) findViewById(R.id.messageRecyclerView);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mLinearLayoutManager.setStackFromEnd(true);
         mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
@@ -146,7 +149,6 @@ public class MainActivity extends AppCompatActivity
         mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
         mMessageRecyclerView.setAdapter(mFirebaseAdapter);
 
-        mMessageEditText = (EditText) findViewById(R.id.messageEditText);
         mMessageEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(mSharedPreferences
                 .getInt(WorderlyPreferences.FRIENDLY_MSG_LENGTH, DEFAULT_MSG_LENGTH_LIMIT))});
         mMessageEditText.addTextChangedListener(new TextWatcher() {
@@ -168,7 +170,6 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        mSendButton = (Button) findViewById(R.id.sendButton);
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -229,15 +230,16 @@ public class MainActivity extends AppCompatActivity
     }
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
-        public TextView messageTextView;
-        public TextView messengerTextView;
-        public CircleImageView messengerImageView;
+        @BindView(R.id.messageTextView)
+        TextView messageTextView;
+        @BindView(R.id.messengerTextView)
+        TextView messengerTextView;
+        @BindView(R.id.messengerImageView)
+        CircleImageView messengerImageView;
 
         public MessageViewHolder(View v) {
             super(v);
-            messageTextView = (TextView) itemView.findViewById(R.id.messageTextView);
-            messengerTextView = (TextView) itemView.findViewById(R.id.messengerTextView);
-            messengerImageView = (CircleImageView) itemView.findViewById(R.id.messengerImageView);
+            ButterKnife.bind(this, v);
         }
     }
 }
