@@ -21,8 +21,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.julia.android.worderly.R;
+import com.julia.android.worderly.model.User;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,19 +36,23 @@ public class SignInActivity extends AppCompatActivity implements
 
     private static final String LOG_TAG = SignInActivity.class.getSimpleName();
     private static final int RC_SIGN_IN = 9001;
+
     public ProgressDialog mProgressDialog;
     @BindView(R.id.sign_in_button)
     SignInButton mSignInButton;
     private GoogleApiClient mGoogleApiClient;
 
+    private DatabaseReference mDatabase;
     // Firebase instance variables
-    private FirebaseAuth mFirebaseAuth;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
         ButterKnife.bind(this);
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         // Set click listeners
         mSignInButton.setOnClickListener(this);
@@ -60,7 +68,7 @@ public class SignInActivity extends AppCompatActivity implements
                 .build();
 
         // Initialize FirebaseAuth
-        mFirebaseAuth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
     }
 
     /**
@@ -106,12 +114,12 @@ public class SignInActivity extends AppCompatActivity implements
         showProgressDialog();
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        mFirebaseAuth.signInWithCredential(credential)
+        mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(LOG_TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
-
+                        hideProgressDialog();
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
@@ -120,12 +128,27 @@ public class SignInActivity extends AppCompatActivity implements
                             Toast.makeText(SignInActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         } else {
-                            startActivity(new Intent(SignInActivity.this, MainActivity.class));
-                            finish();
+                            onAuthSuccess(task.getResult().getUser());
                         }
-                        hideProgressDialog();
                     }
                 });
+    }
+
+    private void onAuthSuccess(FirebaseUser user) {
+        String username = user.getDisplayName();
+
+        // Write new user
+        writeNewUser(user.getUid(), username, user.getEmail());
+
+        // Go to MainActivity
+        startActivity(new Intent(SignInActivity.this, MainActivity.class));
+        finish();
+    }
+
+    private void writeNewUser(String userId, String name, String email) {
+        User user = new User(name, email);
+
+        mDatabase.child("users").child(userId).setValue(user);
     }
 
     @Override
