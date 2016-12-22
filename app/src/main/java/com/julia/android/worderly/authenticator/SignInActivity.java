@@ -1,4 +1,4 @@
-package com.julia.android.worderly.activity;
+package com.julia.android.worderly.authenticator;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -26,7 +26,8 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.julia.android.worderly.R;
-import com.julia.android.worderly.model.User;
+import com.julia.android.worderly.activities.MainActivity;
+import com.julia.android.worderly.models.User;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,14 +35,14 @@ import butterknife.ButterKnife;
 public class SignInActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
+    public static final String USERS_CHILD = "users";
     private static final String LOG_TAG = SignInActivity.class.getSimpleName();
     private static final int RC_SIGN_IN = 9001;
-
     public ProgressDialog mProgressDialog;
     @BindView(R.id.sign_in_button)
     SignInButton mSignInButton;
-    private GoogleApiClient mGoogleApiClient;
 
+    private GoogleApiClient mGoogleApiClient;
     private DatabaseReference mDatabase;
     // Firebase instance variables
     private FirebaseAuth mAuth;
@@ -71,11 +72,6 @@ public class SignInActivity extends AppCompatActivity implements
         mAuth = FirebaseAuth.getInstance();
     }
 
-    /**
-     * Called when a view has been clicked.
-     *
-     * @param v The view that was clicked.
-     */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -148,7 +144,7 @@ public class SignInActivity extends AppCompatActivity implements
     private void writeNewUser(String userId, String name, String email) {
         User user = new User(name, email);
 
-        mDatabase.child("users").child(userId).setValue(user);
+        mDatabase.child(USERS_CHILD).child(userId).setValue(user);
     }
 
     @Override

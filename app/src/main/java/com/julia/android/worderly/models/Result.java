@@ -1,4 +1,4 @@
-package com.julia.android.worderly.model;
+package com.julia.android.worderly.models;
 
 import com.google.gson.annotations.SerializedName;
 

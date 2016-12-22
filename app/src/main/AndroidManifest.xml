@@ -11,15 +11,15 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MainActivity">
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".activity.SignInActivity" />
-
+        <activity android:name=".authenticator.SignInActivity" />
+        <activity android:name=".activities.RandomOpponentActivity" />
+        <activity android:name=".activities.GameActivity" />
     </application>
 
 </manifest>
