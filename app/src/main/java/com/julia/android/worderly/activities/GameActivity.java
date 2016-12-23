@@ -41,11 +41,6 @@ public class GameActivity extends AppCompatActivity {
     public static final String GAMES_CHILD = "games";
     public static final String MOVES_CHILD = "moves";
     private static final String LOG_TAG = GameActivity.class.getSimpleName();
-    DatabaseReference mDatabase;
-    String mCurrentUserId;
-    String mOpponentUserId;
-    String mGamePath = "";
-    String mGamePathReversed = "";
     @BindView(R.id.currentUserTextView)
     TextView mCurrentUserTextView;
     @BindView(R.id.randomUserTextView)
@@ -58,6 +53,11 @@ public class GameActivity extends AppCompatActivity {
     EditText mMessageEditText;
     @BindView(R.id.sendButton)
     Button mSendButton;
+    DatabaseReference mDatabase;
+    String mCurrentUserId;
+    String mOpponentUserId;
+    String mGamePath = "";
+    String mGamePathReversed = "";
     private LinearLayoutManager mLinearLayoutManager;
     private FirebaseRecyclerAdapter<Message, MessageViewHolder> mFirebaseAdapter;
 
@@ -156,9 +156,25 @@ public class GameActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         mFirebaseAdapter.cleanup();
+        mDatabase.child(GAMES_CHILD).child(mGamePath).removeValue();
     }
 
     private void setUpFirebaseAdapter() {

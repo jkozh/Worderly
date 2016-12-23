@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -14,7 +13,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.julia.android.worderly.R;
+import com.julia.android.worderly.models.User;
 
 import java.util.Objects;
 
@@ -25,16 +26,127 @@ public class RandomOpponentActivity extends AppCompatActivity {
 
     public static final String EXTRA_CURRENT_USER_ID = "EXTRA_CURRENT_USER_ID";
     public static final String EXTRA_OPPONENT_USER_ID = "EXTRA_OPPONENT_USER_ID";
+    public static final String USERS_LOOKING_FOR_OPPONENT_CHILD = "usersLookingForOpponent";
+    public static final String GAMES_CHILD = "games";
     private static final String LOG_TAG = RandomOpponentActivity.class.getSimpleName();
-    DatabaseReference mDatabase;
-    boolean opponentFound = false;
-
     @BindView(R.id.currentUserTextView)
     TextView mCurrentUserTextView;
     @BindView(R.id.randomUserTextView)
     TextView mRandomUserTextView;
     @BindView(R.id.timerTextView)
     TextView mTimerTextView;
+
+    DatabaseReference mDatabase;
+    boolean mOpponentFound = false;
+    String mCurrentUid = "";
+    String mOpponentUid = "";
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_random_opponent);
+        ButterKnife.bind(this);
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        mCurrentUserTextView.setText(getUid());
+
+        // Add the user looking for the opponent under usersLookingForOpponent path
+        User user = new User(getUserName(), getUserPhotoUrl());
+        mCurrentUid =  getUid();
+        mDatabase.child(USERS_LOOKING_FOR_OPPONENT_CHILD).child(mCurrentUid).setValue(user);
+
+        mDatabase.child(USERS_LOOKING_FOR_OPPONENT_CHILD)
+                .addChildEventListener(new ChildEventListener() {
+
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                        mOpponentUid = dataSnapshot.getKey();
+
+                        if (!Objects.equals(mCurrentUid, mOpponentUid) && !mOpponentFound) {
+                            mOpponentFound = true;
+                            mRandomUserTextView.setText(mOpponentUid);
+
+                            String gamePath = mCurrentUid + "_" + mOpponentUid;
+                            String gamePathReversed = mOpponentUid + "_" + mCurrentUid;
+
+                            mDatabase.child(GAMES_CHILD).child(gamePath).setValue(true);
+                            // Listen for the opponent ready
+                            mDatabase.child(GAMES_CHILD).child(gamePathReversed)
+                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            new CountDownTimer(6000, 1000) {
+
+                                                public void onTick(long millisUntilFinished) {
+                                                    mTimerTextView.setText(String.valueOf(
+                                                            millisUntilFinished / 1000));
+                                                }
+
+                                                public void onFinish() {
+                                                    // Start new activity
+                                                    Intent intent = new Intent(
+                                                            getApplicationContext(),
+                                                            GameActivity.class);
+                                                    intent.putExtra(
+                                                            EXTRA_CURRENT_USER_ID, mCurrentUid);
+                                                    intent.putExtra(
+                                                            EXTRA_OPPONENT_USER_ID, mOpponentUid);
+                                                    startActivity(intent);
+                                                    // Clean up users
+                                                    mDatabase.child(USERS_LOOKING_FOR_OPPONENT_CHILD)
+                                                            .child(mCurrentUid).removeValue();
+                                                }
+                                            }.start();
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+                        }
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mDatabase.child(USERS_LOOKING_FOR_OPPONENT_CHILD).child(mCurrentUid).removeValue();
+    }
 
     public String getUid() {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -48,73 +160,4 @@ public class RandomOpponentActivity extends AppCompatActivity {
         return FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
     }
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_random_opponent);
-        ButterKnife.bind(this);
-
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-
-        mCurrentUserTextView.setText(getUid());
-
-        mDatabase.child("usersWhoWantsToPlay").addChildEventListener(new ChildEventListener() {
-
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.d(LOG_TAG, "onChildAdded! dataSnapshot: " + dataSnapshot + ", s: " + s);
-
-                final String currentUid =  getUid();
-                final String opponentUid = dataSnapshot.getKey();
-
-                if (!Objects.equals(currentUid, opponentUid) && !opponentFound) {
-                    opponentFound = true;
-                    mRandomUserTextView.setText(opponentUid);
-
-                    new CountDownTimer(6000, 1000) {
-
-                        public void onTick(long millisUntilFinished) {
-                            mTimerTextView.setText(Long.toString(millisUntilFinished / 1000));
-                        }
-
-                        public void onFinish() {
-                            // Start new activity
-                            Intent intent = new Intent(getApplicationContext(), GameActivity.class);
-                            intent.putExtra(EXTRA_CURRENT_USER_ID, currentUid);
-                            intent.putExtra(EXTRA_OPPONENT_USER_ID, opponentUid);
-                            startActivity(intent);
-                        }
-                    }.start();
-                }
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Log.d(LOG_TAG, "onChildChanged! dataSnapshot: " + dataSnapshot + ", s: " + s);
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Log.d(LOG_TAG, "onChildRemoved! dataSnapshot: ");
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                Log.d(LOG_TAG, "onChildMoved! dataSnapshot: " + dataSnapshot + ", s: " + s);
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d(LOG_TAG, "onCancelled! databaseError: " + databaseError);
-
-            }
-        });
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
 }

@@ -17,11 +17,8 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.julia.android.worderly.R;
 import com.julia.android.worderly.authenticator.SignInActivity;
-import com.julia.android.worderly.models.User;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,7 +36,6 @@ public class MainActivity extends AppCompatActivity
     // Firebase instance variables
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
-    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,21 +66,13 @@ public class MainActivity extends AppCompatActivity
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 .build();
 
-        // New child entries
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-
         mRandomPlayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Add this user looking for the opponent under usersWhoWantsToPlay section
-                User user = new User(mUsername, mFirebaseUser.getEmail());
-                mDatabase.child("usersWhoWantsToPlay").child(getUid()).setValue(user);
-
                 // Go to RandomOpponentActivity
                 startActivity(new Intent(MainActivity.this, RandomOpponentActivity.class));
             }
         });
-
     }
 
     public String getUid() {
