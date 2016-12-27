@@ -14,4 +14,6 @@
     <string name="banner_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
     <string name="btn_send">SEND</string>
     <string name="loading">Loading…</string>
+    <string name="drawer_open">open</string>
+    <string name="drawer_close">close</string>
 </resources>

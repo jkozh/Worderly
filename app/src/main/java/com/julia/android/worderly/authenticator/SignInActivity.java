@@ -29,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.julia.android.worderly.R;
 import com.julia.android.worderly.activities.MainActivity;
 import com.julia.android.worderly.models.User;
+import com.julia.android.worderly.models.UserAnonymous;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -126,8 +127,10 @@ public class SignInActivity extends AppCompatActivity implements
                                     Toast.LENGTH_SHORT).show();
                         }
 
-                        onAuthSuccess(mAuth.getCurrentUser());
+                        onAnonymousAuthSuccess(mAuth.getCurrentUser());
                     }
+
+
                 });
     }
 
@@ -196,8 +199,23 @@ public class SignInActivity extends AppCompatActivity implements
         // Write new user
         writeNewUser(user.getUid(), username, user.getEmail());
 
+        startMainActivity(username);
+    }
+
+    private void onAnonymousAuthSuccess(FirebaseUser user) {
+        String username = "Anonymous-" + System.currentTimeMillis();
+        UserAnonymous userAnonymous = new UserAnonymous(username);
+
+        mDatabase.child(USERS_CHILD).child(user.getUid()).setValue(userAnonymous);
+
+        startMainActivity(username);
+    }
+
+    private void startMainActivity(String username) {
         // Go to MainActivity
-        startActivity(new Intent(SignInActivity.this, MainActivity.class));
+        Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+        intent.putExtra("EXTRA_USERNAME", username);
+        startActivity(intent);
         finish();
     }
 
