@@ -53,6 +53,7 @@ public class GameActivity extends AppCompatActivity {
     EditText mMessageEditText;
     @BindView(R.id.sendButton)
     Button mSendButton;
+
     DatabaseReference mDatabase;
     String mCurrentUserId;
     String mOpponentUserId;
