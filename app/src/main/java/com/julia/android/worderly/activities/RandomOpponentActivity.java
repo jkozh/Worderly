@@ -1,6 +1,7 @@
 package com.julia.android.worderly.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
@@ -157,7 +158,11 @@ public class RandomOpponentActivity extends AppCompatActivity {
     }
 
     public String getUserPhotoUrl() {
-        return FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
+        Uri userPhoto = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
+        if (userPhoto == null) {
+            return null;
+        }
+        return userPhoto.toString();
     }
 
 }

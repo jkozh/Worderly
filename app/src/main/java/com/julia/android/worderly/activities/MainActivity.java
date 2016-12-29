@@ -14,9 +14,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -27,6 +29,8 @@ import com.julia.android.worderly.authenticator.SignInActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.julia.android.worderly.authenticator.SignInActivity.EXTRA_USERNAME;
 
 public class MainActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener {
@@ -85,13 +89,22 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        if (getIntent().getStringExtra("EXTRA_USERNAME") != null) {
-            mUsername = getIntent().getStringExtra("EXTRA_USERNAME");
+        if (getIntent().getStringExtra(EXTRA_USERNAME) != null) {
+            mUsername = getIntent().getStringExtra(EXTRA_USERNAME);
         }
 
         View header = mNavigationView.getHeaderView(0);
         TextView usernameTextView = (TextView) header.findViewById(R.id.usernameTextView);
+        ImageView avatarImageView = (ImageView) header.findViewById(R.id.avatarImageView);
+
+        // Set up username in Navigation Drawer
         usernameTextView.setText(mUsername);
+        // Set up user photo in Navigation Drawer
+        if (mPhotoUrl != null) {
+            Glide.with(MainActivity.this)
+                    .load(mPhotoUrl)
+                    .into(avatarImageView);
+        }
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)

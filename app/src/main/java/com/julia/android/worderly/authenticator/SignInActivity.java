@@ -38,6 +38,7 @@ public class SignInActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     public static final String USERS_CHILD = "users";
+    public static final String EXTRA_USERNAME = "EXTRA_USERNAME";
     private static final String LOG_TAG = SignInActivity.class.getSimpleName();
     private static final int RC_SIGN_IN = 9001;
     public ProgressDialog mProgressDialog;
@@ -103,6 +104,7 @@ public class SignInActivity extends AppCompatActivity implements
                 break;
             case R.id.sign_in_guest_button:
                 signInGuest();
+                break;
         }
     }
 
@@ -214,7 +216,7 @@ public class SignInActivity extends AppCompatActivity implements
     private void startMainActivity(String username) {
         // Go to MainActivity
         Intent intent = new Intent(SignInActivity.this, MainActivity.class);
-        intent.putExtra("EXTRA_USERNAME", username);
+        intent.putExtra(EXTRA_USERNAME, username);
         startActivity(intent);
         finish();
     }
