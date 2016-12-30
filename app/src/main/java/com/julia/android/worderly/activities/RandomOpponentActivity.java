@@ -53,7 +53,8 @@ public class RandomOpponentActivity extends AppCompatActivity {
         mCurrentUserTextView.setText(getUid());
 
         // Add the user looking for the opponent under usersLookingForOpponent path
-        User user = new User(getUserName(), getUserPhotoUrl());
+        final User user = new User(getUserName(),
+                "https://cdn4.iconfinder.com/data/icons/standard-free-icons/139/Profile01-128.png" /*getUserPhotoUrl()*/);
         mCurrentUid =  getUid();
         mDatabase.child(USERS_LOOKING_FOR_OPPONENT_CHILD).child(mCurrentUid).setValue(user);
 
@@ -62,52 +63,58 @@ public class RandomOpponentActivity extends AppCompatActivity {
 
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        final int MAX_USERS = 2;
+                        // Need to avoid confusion
+                        //if (dataSnapshot.getChildrenCount() < MAX_USERS) {
 
-                        mOpponentUid = dataSnapshot.getKey();
+                            mOpponentUid = dataSnapshot.getKey();
 
-                        if (!Objects.equals(mCurrentUid, mOpponentUid) && !mOpponentFound) {
-                            mOpponentFound = true;
-                            mRandomUserTextView.setText(mOpponentUid);
+                            if (!Objects.equals(mCurrentUid, mOpponentUid) && !mOpponentFound) {
+                                mOpponentFound = true;
+                                mRandomUserTextView.setText(mOpponentUid);
 
-                            String gamePath = mCurrentUid + "_" + mOpponentUid;
-                            String gamePathReversed = mOpponentUid + "_" + mCurrentUid;
+                                String gamePath = mCurrentUid + "_" + mOpponentUid;
+                                String gamePathReversed = mOpponentUid + "_" + mCurrentUid;
 
-                            mDatabase.child(GAMES_CHILD).child(gamePath).setValue(true);
-                            // Listen for the opponent ready
-                            mDatabase.child(GAMES_CHILD).child(gamePathReversed)
-                                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            new CountDownTimer(6000, 1000) {
+                                mDatabase.child(GAMES_CHILD).child(gamePath).setValue(true);
+                                // Listen for the opponent ready
+                                mDatabase.child(GAMES_CHILD).child(gamePathReversed)
+                                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                new CountDownTimer(6000, 1000) {
 
-                                                public void onTick(long millisUntilFinished) {
-                                                    mTimerTextView.setText(String.valueOf(
-                                                            millisUntilFinished / 1000));
-                                                }
+                                                    public void onTick(long millisUntilFinished) {
+                                                        mTimerTextView.setText(String.valueOf(
+                                                                millisUntilFinished / 1000));
+                                                    }
 
-                                                public void onFinish() {
-                                                    // Start new activity
-                                                    Intent intent = new Intent(
-                                                            getApplicationContext(),
-                                                            GameActivity.class);
-                                                    intent.putExtra(
-                                                            EXTRA_CURRENT_USER_ID, mCurrentUid);
-                                                    intent.putExtra(
-                                                            EXTRA_OPPONENT_USER_ID, mOpponentUid);
-                                                    startActivity(intent);
-                                                    // Clean up users
-                                                    mDatabase.child(USERS_LOOKING_FOR_OPPONENT_CHILD)
-                                                            .child(mCurrentUid).removeValue();
-                                                }
-                                            }.start();
-                                        }
+                                                    public void onFinish() {
+                                                        // Start new activity
+                                                        Intent intent = new Intent(
+                                                                getApplicationContext(),
+                                                                GameActivity.class);
+                                                        intent.putExtra(
+                                                                EXTRA_CURRENT_USER_ID, mCurrentUid);
+                                                        intent.putExtra(
+                                                                EXTRA_OPPONENT_USER_ID, mOpponentUid);
+                                                        startActivity(intent);
+                                                        // Clean up users
+                                                        mDatabase.child(USERS_LOOKING_FOR_OPPONENT_CHILD)
+                                                                .child(mCurrentUid).removeValue();
+                                                        mOpponentFound = false;
+                                                        mOpponentUid = "";
+                                                    }
+                                                }.start();
+                                            }
 
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
 
-                                        }
-                                    });
-                        }
+                                            }
+                                        });
+                            }
+                        //}
                     }
 
                     @Override
@@ -147,6 +154,7 @@ public class RandomOpponentActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mDatabase.child(USERS_LOOKING_FOR_OPPONENT_CHILD).child(mCurrentUid).removeValue();
+        mOpponentFound = false;
     }
 
     public String getUid() {
