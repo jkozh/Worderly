@@ -16,4 +16,6 @@
     <string name="loading">Loading…</string>
     <string name="drawer_open">open</string>
     <string name="drawer_close">close</string>
+    <string name="action_chat">Chat</string>
+    <string name="action_resign">Resign</string>
 </resources>

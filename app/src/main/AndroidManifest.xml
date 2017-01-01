@@ -20,6 +20,7 @@
         <activity android:name=".authenticator.SignInActivity" />
         <activity android:name=".activities.RandomOpponentActivity" />
         <activity android:name=".activities.GameActivity" />
+        <activity android:name=".activities.ChatActivity" />
     </application>
 
 </manifest>

@@ -82,7 +82,7 @@ public class RandomOpponentActivity extends AppCompatActivity {
                                         .addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                                new CountDownTimer(6000, 1000) {
+                                                new CountDownTimer(1000, 1000) {
 
                                                     public void onTick(long millisUntilFinished) {
                                                         mTimerTextView.setText(String.valueOf(

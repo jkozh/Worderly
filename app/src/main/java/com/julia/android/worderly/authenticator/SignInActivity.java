@@ -2,6 +2,7 @@ package com.julia.android.worderly.authenticator;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -38,7 +39,9 @@ public class SignInActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     public static final String USERS_CHILD = "users";
-    public static final String EXTRA_USERNAME = "EXTRA_USERNAME";
+    public static final String EXTRA_USERNAME = "com.julia.android.worderly.authenticator.EXTRA_USERNAME";
+    public static final String PREF_SIGN_IN = "PREF_SIGN_IN";
+    public static final String PREF_USERNAME = "PREF_USERNAME";
     private static final String LOG_TAG = SignInActivity.class.getSimpleName();
     private static final int RC_SIGN_IN = 9001;
     public ProgressDialog mProgressDialog;
@@ -201,25 +204,36 @@ public class SignInActivity extends AppCompatActivity implements
         // Write new user
         writeNewUser(user.getUid(), username, user.getEmail());
 
-        startMainActivity(username);
+        setSharedPreferences(username);
+
+        startMainActivity();
     }
 
     private void onAnonymousAuthSuccess(FirebaseUser user) {
         String username = "Anonymous-" + System.currentTimeMillis();
         UserAnonymous userAnonymous = new UserAnonymous(username);
 
+        setSharedPreferences(username);
+
         mDatabase.child(USERS_CHILD).child(user.getUid()).setValue(userAnonymous);
 
-        startMainActivity(username);
+        startMainActivity();
     }
 
-    private void startMainActivity(String username) {
+    private void setSharedPreferences(String username) {
+        SharedPreferences prefs = getSharedPreferences(PREF_SIGN_IN, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(PREF_USERNAME, username);
+        editor.apply();
+    }
+
+    private void startMainActivity() {
         // Go to MainActivity
-        Intent intent = new Intent(SignInActivity.this, MainActivity.class);
-        intent.putExtra(EXTRA_USERNAME, username);
-        startActivity(intent);
+        startActivity(new Intent(SignInActivity.this, MainActivity.class));
         finish();
     }
+
+
 
     private void writeNewUser(String userId, String name, String email) {
         User user = new User(name, email);

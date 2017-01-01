@@ -29,14 +29,14 @@ import com.julia.android.worderly.authenticator.SignInActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.julia.android.worderly.authenticator.SignInActivity.EXTRA_USERNAME;
+import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener {
 
     public static final String ANONYMOUS = "anonymous";
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
+
     @BindView(R.id.randomPlayButton)
     Button mRandomPlayButton;
     @BindView(R.id.drawer_layout)
@@ -59,17 +59,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        setSupportActionBar(mToolbar);
-
-        final ActionBar ab = getSupportActionBar();
-        if (ab != null) {
-            ab.setHomeAsUpIndicator(R.drawable.ic_menu);
-            ab.setDisplayHomeAsUpEnabled(true);
-        }
-
-        if (mNavigationView != null) {
-            setupDrawerContent(mNavigationView);
-        }
+        setUpActionBar();
+        setUpDrawer();
 
         // Set default username is anonymous.
         mUsername = ANONYMOUS;
@@ -89,35 +80,58 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        if (getIntent().getStringExtra(EXTRA_USERNAME) != null) {
-            mUsername = getIntent().getStringExtra(EXTRA_USERNAME);
-        }
-
-        View header = mNavigationView.getHeaderView(0);
-        TextView usernameTextView = (TextView) header.findViewById(R.id.usernameTextView);
-        ImageView avatarImageView = (ImageView) header.findViewById(R.id.avatarImageView);
-
-        // Set up username in Navigation Drawer
-        usernameTextView.setText(mUsername);
-        // Set up user photo in Navigation Drawer
-        if (mPhotoUrl != null) {
-            Glide.with(MainActivity.this)
-                    .load(mPhotoUrl)
-                    .into(avatarImageView);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            mUsername = extras.getString(SignInActivity.EXTRA_USERNAME);
+            Log.d(LOG_TAG, "UUUUUUUSER:"+mUsername);
         }
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 .build();
+    }
 
-        mRandomPlayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Go to RandomOpponentActivity
-                startActivity(new Intent(MainActivity.this, RandomOpponentActivity.class));
+    private void setUpActionBar() {
+        setSupportActionBar(mToolbar);
+        final ActionBar ab = getSupportActionBar();
+        if (ab != null) {
+            ab.setHomeAsUpIndicator(R.drawable.ic_menu);
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    private void setUpDrawer() {
+        if (mNavigationView != null) {
+            setupDrawerContent(mNavigationView);
+        }
+
+        if (mNavigationView != null) {
+            View header = mNavigationView.getHeaderView(0);
+            TextView usernameTextView = (TextView) header.findViewById(R.id.usernameTextView);
+            ImageView avatarImageView = (ImageView) header.findViewById(R.id.avatarImageView);
+
+            // Set up username in Navigation Drawer
+            usernameTextView.setText(mUsername);
+            // Set up user photo in Navigation Drawer
+            if (mPhotoUrl != null) {
+                Glide.with(MainActivity.this)
+                        .load(mPhotoUrl)
+                        .into(avatarImageView);
             }
-        });
+        }
+    }
+
+    private void setupDrawerContent(NavigationView navigationView) {
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                        menuItem.setChecked(true);
+                        mDrawerLayout.closeDrawers();
+                        return true;
+                    }
+                });
     }
 
     @Override
@@ -133,6 +147,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+
+    @OnClick(R.id.randomPlayButton)
+    public void onClick() {
+        // Go to RandomOpponentActivity
+        startActivity(new Intent(MainActivity.this, RandomOpponentActivity.class));
     }
 
     @Override
@@ -164,17 +184,5 @@ public class MainActivity extends AppCompatActivity
         // be available.
         Log.d(LOG_TAG, "onConnectionFailed:" + connectionResult);
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
-    }
-
-    private void setupDrawerContent(NavigationView navigationView) {
-        navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                        menuItem.setChecked(true);
-                        mDrawerLayout.closeDrawers();
-                        return true;
-                    }
-                });
     }
 }
