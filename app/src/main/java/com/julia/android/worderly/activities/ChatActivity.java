@@ -21,9 +21,11 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.julia.android.worderly.R;
 import com.julia.android.worderly.authenticator.SignInActivity;
 import com.julia.android.worderly.models.Message;
+import com.julia.android.worderly.utils.Constants;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,8 +35,6 @@ import butterknife.OnTextChanged;
 public class ChatActivity extends AppCompatActivity {
 
     public static final int DEFAULT_MSG_LENGTH_LIMIT = 20;
-    public static final String MESSAGES_CHILD = "messages";
-    public static final String GAMES_CHILD = "games";
     private static final String LOG_TAG = ChatActivity.class.getSimpleName();
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -94,11 +94,12 @@ public class ChatActivity extends AppCompatActivity {
         Message message = new
                 Message(mMessageEditText.getText().toString(),
                 getUserName(),
-                getUserPhotoUrl());
+                getUserPhotoUrl(),
+                ServerValue.TIMESTAMP.toString());
 
-        mDatabase.child(GAMES_CHILD).child(mGamePath).child(MESSAGES_CHILD)
+        mDatabase.child(Constants.GAMES_CHILD).child(mGamePath).child(Constants.MESSAGES_CHILD)
                 .push().setValue(message);
-        mDatabase.child(GAMES_CHILD).child(mGamePathReversed).child(MESSAGES_CHILD)
+        mDatabase.child(Constants.GAMES_CHILD).child(mGamePathReversed).child(Constants.MESSAGES_CHILD)
                 .push().setValue(message);
 
         mMessageEditText.setText("");
@@ -152,7 +153,7 @@ public class ChatActivity extends AppCompatActivity {
                 Message.class,
                 R.layout.item_message,
                 MessageViewHolder.class,
-                mDatabase.child(GAMES_CHILD).child(mGamePathReversed).child(MESSAGES_CHILD)) {
+                mDatabase.child(Constants.GAMES_CHILD).child(mGamePathReversed).child(Constants.MESSAGES_CHILD)) {
 
             @Override
             protected void populateViewHolder(MessageViewHolder viewHolder,
@@ -190,6 +191,11 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
         mMessageRecyclerView.setAdapter(mFirebaseAdapter);
+
+        // Hide ProgressBar when empty chat log
+        if (mFirebaseAdapter.getItemCount() == 0) {
+            mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+        }
     }
 
     public String getUserName() {

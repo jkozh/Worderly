@@ -6,14 +6,16 @@ public class Message {
     private String text;
     private String name;
     private String photoUrl;
+    private String timeStamp;
 
     public Message() {
     }
 
-    public Message(String text, String name, String photoUrl) {
+    public Message(String text, String name, String photoUrl, String timeStamp) {
         this.text = text;
         this.name = name;
         this.photoUrl = photoUrl;
+        this.timeStamp = timeStamp;
     }
 
     public String getId() {
@@ -47,4 +49,13 @@ public class Message {
     public void setText(String text) {
         this.text = text;
     }
+
+    public String getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(String timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
 }

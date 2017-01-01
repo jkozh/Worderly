@@ -18,4 +18,5 @@
     <string name="drawer_close">close</string>
     <string name="action_chat">Chat</string>
     <string name="action_resign">Resign</string>
+    <string name="chat_message_hint">Enter your message here</string>
 </resources>

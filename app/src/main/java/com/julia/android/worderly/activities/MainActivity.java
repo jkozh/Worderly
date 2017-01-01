@@ -83,7 +83,6 @@ public class MainActivity extends AppCompatActivity
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             mUsername = extras.getString(SignInActivity.EXTRA_USERNAME);
-            Log.d(LOG_TAG, "UUUUUUUSER:"+mUsername);
         }
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)

@@ -31,6 +31,7 @@ import com.julia.android.worderly.R;
 import com.julia.android.worderly.activities.MainActivity;
 import com.julia.android.worderly.models.User;
 import com.julia.android.worderly.models.UserAnonymous;
+import com.julia.android.worderly.utils.Constants;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,7 +39,6 @@ import butterknife.ButterKnife;
 public class SignInActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
-    public static final String USERS_CHILD = "users";
     public static final String EXTRA_USERNAME = "com.julia.android.worderly.authenticator.EXTRA_USERNAME";
     public static final String PREF_SIGN_IN = "PREF_SIGN_IN";
     public static final String PREF_USERNAME = "PREF_USERNAME";
@@ -215,7 +215,7 @@ public class SignInActivity extends AppCompatActivity implements
 
         setSharedPreferences(username);
 
-        mDatabase.child(USERS_CHILD).child(user.getUid()).setValue(userAnonymous);
+        mDatabase.child(Constants.USERS_CHILD).child(user.getUid()).setValue(userAnonymous);
 
         startMainActivity();
     }
@@ -238,7 +238,7 @@ public class SignInActivity extends AppCompatActivity implements
     private void writeNewUser(String userId, String name, String email) {
         User user = new User(name, email);
 
-        mDatabase.child(USERS_CHILD).child(userId).setValue(user);
+        mDatabase.child(Constants.USERS_CHILD).child(userId).setValue(user);
     }
 
     @Override

@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,14 +20,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.julia.android.worderly.R;
 import com.julia.android.worderly.authenticator.SignInActivity;
 import com.julia.android.worderly.models.Game;
+import com.julia.android.worderly.models.User;
+import com.julia.android.worderly.utils.Constants;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class GameActivity extends AppCompatActivity {
 
-    public static final String GAMES_CHILD = "games";
-    public static final String MOVES_CHILD = "moves";
     public static final String EXTRA_GAME_PATH = "EXTRA_GAME_PATH";
     public static final String EXTRA_GAME_PATH_REVERSED = "EXTRA_GAME_PATH_REVERSED";
     private static final String LOG_TAG = GameActivity.class.getSimpleName();
@@ -69,8 +68,11 @@ public class GameActivity extends AppCompatActivity {
         mRandomUserTextView.setText(mOpponentUserId);
         Game game = new Game(mCurrentUserId, mOpponentUserId);
 
-        mDatabase.child(GAMES_CHILD).child(mGamePath).child(MOVES_CHILD).push().setValue(game);
-        mDatabase.child(GAMES_CHILD).child(mGamePath).child(MOVES_CHILD).addChildEventListener(
+        User currentUser = new User(getUserName(), getUserPhotoUrl());
+
+        mDatabase.child(Constants.GAMES_CHILD).child(mGamePath).child(Constants.USER_CHILD).push().setValue(currentUser);
+        mDatabase.child(Constants.GAMES_CHILD).child(mGamePath).child(Constants.MOVES_CHILD).push().setValue(game);
+        mDatabase.child(Constants.GAMES_CHILD).child(mGamePath).child(Constants.MOVES_CHILD).addChildEventListener(
                 new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -123,7 +125,7 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mDatabase.child(GAMES_CHILD).child(mGamePath).removeValue();
+        mDatabase.child(Constants.GAMES_CHILD).child(mGamePath).removeValue();
     }
 
     @Override
@@ -156,6 +158,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public String getUserPhotoUrl() {
-        return FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
+        // TODO: Fix it below
+        return "https://cdn4.iconfinder.com/data/icons/standard-free-icons/139/Profile01-128.png" /*getUserPhotoUrl()*/;
     }
 }

@@ -17,6 +17,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.julia.android.worderly.R;
 import com.julia.android.worderly.models.User;
+import com.julia.android.worderly.utils.Constants;
 
 import java.util.Objects;
 
@@ -28,7 +29,6 @@ public class RandomOpponentActivity extends AppCompatActivity {
     public static final String EXTRA_CURRENT_USER_ID = "EXTRA_CURRENT_USER_ID";
     public static final String EXTRA_OPPONENT_USER_ID = "EXTRA_OPPONENT_USER_ID";
     public static final String USERS_LOOKING_FOR_OPPONENT_CHILD = "usersLookingForOpponent";
-    public static final String GAMES_CHILD = "games";
     private static final String LOG_TAG = RandomOpponentActivity.class.getSimpleName();
     @BindView(R.id.currentUserTextView)
     TextView mCurrentUserTextView;
@@ -76,9 +76,9 @@ public class RandomOpponentActivity extends AppCompatActivity {
                                 String gamePath = mCurrentUid + "_" + mOpponentUid;
                                 String gamePathReversed = mOpponentUid + "_" + mCurrentUid;
 
-                                mDatabase.child(GAMES_CHILD).child(gamePath).setValue(true);
+                                mDatabase.child(Constants.GAMES_CHILD).child(gamePath).setValue(true);
                                 // Listen for the opponent ready
-                                mDatabase.child(GAMES_CHILD).child(gamePathReversed)
+                                mDatabase.child(Constants.GAMES_CHILD).child(gamePathReversed)
                                         .addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(DataSnapshot dataSnapshot) {
