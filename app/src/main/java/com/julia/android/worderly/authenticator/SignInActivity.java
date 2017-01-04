@@ -202,7 +202,7 @@ public class SignInActivity extends AppCompatActivity implements
         String username = user.getDisplayName();
 
         // Write new user
-        writeNewUser(user.getUid(), username, user.getEmail());
+        writeNewUser(user.getUid(), username, user.getPhotoUrl().toString(), user.getEmail());
 
         setSharedPreferences(username);
 
@@ -210,7 +210,7 @@ public class SignInActivity extends AppCompatActivity implements
     }
 
     private void onAnonymousAuthSuccess(FirebaseUser user) {
-        String username = "Anonymous-" + System.currentTimeMillis();
+        String username = "Guest" + System.currentTimeMillis();
         UserAnonymous userAnonymous = new UserAnonymous(username);
 
         setSharedPreferences(username);
@@ -233,10 +233,8 @@ public class SignInActivity extends AppCompatActivity implements
         finish();
     }
 
-
-
-    private void writeNewUser(String userId, String name, String email) {
-        User user = new User(name, email);
+    private void writeNewUser(String userId, String name, String photoUrl, String email) {
+        User user = new User(name, photoUrl, email);
 
         mDatabase.child(Constants.USERS_CHILD).child(userId).setValue(user);
     }

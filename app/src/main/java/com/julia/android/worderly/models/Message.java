@@ -1,21 +1,23 @@
 package com.julia.android.worderly.models;
 
+import com.google.firebase.database.ServerValue;
+
 public class Message {
 
     private String id;
     private String text;
     private String name;
     private String photoUrl;
-    private String timeStamp;
+    private Object timeStamp;
 
     public Message() {
     }
 
-    public Message(String text, String name, String photoUrl, String timeStamp) {
+    public Message(String text, String name, String photoUrl) {
         this.text = text;
         this.name = name;
         this.photoUrl = photoUrl;
-        this.timeStamp = timeStamp;
+        this.timeStamp = ServerValue.TIMESTAMP;
     }
 
     public String getId() {
@@ -50,12 +52,11 @@ public class Message {
         this.text = text;
     }
 
-    public String getTimeStamp() {
+    public Object getTimeStamp() {
         return timeStamp;
     }
 
-    public void setTimeStamp(String timeStamp) {
+    public void setTimeStamp(Object timeStamp) {
         this.timeStamp = timeStamp;
     }
-
 }

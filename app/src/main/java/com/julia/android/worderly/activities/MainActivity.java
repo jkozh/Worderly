@@ -1,6 +1,7 @@
 package com.julia.android.worderly.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
 
         setUpActionBar();
-        setUpDrawer();
+
 
         // Set default username is anonymous.
         mUsername = ANONYMOUS;
@@ -83,7 +84,13 @@ public class MainActivity extends AppCompatActivity
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             mUsername = extras.getString(SignInActivity.EXTRA_USERNAME);
+        } else {
+            SharedPreferences prefs =
+                    getSharedPreferences(SignInActivity.PREF_SIGN_IN, MODE_PRIVATE);
+            mUsername = prefs.getString(SignInActivity.PREF_USERNAME, "value_is_missing");
         }
+        // Set up Drawer after username has been fetched
+        setUpDrawer();
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)

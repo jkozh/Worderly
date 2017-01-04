@@ -41,6 +41,7 @@ public class GameActivity extends AppCompatActivity {
     DatabaseReference mDatabase;
     String mCurrentUserId;
     String mOpponentUserId;
+    String mOpponentUsername = "";
     String mGamePath = "";
     String mGamePathReversed = "";
 
@@ -56,6 +57,7 @@ public class GameActivity extends AppCompatActivity {
         if (extras != null) {
             mCurrentUserId = extras.getString(RandomOpponentActivity.EXTRA_CURRENT_USER_ID);
             mOpponentUserId = extras.getString(RandomOpponentActivity.EXTRA_OPPONENT_USER_ID);
+            mOpponentUsername = extras.getString(RandomOpponentActivity.EXTRA_OPPONENT_USERNAME);
         }
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -68,12 +70,14 @@ public class GameActivity extends AppCompatActivity {
         mRandomUserTextView.setText(mOpponentUserId);
         Game game = new Game(mCurrentUserId, mOpponentUserId);
 
-        User currentUser = new User(getUserName(), getUserPhotoUrl());
+        User currentUser = new User(getUserName(), getUserPhotoUrl(), "");
 
-        mDatabase.child(Constants.GAMES_CHILD).child(mGamePath).child(Constants.USER_CHILD).push().setValue(currentUser);
-        mDatabase.child(Constants.GAMES_CHILD).child(mGamePath).child(Constants.MOVES_CHILD).push().setValue(game);
-        mDatabase.child(Constants.GAMES_CHILD).child(mGamePath).child(Constants.MOVES_CHILD).addChildEventListener(
-                new ChildEventListener() {
+        mDatabase.child(Constants.GAMES_CHILD).child(mGamePath).child(Constants.USER_CHILD)
+                .child(getUserName()).setValue(currentUser);
+        mDatabase.child(Constants.GAMES_CHILD).child(mGamePath).child(Constants.MOVES_CHILD)
+                .push().setValue(game);
+        mDatabase.child(Constants.GAMES_CHILD).child(mGamePath).child(Constants.MOVES_CHILD)
+                .addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     }
@@ -104,7 +108,8 @@ public class GameActivity extends AppCompatActivity {
             ab.setDisplayHomeAsUpEnabled(true);
             ab.setDisplayShowTitleEnabled(false);
         }
-        mToolbar.setTitle("You are playing with ...");
+        mToolbar.setTitle("You are playing with " + mOpponentUsername);
+        //mToolbar.setSubtitle(mOpponentUsername);
     }
 
     @Override
@@ -142,6 +147,7 @@ public class GameActivity extends AppCompatActivity {
                 Intent intent = new Intent(GameActivity.this, ChatActivity.class);
                 intent.putExtra(EXTRA_GAME_PATH, mGamePath);
                 intent.putExtra(EXTRA_GAME_PATH_REVERSED, mGamePathReversed);
+                intent.putExtra(RandomOpponentActivity.EXTRA_OPPONENT_USERNAME, mOpponentUsername);
                 startActivity(intent);
                 return true;
             case R.id.action_resign:
@@ -159,6 +165,6 @@ public class GameActivity extends AppCompatActivity {
 
     public String getUserPhotoUrl() {
         // TODO: Fix it below
-        return "https://cdn4.iconfinder.com/data/icons/standard-free-icons/139/Profile01-128.png" /*getUserPhotoUrl()*/;
+        return "https://cdn4.iconfinder.com/data/icons/standard-free-icons/139/Profile01-128.png";
     }
 }

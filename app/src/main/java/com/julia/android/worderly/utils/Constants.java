@@ -7,5 +7,6 @@ public class Constants {
     public static final String USER_CHILD = "user";
     public static final String USERS_CHILD = "users";
     public static final String MESSAGES_CHILD = "messages";
+    public static final String USERS_LOOKING_FOR_OPPONENT_CHILD = "usersLookingForOpponent";
 
 }
