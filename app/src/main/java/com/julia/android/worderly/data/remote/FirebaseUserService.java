@@ -1,61 +1,41 @@
 package com.julia.android.worderly.data.remote;
 
-
-import android.app.Activity;
-import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
-
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.GoogleAuthProvider;
-import com.julia.android.worderly.R;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.julia.android.worderly.model.User;
+import com.julia.android.worderly.utils.FirebaseConstants;
 
 public class FirebaseUserService {
-
-    private FirebaseAuth firebaseAuth;
-    private GoogleApiClient googleApiClient;
+    private DatabaseReference mDatabase;
 
     public FirebaseUserService() {
-        this.firebaseAuth = FirebaseAuth.getInstance();
+        this.mDatabase = FirebaseDatabase.getInstance().getReference();
     }
 
-    public Task<AuthResult> getAnonymousUser(String email, String password) {
-        //return firebaseAuth.signInWithEmailAndPassword(email, password);
+    public void createUser(FirebaseUser firebaseUser) {
+        String userUid = firebaseUser.getUid();
+        String username = firebaseUser.getDisplayName();
+        String userPhotoUrl;
+        if (firebaseUser.getPhotoUrl() != null) {
+            userPhotoUrl = firebaseUser.getPhotoUrl().toString();
+        } else {
+            userPhotoUrl = "none";
+        }
+        String userEmail = firebaseUser.getEmail();
+
+        User user = new User(username, userPhotoUrl, userEmail);
+
+        mDatabase.child(FirebaseConstants.FIREBASE_USERS_CHILD).child(userUid).setValue(user);
     }
 
-    public Task<AuthResult> createAnonymousUser(String email, String password) {
-        //return firebaseAuth.createUserWithEmailAndPassword(email, password);
+    public DatabaseReference getUser(String userUid) {
+        return mDatabase.child(FirebaseConstants.FIREBASE_USERS_CHILD).child(userUid);
     }
 
-    public Intent getUserWithGoogle(FragmentActivity activity) {
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(activity.getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-
-        googleApiClient = new GoogleApiClient.Builder(activity)
-                .enableAutoManage(activity, new GoogleApiClient.OnConnectionFailedListener() {
-                    @Override
-                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                    }
-                })
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-
-        return Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+    public void updateUser(FirebaseUser user) {
     }
 
-    public Task<AuthResult> getAuthWithGoogle(final Activity activity, GoogleSignInAccount acct) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        return firebaseAuth.signInWithCredential(credential);
+    public void deleteUser(String userUid) {
     }
-
 }
