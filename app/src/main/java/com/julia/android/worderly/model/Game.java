@@ -1,4 +1,4 @@
-package com.julia.android.worderly.models;
+package com.julia.android.worderly.model;
 
 public class Game {
 

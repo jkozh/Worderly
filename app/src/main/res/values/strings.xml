@@ -19,4 +19,5 @@
     <string name="action_chat">Chat</string>
     <string name="action_resign">Resign</string>
     <string name="chat_message_hint">Enter your message here</string>
+    <string name="sign_in_error">%1$s Sign In Error</string>
 </resources>

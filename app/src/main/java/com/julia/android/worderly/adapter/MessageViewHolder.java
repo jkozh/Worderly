@@ -1,4 +1,4 @@
-package com.julia.android.worderly.activities;
+package com.julia.android.worderly.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -10,16 +10,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-class MessageViewHolder extends RecyclerView.ViewHolder{
+public class MessageViewHolder extends RecyclerView.ViewHolder{
 
     @BindView(R.id.messengerTextView)
-    TextView messengerTextView;
+    public TextView messengerTextView;
     @BindView(R.id.messengerImageView)
-    CircleImageView messengerImageView;
+    public CircleImageView messengerImageView;
     @BindView(R.id.messageTextView)
-    TextView messageTextView;
+    public TextView messageTextView;
     @BindView(R.id.timeTextView)
-    TextView timeTextView;
+    public TextView timeTextView;
 
     public MessageViewHolder(View itemView) {
         super(itemView);

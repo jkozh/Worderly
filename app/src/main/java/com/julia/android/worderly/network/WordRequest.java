@@ -13,8 +13,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.julia.android.worderly.BuildConfig;
-import com.julia.android.worderly.models.Result;
-import com.julia.android.worderly.models.Word;
+import com.julia.android.worderly.model.Result;
+import com.julia.android.worderly.model.Word;
 
 import org.json.JSONException;
 import org.json.JSONObject;

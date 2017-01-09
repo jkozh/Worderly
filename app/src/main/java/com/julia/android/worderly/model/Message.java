@@ -1,4 +1,4 @@
-package com.julia.android.worderly.models;
+package com.julia.android.worderly.model;
 
 import com.google.firebase.database.ServerValue;
 

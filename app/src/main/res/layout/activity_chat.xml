@@ -25,7 +25,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="com.julia.android.worderly.activities.ChatActivity">
+        tools:context="com.julia.android.worderly.chat.view.ChatActivity">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/messageRecyclerView"
