@@ -1,9 +1,10 @@
-package com.julia.android.worderly.ui.login.presenter;
+package com.julia.android.worderly.ui.login;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
-public interface SignInPresenter {
+interface SignInPresenter {
     void onStart();
     void onStop();
     void firebaseAuthWithGoogle(GoogleSignInAccount account);
+    void firebaseAuthAnonymous();
 }

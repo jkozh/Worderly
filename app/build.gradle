@@ -52,7 +52,6 @@ dependencies {
 
     // Google
     compile 'com.google.android.gms:play-services:10.0.1'
-    compile 'com.google.android.gms:play-services-auth:10.0.1'
 
     // Firebase
     compile 'com.google.firebase:firebase-database:10.0.1'

@@ -1,4 +1,4 @@
-package com.julia.android.worderly.ui.login.presenter;
+package com.julia.android.worderly.ui.login;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -12,20 +12,16 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.julia.android.worderly.data.remote.FirebaseUserService;
-import com.julia.android.worderly.ui.login.view.SignInActivity;
-import com.julia.android.worderly.ui.login.view.SignInView;
 
-public class SignInPresenterImpl implements SignInPresenter {
+class SignInPresenterImpl implements SignInPresenter {
 
     private static final String TAG = SignInPresenterImpl.class.getSimpleName();
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private SignInView mSignInView;
-    private SignInActivity mSignInActivity;
 
-    public SignInPresenterImpl(SignInView signInView, SignInActivity signInActivity) {
+    SignInPresenterImpl(SignInView signInView) {
         this.mSignInView = signInView;
-        this.mSignInActivity = signInActivity;
 
         mAuth = FirebaseAuth.getInstance();
         setAuthStateListener();
@@ -71,8 +67,8 @@ public class SignInPresenterImpl implements SignInPresenter {
         }
 
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(mSignInActivity, new OnCompleteListener<AuthResult>() {
+        mAuth.signInWithCredential(credential).addOnCompleteListener((SignInActivity) mSignInView,
+                new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
@@ -98,6 +94,44 @@ public class SignInPresenterImpl implements SignInPresenter {
                         }
                     }
                 });
+    }
+
+    @Override
+    public void firebaseAuthAnonymous() {
+        if (mSignInView != null) {
+            mSignInView.showProgressDialog();
+        }
+
+        mAuth.signInAnonymously()
+                .addOnCompleteListener((SignInActivity) mSignInView,
+                        new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                Log.d(TAG, "signInAnonymously:onComplete:" + task.isSuccessful());
+
+                                // If sign in fails, display a message to the user.
+                                // If sign in succeeds the auth state listener will be notified
+                                // and logic to handle the signed in user
+                                // can be handled in the listener.
+                                if (!task.isSuccessful()) {
+                                    Log.w(TAG, "signInAnonymously", task.getException());
+                                    mSignInView.signInFail("Authentication failed.");
+                                } else {
+                                    FirebaseUser user = task.getResult().getUser();
+                                    new FirebaseUserService().createUser(user);
+                                    if (mSignInView != null) {
+                                        mSignInView.setSharedPreferences(user);
+                                        mSignInView.navigateToMainActivity();
+                                    }
+                                }
+                                if (mSignInView != null) {
+                                    mSignInView.hideProgressDialog();
+                                }
+
+
+                            }
+                        });
+
     }
 
     public SignInView getSignInView() {
