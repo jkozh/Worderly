@@ -1,5 +1,9 @@
 package com.julia.android.worderly.model;
 
+import android.net.Uri;
+
+import com.julia.android.worderly.utils.Constants;
+
 public class User {
 
     private String username;
@@ -21,15 +25,23 @@ public class User {
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        if (username != null) {
+            this.username = username;
+        } else {
+            this.username = "Guest";
+        }
     }
 
     public String getPhotoUrl() {
         return photoUrl;
     }
 
-    public void setPhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
+    public void setPhotoUrl(Uri photoUrl) {
+        if (photoUrl != null) {
+            this.photoUrl = photoUrl.toString();
+        } else {
+            this.photoUrl = Constants.DEFAULT_USER_PHOTO_URL;
+        }
     }
 
     public String getEmail() {
@@ -37,6 +49,10 @@ public class User {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        if (email != null) {
+            this.email = email;
+        } else {
+            this.email = "0";
+        }
     }
 }

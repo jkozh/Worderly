@@ -4,7 +4,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.julia.android.worderly.model.User;
-import com.julia.android.worderly.utils.Constants;
 import com.julia.android.worderly.utils.FirebaseConstants;
 
 public class FirebaseUserService {
@@ -15,25 +14,11 @@ public class FirebaseUserService {
     }
 
     public void createUser(FirebaseUser firebaseUser) {
+        User user = new User();
+        user.setUsername(firebaseUser.getDisplayName());
+        user.setEmail(firebaseUser.getEmail());
+        user.setPhotoUrl(firebaseUser.getPhotoUrl());
         String userUid = firebaseUser.getUid();
-        String username = firebaseUser.getDisplayName();
-
-        String userPhotoUrl;
-        if (firebaseUser.getPhotoUrl() != null) {
-            userPhotoUrl = firebaseUser.getPhotoUrl().toString();
-        } else {
-            userPhotoUrl = Constants.DEFAULT_USER_PHOTO_URL;
-        }
-
-        String userEmail;
-        if (firebaseUser.getEmail() != null) {
-            userEmail = firebaseUser.getEmail();
-        } else {
-            userEmail = "0";
-        }
-
-        User user = new User(username, userPhotoUrl, userEmail);
-
         mDatabase.child(FirebaseConstants.FIREBASE_USERS_CHILD).child(userUid).setValue(user);
     }
 
