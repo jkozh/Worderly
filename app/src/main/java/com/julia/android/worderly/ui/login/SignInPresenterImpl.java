@@ -11,16 +11,20 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.julia.android.worderly.R;
 import com.julia.android.worderly.data.remote.FirebaseUserService;
+import com.julia.android.worderly.model.User;
 
 class SignInPresenterImpl implements SignInPresenter {
 
     private static final String TAG = SignInPresenterImpl.class.getSimpleName();
+    FirebaseUser mFirebaseUser;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private SignInView mSignInView;
+    private User mUser;
 
-    SignInPresenterImpl(SignInView signInView) {
+            SignInPresenterImpl(SignInView signInView) {
         this.mSignInView = signInView;
 
         mAuth = FirebaseAuth.getInstance();
@@ -59,6 +63,11 @@ class SignInPresenterImpl implements SignInPresenter {
     }
 
     @Override
+    public void onDestroy() {
+        mSignInView = null;
+    }
+
+    @Override
     public void firebaseAuthWithGoogle(GoogleSignInAccount account) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
 
@@ -79,13 +88,15 @@ class SignInPresenterImpl implements SignInPresenter {
                         if (!task.isSuccessful()) {
                             Log.w(TAG, "signInWithCredential", task.getException());
                             if (mSignInView != null) {
-                                mSignInView.signInFail("Authentication failed.");
+                                mSignInView.signInFail(
+                                        ((SignInActivity) mSignInView).getResources()
+                                                .getString(R.string.error_google_sign_in_failed));
                             }
                         } else {
-                            FirebaseUser user = task.getResult().getUser();
-                            new FirebaseUserService().createUser(user);
+                            FirebaseUser firebaseUser = task.getResult().getUser();
+                            mUser = new FirebaseUserService().createUser(firebaseUser);
                             if (mSignInView != null) {
-                                mSignInView.setSharedPreferences(user);
+                                mSignInView.setSharedPreferences(mUser);
                                 mSignInView.navigateToMainActivity();
                             }
                         }
@@ -115,23 +126,32 @@ class SignInPresenterImpl implements SignInPresenter {
                                 // can be handled in the listener.
                                 if (!task.isSuccessful()) {
                                     Log.w(TAG, "signInAnonymously", task.getException());
-                                    mSignInView.signInFail("Authentication failed.");
-                                } else {
-                                    FirebaseUser user = task.getResult().getUser();
-                                    new FirebaseUserService().createUser(user);
                                     if (mSignInView != null) {
-                                        mSignInView.setSharedPreferences(user);
-                                        mSignInView.navigateToMainActivity();
+                                        mSignInView.signInFail(
+                                                ((SignInActivity) mSignInView).getResources()
+                                                .getString(R.string.error_anonymous_sign_in_failed));
+                                    }
+                                } else {
+                                    mFirebaseUser = task.getResult().getUser();
+                                    mUser = new FirebaseUserService().createUser(mFirebaseUser);
+                                    if (mSignInView != null) {
+                                        mSignInView.showEnterNicknameDialog(mUser.getUsername());
                                     }
                                 }
                                 if (mSignInView != null) {
                                     mSignInView.hideProgressDialog();
                                 }
-
-
                             }
                         });
+    }
 
+    @Override
+    public void setUsernameFromDialog(String username) {
+        mUser.setUsername(username);
+        if (mSignInView != null) {
+            mSignInView.setSharedPreferences(mUser);
+            mSignInView.navigateToMainActivity();
+        }
     }
 
     public SignInView getSignInView() {

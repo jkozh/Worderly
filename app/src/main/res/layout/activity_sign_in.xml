@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="40dp"
-        android:text="@string/sign_in"
+        android:text="@string/msg_sign_in"
         android:textSize="30sp"
         android:textStyle="bold"/>
 
@@ -27,6 +27,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="@string/skip_this"/>
+        android:text="@string/msg_skip_this"/>
 
 </LinearLayout>

@@ -1,20 +1,32 @@
 <resources>
     <string name="app_name">Worderly</string>
-    <string name="sign_out">Sign Out</string>
-    <string name="invite_menu_label">Invite</string>
-    <string name="invitation_cta">Call to action</string>
-    <string name="invitation_title">Friendly Chat Invite</string>
-    <string name="sign_in">Sign In</string>
-    <string name="sign_up">Sign Up</string>
-    <string name="fresh_config">Fresh Config</string>
-    <string name="cause_crash">Cause Crash</string>
-    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="btn_send">SEND</string>
-    <string name="loading">Loading…</string>
-    <string name="drawer_open">open</string>
-    <string name="drawer_close">close</string>
+
+    <!-- Actions in Chat Activity -->
     <string name="action_chat">Chat</string>
     <string name="action_resign">Resign</string>
-    <string name="chat_message_hint">Enter your message here</string>
-    <string name="skip_this">Skip this</string>
+
+    <!-- Actions in Main Activity -->
+    <string name="action_sign_out">Sign Out</string>
+    <string name="action_invite">Invite</string>
+
+    <!-- Hints in Chat Activity -->
+    <string name="enter_message_hint">Enter your message here</string>
+
+    <!-- Messages in SignIn Activity -->
+    <string name="msg_sign_in">Sign In</string>
+    <string name="msg_skip_this">Skip this</string>
+    <string name="msg_loading">Loading…</string>
+
+    <!-- Messages in Main Activity -->
+    <string name="msg_play_with">Play with...</string>
+    <string name="msg_random_opponent">Random opponent</string>
+    <string name="msg_worderly_friends">Worderly Friends</string>
+    <string name="msg_find_player">Find player</string>
+
+    <!-- Messages in Chat Activity -->
+    <string name="msg_send">SEND</string>
+
+    <!-- Errors -->
+    <string name="error_google_sign_in_failed">Google Sign In failed.</string>
+    <string name="error_anonymous_sign_in_failed">Anonymous Sign In failed.</string>
 </resources>

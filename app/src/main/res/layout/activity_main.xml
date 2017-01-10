@@ -8,7 +8,6 @@
 
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -18,7 +17,7 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+                android:id="@+id/toolbar_main_activity"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
@@ -34,16 +33,30 @@
             android:orientation="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <Button
-                android:id="@+id/randomPlayButton"
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Play with the random opponent" />
+                android:text="@string/msg_play_with"
+                android:textSize="30sp"
+                android:textStyle="bold" />
 
             <Button
+                android:id="@+id/button_random_play"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Play with ..." />
+                android:text="@string/msg_random_opponent" />
+
+            <Button
+                android:id="@+id/button_play_with_friends"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/msg_worderly_friends" />
+
+            <Button
+                android:id="@+id/button_find_player"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/msg_find_player" />
 
         </LinearLayout>
 

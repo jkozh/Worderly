@@ -7,17 +7,17 @@ import com.julia.android.worderly.utils.Constants;
 public class User {
 
     private String username;
-    private String photoUrl;
     private String email;
+    private String photoUrl;
 
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public User(String username, String photoUrl, String email) {
+    public User(String username, String email, String photoUrl) {
         this.username = username;
-        this.photoUrl = photoUrl;
         this.email = email;
+        this.photoUrl = photoUrl;
     }
 
     public String getUsername() {
@@ -28,19 +28,7 @@ public class User {
         if (username != null) {
             this.username = username;
         } else {
-            this.username = "Guest";
-        }
-    }
-
-    public String getPhotoUrl() {
-        return photoUrl;
-    }
-
-    public void setPhotoUrl(Uri photoUrl) {
-        if (photoUrl != null) {
-            this.photoUrl = photoUrl.toString();
-        } else {
-            this.photoUrl = Constants.DEFAULT_USER_PHOTO_URL;
+            this.username = Constants.GUEST + System.currentTimeMillis();
         }
     }
 
@@ -53,6 +41,18 @@ public class User {
             this.email = email;
         } else {
             this.email = "0";
+        }
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(Uri photoUrl) {
+        if (photoUrl != null) {
+            this.photoUrl = photoUrl.toString();
+        } else {
+            this.photoUrl = Constants.DEFAULT_USER_PHOTO_URL;
         }
     }
 }

@@ -1,15 +1,18 @@
 package com.julia.android.worderly.ui.login;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.firebase.auth.FirebaseUser;
 import com.julia.android.worderly.R;
 import com.julia.android.worderly.model.User;
 import com.julia.android.worderly.ui.main.view.MainActivity;
@@ -17,11 +20,13 @@ import com.julia.android.worderly.ui.main.view.MainActivity;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SignInActivity extends AbstractSignInActivity implements SignInView {
+public class SignInActivity extends AbstractSignInActivity {
 
+    public static final String PREF_SIGN_IN = "PREF_SIGN_IN";
+    public static final String PREF_USERNAME = "PREF_USERNAME";
+    public static final String PREF_USER_PHOTO_URL = "PREF_USER_PHOTO_URL";
     private static final String TAG = SignInActivity.class.getSimpleName();
     private static final int REQUEST_SIGN_IN_GOOGLE = 9001;
-
     private ProgressDialog mProgressDialog;
     private SignInPresenter mPresenter;
 
@@ -41,14 +46,18 @@ public class SignInActivity extends AbstractSignInActivity implements SignInView
     public void onStart() {
         super.onStart();
         mPresenter.onStart();
-
     }
 
     @Override
     public void onStop() {
         super.onStop();
         mPresenter.onStop();
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.onDestroy();
     }
 
     @Override
@@ -69,8 +78,8 @@ public class SignInActivity extends AbstractSignInActivity implements SignInView
             mPresenter.firebaseAuthWithGoogle(account);
         } else {
             // Google Sign In failed, update UI appropriately
-            Log.e(TAG, "Google Sign In failed.");
-            signInFail("Google Sign In failed.");
+            Log.e(TAG, getString(R.string.error_google_sign_in_failed));
+            signInFail(getString(R.string.error_google_sign_in_failed));
         }
     }
 
@@ -78,7 +87,6 @@ public class SignInActivity extends AbstractSignInActivity implements SignInView
     public void signInFail(String errorMessage) {
         Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
     }
-
 
     @OnClick(R.id.sign_in_google_button)
     public void onSignInWithGoogleButton() {
@@ -102,7 +110,7 @@ public class SignInActivity extends AbstractSignInActivity implements SignInView
     public void showProgressDialog() {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage(getString(R.string.loading));
+            mProgressDialog.setMessage(getString(R.string.msg_loading));
             mProgressDialog.setIndeterminate(true);
         }
         mProgressDialog.show();
@@ -116,21 +124,29 @@ public class SignInActivity extends AbstractSignInActivity implements SignInView
     }
 
     @Override
-    public void setSharedPreferences(FirebaseUser user) {
-
+    public void setSharedPreferences(User user) {
+        SharedPreferences prefs = getSharedPreferences(PREF_SIGN_IN, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(PREF_USERNAME, user.getUsername());
+        editor.putString(PREF_USER_PHOTO_URL, user.getPhotoUrl());
+        editor.apply();
     }
 
     @Override
-    public void showEnterNicknameDialog(final User user) {
-        //.setTitle("Insert your nickname");
-        //.setMessage("Or leave it as Guest23232");
-        //final EditText nicknameEditText = new EditText(this);
-        //.setView(nicknameEditText);
-        //.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-        //    public void onClick(DialogInterface dialog, int whichButton) {
-        //        mPresenter.createUser(user, nicknameEditText.getText().toString());
-        //    }
-        //});
-        //.show();
+    public void showEnterNicknameDialog(String username) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Enter your nickname");
+        builder.setMessage("By default: '" + username + "'");
+        final EditText nicknameEditText = new EditText(this);
+        builder.setView(nicknameEditText);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mPresenter.setUsernameFromDialog(nicknameEditText.getText().toString());
+            }
+        });
+        final AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }
