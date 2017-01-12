@@ -18,13 +18,18 @@
     <string name="msg_loading">Loading…</string>
 
     <!-- Messages in Main Activity -->
-    <string name="msg_play_with">Play with...</string>
+    <string name="msg_play_with">Play with…</string>
     <string name="msg_random_opponent">Random opponent</string>
     <string name="msg_worderly_friends">Worderly Friends</string>
     <string name="msg_find_player">Find player</string>
 
     <!-- Messages in Chat Activity -->
     <string name="msg_send">SEND</string>
+
+    <!-- Dialog -->
+    <string name="title_enter_nickname">Enter your nickname</string>
+    <string name="msg_by_default">By default: \"%1$s\"</string>
+    <string name="action_ok">OK</string>
 
     <!-- Errors -->
     <string name="error_google_sign_in_failed">Google Sign In failed.</string>

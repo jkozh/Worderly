@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.text.InputFilter;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -16,6 +17,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.julia.android.worderly.R;
 import com.julia.android.worderly.model.User;
 import com.julia.android.worderly.ui.main.view.MainActivity;
+import com.julia.android.worderly.utils.Constants;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -135,17 +137,22 @@ public class SignInActivity extends AbstractSignInActivity {
     @Override
     public void showEnterNicknameDialog(String username) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Enter your nickname");
-        builder.setMessage("By default: '" + username + "'");
+        builder.setTitle(getString(R.string.title_enter_nickname));
+        builder.setMessage(getString(R.string.msg_by_default, username));
         final EditText nicknameEditText = new EditText(this);
+        nicknameEditText.setFilters(new InputFilter[] {
+                // Maximum 20 characters
+                new InputFilter.LengthFilter(Constants.MAX_USERNAME_INPUT_DIALOG),
+        });
         builder.setView(nicknameEditText);
 
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mPresenter.setUsernameFromDialog(nicknameEditText.getText().toString());
-            }
-        });
+        builder.setPositiveButton(getString(R.string.action_ok),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mPresenter.setUsernameFromDialog(nicknameEditText.getText().toString());
+                    }
+                });
         final AlertDialog dialog = builder.create();
         dialog.show();
     }

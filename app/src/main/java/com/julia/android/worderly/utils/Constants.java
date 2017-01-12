@@ -6,8 +6,9 @@ public class Constants {
     public static final String DEFAULT_USER_PHOTO_URL =
             "https://cdn4.iconfinder.com/data/icons/standard-free-icons/139/Profile01-128.png";
 
-    //
-    public static final String ANONYMOUS = "anonymous";
     public static final String GUEST = "Guest";
+
+    // Length Limit
+    public static final int MAX_USERNAME_INPUT_DIALOG = 20;
 
 }

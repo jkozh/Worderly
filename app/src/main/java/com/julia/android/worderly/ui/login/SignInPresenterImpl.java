@@ -15,6 +15,8 @@ import com.julia.android.worderly.R;
 import com.julia.android.worderly.data.remote.FirebaseUserService;
 import com.julia.android.worderly.model.User;
 
+import java.util.Objects;
+
 class SignInPresenterImpl implements SignInPresenter {
 
     private static final String TAG = SignInPresenterImpl.class.getSimpleName();
@@ -147,7 +149,9 @@ class SignInPresenterImpl implements SignInPresenter {
 
     @Override
     public void setUsernameFromDialog(String username) {
-        mUser.setUsername(username);
+        if (!Objects.equals(username, "")) {
+            mUser.setUsername(username);
+        }
         if (mSignInView != null) {
             mSignInView.setSharedPreferences(mUser);
             mSignInView.navigateToMainActivity();
