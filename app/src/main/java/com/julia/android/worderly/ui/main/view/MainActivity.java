@@ -17,17 +17,28 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.julia.android.worderly.R;
-import com.julia.android.worderly.ui.login.SignInActivity;
+import com.julia.android.worderly.model.User;
 import com.julia.android.worderly.ui.main.presenter.MainPresenter;
 import com.julia.android.worderly.ui.main.presenter.MainPresenterImpl;
 import com.julia.android.worderly.ui.randomopponent.view.RandomOpponentActivity;
+import com.julia.android.worderly.ui.signin.SignInActivity;
 import com.julia.android.worderly.utils.Constants;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.julia.android.worderly.utils.Constants.PREF_NAME;
+import static com.julia.android.worderly.utils.Constants.PREF_USER;
+
+/**
+ * MainActivity shows a screen after SignIn. It contains some buttons to start a game.
+ * Also the left Drawer contains some info about the logged in mUser, and statistics of games.
+ */
 public class MainActivity extends AbstractMainActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -42,25 +53,28 @@ public class MainActivity extends AbstractMainActivity {
     Toolbar mToolbar;
 
     private MainPresenter mPresenter;
-    private String mUsername;
-    private String mUserPhotoUrl;
+    private User mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
+        getSharedPrefs();
         mPresenter = new MainPresenterImpl(this);
         setGoogleApiClient();
-
-        SharedPreferences prefs = getSharedPreferences(SignInActivity.PREF_SIGN_IN, MODE_PRIVATE);
-        mUsername = prefs.getString(SignInActivity.PREF_USERNAME, "value_is_missing");
-        mUserPhotoUrl = prefs.getString(SignInActivity.PREF_USER_PHOTO_URL, "value_is_missing");
-
         setUpActionBar();
         // Set up Drawer after the username was fetched
         setUpDrawer();
+    }
+
+    private void getSharedPrefs() {
+        SharedPreferences mPrefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = mPrefs.getString(PREF_USER, Constants.PREF_USER_DEFAULT_VALUE);
+        if (!Objects.equals(json, "")) {
+            mUser = gson.fromJson(json, User.class);
+        }
     }
 
     @Override
@@ -84,14 +98,24 @@ public class MainActivity extends AbstractMainActivity {
             TextView usernameTextView = ButterKnife.findById(headerView, R.id.usernameTextView);
             ImageView avatarImageView = ButterKnife.findById(headerView, R.id.avatarImageView);
 
-            // Set up username in Navigation Drawer
-            usernameTextView.setText(mUsername);
-            // Set up user photo in Navigation Drawer
-            setUserAvatarPhoto(avatarImageView, mUserPhotoUrl);
+            if (mUser != null) {
+                // Set up username in Navigation Drawer
+                setUsernameInDrawer(usernameTextView, mUser.getUsername());
+
+                // Set up mUser photo in Navigation Drawer
+                setUserPhotoInDrawer(avatarImageView, mUser.getPhotoUrl());
+            }
         }
     }
 
-    void setUserAvatarPhoto(ImageView avatarImageView, String photoUrl ) {
+    private void setUsernameInDrawer(TextView usernameTextView, String username) {
+        if (username == null) {
+            username = Constants.GUEST;
+        }
+        usernameTextView.setText(username);
+    }
+
+    private void setUserPhotoInDrawer(ImageView avatarImageView, String photoUrl ) {
         if (photoUrl == null) {
             photoUrl = Constants.DEFAULT_USER_PHOTO_URL;
         }
@@ -100,6 +124,9 @@ public class MainActivity extends AbstractMainActivity {
                 .into(avatarImageView);
     }
 
+    /**
+     * Start the game with random opponent
+     */
     @OnClick(R.id.button_random_play)
     public void onClick() {
         // Launch the RandomOpponentActivity
@@ -132,6 +159,9 @@ public class MainActivity extends AbstractMainActivity {
         Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Not signed in, launch the Sign In activity
+     */
     @Override
     public void navigateToSignInActivity() {
         startActivity(new Intent(this, SignInActivity.class));

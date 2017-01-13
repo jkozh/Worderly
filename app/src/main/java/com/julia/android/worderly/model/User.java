@@ -6,53 +6,63 @@ import com.julia.android.worderly.utils.Constants;
 
 public class User {
 
-    private String username;
-    private String email;
-    private String photoUrl;
+    private String mId;
+    private String mUsername;
+    private String mEmail;
+    private String mPhotoUrl;
 
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public User(String username, String email, String photoUrl) {
-        this.username = username;
-        this.email = email;
-        this.photoUrl = photoUrl;
+    public User(String id, String username, String email, String photoUrl) {
+        this.mId = id;
+        this.mUsername = username;
+        this.mEmail = email;
+        this.mPhotoUrl = photoUrl;
+    }
+
+    public String getId() {
+        return mId;
+    }
+
+    public void setId(String id) {
+        this.mId = id;
     }
 
     public String getUsername() {
-        return username;
+        return mUsername;
     }
 
     public void setUsername(String username) {
         if (username != null) {
-            this.username = username;
+            this.mUsername = username;
         } else {
-            this.username = Constants.GUEST + System.currentTimeMillis();
+            this.mUsername = Constants.GUEST + System.currentTimeMillis();
         }
     }
 
     public String getEmail() {
-        return email;
+        return mEmail;
     }
 
     public void setEmail(String email) {
         if (email != null) {
-            this.email = email;
+            this.mEmail = email;
         } else {
-            this.email = "0";
+            this.mEmail = "0";
         }
     }
 
     public String getPhotoUrl() {
-        return photoUrl;
+        return mPhotoUrl;
     }
 
     public void setPhotoUrl(Uri photoUrl) {
         if (photoUrl != null) {
-            this.photoUrl = photoUrl.toString();
+            this.mPhotoUrl = photoUrl.toString();
         } else {
-            this.photoUrl = Constants.DEFAULT_USER_PHOTO_URL;
+            this.mPhotoUrl = Constants.DEFAULT_USER_PHOTO_URL;
         }
     }
 }

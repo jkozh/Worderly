@@ -1,40 +1,34 @@
 package com.julia.android.worderly.ui.randomopponent.view;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.julia.android.worderly.R;
-import com.julia.android.worderly.utils.FirebaseConstants;
+import com.julia.android.worderly.ui.randomopponent.presenter.RandomOpponentPresenter;
+import com.julia.android.worderly.ui.randomopponent.presenter.RandomOpponentPresenterImpl;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
-public class RandomOpponentActivity extends AppCompatActivity {
+public class RandomOpponentActivity extends AppCompatActivity implements RandomOpponentView {
 
-    public static final String EXTRA_CURRENT_USER_ID = "EXTRA_CURRENT_USER_ID";
-    public static final String EXTRA_OPPONENT_USER_ID = "EXTRA_OPPONENT_USER_ID";
-    public static final String EXTRA_OPPONENT_USERNAME = "EXTRA_OPPONENT_USERNAME";
+    private static final String TAG = RandomOpponentActivity.class.getSimpleName();
 
-    private static final String LOG_TAG = RandomOpponentActivity.class.getSimpleName();
+    @BindView(R.id.toolbar_randomopponent_activity)
+    Toolbar mToolbar;
+    @BindView(R.id.image_avatar_opponent)
+    CircleImageView mAvatarOpponentImageView;
+    @BindView(R.id.text_username_opponent)
+    TextView mUsernameOpponentTextView;
+    @BindView(R.id.text_uid_opponent)
+    TextView mUidOpponentTextView;
 
-    @BindView(R.id.currentUserTextView)
-    TextView mCurrentUserTextView;
-    @BindView(R.id.randomUserTextView)
-    TextView mRandomUserTextView;
-    @BindView(R.id.timerTextView)
-    TextView mTimerTextView;
-
-    DatabaseReference mDatabase;
-    boolean mOpponentFound = false;
-    String mCurrentUid = "";
-    String mOpponentUid = "";
-    String mOpponentUsername = "";
+    private RandomOpponentPresenter mPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,167 +36,28 @@ public class RandomOpponentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_random_opponent);
         ButterKnife.bind(this);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-
-        mCurrentUserTextView.setText(getUid());
-
-        // Add the user looking for the opponent under usersLookingForOpponent path
-//        final User user = new User(getUserName(),
-//                ,
-//                "");
-//        mCurrentUid =  getUid();
-//        mDatabase.child(FirebaseConstants.FIREBASE_USERS_ONLINE)
-//                .child(mCurrentUid).setValue(user);
-//
-//        mDatabase.child(FirebaseConstants.FIREBASE_USERS_ONLINE)
-//                .addChildEventListener(new ChildEventListener() {
-//
-//                    @Override
-//                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//                        final int MAX_USERS = 2;
-//                        // Need to avoid confusion
-//                        //if (dataSnapshot.getChildrenCount() < MAX_USERS) {
-//
-//                            mOpponentUid = dataSnapshot.getKey();
-//
-//                            if (!Objects.equals(mCurrentUid, mOpponentUid) && !mOpponentFound) {
-//                                mOpponentFound = true;
-//                                mRandomUserTextView.setText(mOpponentUid);
-//
-//                                String gamePath = mCurrentUid + "_" + mOpponentUid;
-//                                final String gamePathReversed = mOpponentUid + "_" + mCurrentUid;
-//
-//                                mDatabase.child(FirebaseConstants.FIREBASE_GAMES_CHILD).child(gamePath).setValue(true);
-//                                // Listen for the opponent ready
-//                                mDatabase.child(FirebaseConstants.FIREBASE_GAMES_CHILD).child(gamePathReversed)
-//                                        .addListenerForSingleValueEvent(new ValueEventListener() {
-//                                            @Override
-//                                            public void onDataChange(DataSnapshot dataSnapshot) {
-//
-//                                                mDatabase.child(FirebaseConstants.FIREBASE_GAMES_CHILD)
-//                                                        .child(gamePathReversed)
-//                                                        .child(FirebaseConstants.FIREBASE_USER_CHILD)
-//                                                        .addChildEventListener(
-//                                                                new ChildEventListener() {
-//                                                    @Override
-//                                                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//                                                        User user = dataSnapshot.getValue(User.class);
-//                                                        mOpponentUsername = user.getUsername();
-//                                                    }
-//
-//                                                    @Override
-//                                                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//
-//                                                    }
-//
-//                                                    @Override
-//                                                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-//
-//                                                    }
-//
-//                                                    @Override
-//                                                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-//
-//                                                    }
-//
-//                                                    @Override
-//                                                    public void onCancelled(DatabaseError databaseError) {
-//
-//                                                    }
-//                                                });
-//
-//                                                new CountDownTimer(1000, 1000) {
-//
-//                                                    public void onTick(long millisUntilFinished) {
-//                                                        mTimerTextView.setText(String.valueOf(
-//                                                                millisUntilFinished / 1000));
-//                                                    }
-//
-//                                                    public void onFinish() {
-//                                                        // Start new activity
-//                                                        Intent intent = new Intent(
-//                                                                getApplicationContext(),
-//                                                                GameActivity.class);
-//                                                        intent.putExtra(
-//                                                                EXTRA_CURRENT_USER_ID, mCurrentUid);
-//                                                        intent.putExtra(
-//                                                                EXTRA_OPPONENT_USER_ID, mOpponentUid);
-//                                                        intent.putExtra(
-//                                                                EXTRA_OPPONENT_USERNAME, mOpponentUsername);
-//                                                        startActivity(intent);
-//                                                        // Clean up users
-//                                                        mDatabase.child(FirebaseConstants.FIREBASE_USERS_ONLINE)
-//                                                                .child(mCurrentUid).removeValue();
-//                                                        mOpponentFound = false;
-//                                                        mOpponentUid = "";
-//                                                        mOpponentUsername = "";
-//                                                    }
-//                                                }.start();
-//                                            }
-//
-//                                            @Override
-//                                            public void onCancelled(DatabaseError databaseError) {
-//
-//                                            }
-//                                        });
-//                            }
-//                        //}
-//                    }
-//
-//                    @Override
-//                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//                    }
-//
-//                    @Override
-//                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-//                    }
-//
-//                    @Override
-//                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//                    }
-//                });
+        mPresenter = new RandomOpponentPresenterImpl(this);
+        setUpActionBar();
     }
 
     @Override
-    public void onStart() {
+    protected void onStart() {
         super.onStart();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
+        mPresenter.onStart();
+        //mPresenter.addUserToOnlineUsers();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mDatabase.child(FirebaseConstants.FIREBASE_USERS_ONLINE).child(mCurrentUid).removeValue();
-        mOpponentFound = false;
+        mPresenter.onDestroy();
     }
 
-    public String getUid() {
-        return FirebaseAuth.getInstance().getCurrentUser().getUid();
-    }
-
-    public String getUserName() {
-        return FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-    }
-
-    public String getUserPhotoUrl() {
-        Uri userPhoto = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
-        if (userPhoto == null) {
-            return null;
+    private void setUpActionBar() {
+        setSupportActionBar(mToolbar);
+        final ActionBar ab = getSupportActionBar();
+        if (ab != null) {
+            ab.setDisplayHomeAsUpEnabled(true);
         }
-        return userPhoto.toString();
     }
-
 }

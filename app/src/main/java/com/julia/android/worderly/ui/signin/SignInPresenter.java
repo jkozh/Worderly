@@ -1,4 +1,4 @@
-package com.julia.android.worderly.ui.login;
+package com.julia.android.worderly.ui.signin;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
@@ -8,5 +8,6 @@ interface SignInPresenter {
     void onDestroy();
     void firebaseAuthWithGoogle(GoogleSignInAccount account);
     void firebaseAuthAnonymous();
-    void setUsernameFromDialog(String username);
+    //void setSharedPrefs(User user);
+    //void setUsernameFromDialog();
 }

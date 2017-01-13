@@ -18,7 +18,6 @@ public class MainPresenterImpl implements MainPresenter {
         // Initialize Firebase Auth
         mFirebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
-
         if (mFirebaseUser == null) {
             // Not signed in, launch the Sign In activity
             mMainView.navigateToSignInActivity();

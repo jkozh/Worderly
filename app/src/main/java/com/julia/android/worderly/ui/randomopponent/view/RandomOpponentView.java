@@ -1,5 +1,5 @@
-package com.julia.android.worderly.randomopponent.view;
+package com.julia.android.worderly.ui.randomopponent.view;
 
 
-public class RandomOpponentView {
+public interface RandomOpponentView {
 }

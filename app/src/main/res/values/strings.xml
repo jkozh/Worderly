@@ -32,6 +32,5 @@
     <string name="action_ok">OK</string>
 
     <!-- Errors -->
-    <string name="error_google_sign_in_failed">Google Sign In failed.</string>
-    <string name="error_anonymous_sign_in_failed">Anonymous Sign In failed.</string>
+    <string name="error_sign_in_failed">Sign In failed.</string>
 </resources>

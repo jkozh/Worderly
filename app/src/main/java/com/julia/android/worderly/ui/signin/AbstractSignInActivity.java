@@ -1,4 +1,4 @@
-package com.julia.android.worderly.ui.login;
+package com.julia.android.worderly.ui.signin;
 
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;

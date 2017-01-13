@@ -1,12 +1,12 @@
-package com.julia.android.worderly.ui.login;
+package com.julia.android.worderly.ui.signin;
 
 import com.julia.android.worderly.model.User;
 
 interface SignInView {
     void signInFail(String errorMessage);
+    void setSharedPrefs(User user);
     void navigateToMainActivity();
     void showProgressDialog();
     void hideProgressDialog();
-    void setSharedPreferences(User user);
-    void showEnterNicknameDialog(String username);
+    //void showEnterNicknameDialog(String username);
 }

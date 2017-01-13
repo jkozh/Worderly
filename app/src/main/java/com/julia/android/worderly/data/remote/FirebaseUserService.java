@@ -15,15 +15,13 @@ public class FirebaseUserService {
 
     public User createUser(FirebaseUser firebaseUser) {
         User user = new User();
+        user.setId(firebaseUser.getUid());
         user.setUsername(firebaseUser.getDisplayName());
         user.setEmail(firebaseUser.getEmail());
         user.setPhotoUrl(firebaseUser.getPhotoUrl());
-        String userUid = firebaseUser.getUid();
-        mDatabase.child(FirebaseConstants.FIREBASE_USERS_CHILD).child(userUid).setValue(user);
-        return new User(
-                user.getUsername(),
-                user.getEmail(),
-                user.getPhotoUrl());
+
+        mDatabase.child(FirebaseConstants.FIREBASE_USERS_CHILD).child(user.getId()).setValue(user);
+        return user;
     }
 
     public DatabaseReference getUser(String userUid) {
