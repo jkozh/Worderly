@@ -57,7 +57,7 @@ public class ChatActivity extends AppCompatActivity {
 //        if (extras != null) {
 //            mGamePath = extras.getString(GameActivity.EXTRA_GAME_PATH);
 //            mGamePathReversed = extras.getString(GameActivity.EXTRA_GAME_PATH_REVERSED);
-//            mOpponentUsername = extras.getString(RandomOpponentActivity.EXTRA_OPPONENT_USERNAME);
+//            mOpponentUsername = extras.getString(SearchOpponentActivity.EXTRA_OPPONENT_USERNAME);
 //        }
 //
 //        mDatabase = FirebaseDatabase.getInstance().getReference();

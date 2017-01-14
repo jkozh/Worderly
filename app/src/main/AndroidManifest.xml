@@ -18,7 +18,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.signin.SignInActivity" />
-        <activity android:name=".ui.randomopponent.view.RandomOpponentActivity" />
+        <activity android:name=".ui.randomopponent.view.SearchOpponentActivity" />
         <activity android:name=".ui.game.view.GameActivity" />
         <activity android:name=".ui.chat.view.ChatActivity" />
     </application>

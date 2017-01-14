@@ -1,7 +1,5 @@
 package com.julia.android.worderly.model;
 
-import android.net.Uri;
-
 import com.julia.android.worderly.utils.Constants;
 
 public class User {
@@ -58,9 +56,9 @@ public class User {
         return mPhotoUrl;
     }
 
-    public void setPhotoUrl(Uri photoUrl) {
+    public void setPhotoUrl(String photoUrl) {
         if (photoUrl != null) {
-            this.mPhotoUrl = photoUrl.toString();
+            this.mPhotoUrl = photoUrl;
         } else {
             this.mPhotoUrl = Constants.DEFAULT_USER_PHOTO_URL;
         }

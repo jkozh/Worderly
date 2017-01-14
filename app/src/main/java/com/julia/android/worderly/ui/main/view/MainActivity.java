@@ -22,7 +22,7 @@ import com.julia.android.worderly.R;
 import com.julia.android.worderly.model.User;
 import com.julia.android.worderly.ui.main.presenter.MainPresenter;
 import com.julia.android.worderly.ui.main.presenter.MainPresenterImpl;
-import com.julia.android.worderly.ui.randomopponent.view.RandomOpponentActivity;
+import com.julia.android.worderly.ui.randomopponent.view.SearchOpponentActivity;
 import com.julia.android.worderly.ui.signin.SignInActivity;
 import com.julia.android.worderly.utils.Constants;
 
@@ -72,7 +72,7 @@ public class MainActivity extends AbstractMainActivity {
         SharedPreferences mPrefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         Gson gson = new Gson();
         String json = mPrefs.getString(PREF_USER, Constants.PREF_USER_DEFAULT_VALUE);
-        if (!Objects.equals(json, "")) {
+        if (!Objects.equals(json, Constants.PREF_USER_DEFAULT_VALUE)) {
             mUser = gson.fromJson(json, User.class);
         }
     }
@@ -129,8 +129,8 @@ public class MainActivity extends AbstractMainActivity {
      */
     @OnClick(R.id.button_random_play)
     public void onClick() {
-        // Launch the RandomOpponentActivity
-        startActivity(new Intent(this, RandomOpponentActivity.class));
+        // Launch the SearchOpponentActivity
+        startActivity(new Intent(this, SearchOpponentActivity.class));
     }
 
     @Override

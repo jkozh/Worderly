@@ -41,9 +41,9 @@ public class GameActivity extends AppCompatActivity {
 //
 //        Bundle extras = getIntent().getExtras();
 //        if (extras != null) {
-//            mCurrentUserId = extras.getString(RandomOpponentActivity.EXTRA_CURRENT_USER_ID);
-//            mOpponentUserId = extras.getString(RandomOpponentActivity.EXTRA_OPPONENT_USER_ID);
-//            mOpponentUsername = extras.getString(RandomOpponentActivity.EXTRA_OPPONENT_USERNAME);
+//            mCurrentUserId = extras.getString(SearchOpponentActivity.EXTRA_CURRENT_USER_ID);
+//            mOpponentUserId = extras.getString(SearchOpponentActivity.EXTRA_OPPONENT_USER_ID);
+//            mOpponentUsername = extras.getString(SearchOpponentActivity.EXTRA_OPPONENT_USERNAME);
 //        }
 //
 //        mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -133,7 +133,7 @@ public class GameActivity extends AppCompatActivity {
 //                Intent intent = new Intent(GameActivity.this, ChatActivity.class);
 //                intent.putExtra(EXTRA_GAME_PATH, mGamePath);
 //                intent.putExtra(EXTRA_GAME_PATH_REVERSED, mGamePathReversed);
-//                intent.putExtra(RandomOpponentActivity.EXTRA_OPPONENT_USERNAME, mOpponentUsername);
+//                intent.putExtra(SearchOpponentActivity.EXTRA_OPPONENT_USERNAME, mOpponentUsername);
 //                startActivity(intent);
 //                return true;
 //            case R.id.action_resign:
