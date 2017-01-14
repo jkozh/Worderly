@@ -1,4 +1,4 @@
-package com.julia.android.worderly.ui.randomopponent.interactor;
+package com.julia.android.worderly.ui.search.interactor;
 
 import android.util.Log;
 
@@ -7,8 +7,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.julia.android.worderly.model.User;
-import com.julia.android.worderly.ui.randomopponent.presenter.SearchOpponentPresenter;
+import com.julia.android.worderly.ui.search.presenter.SearchOpponentPresenter;
 import com.julia.android.worderly.utils.FirebaseConstants;
 
 import java.util.Objects;
@@ -17,10 +18,12 @@ public class SearchOpponentInteractorImpl implements SearchOpponentInteractor {
 
     private final SearchOpponentPresenter mPresenter;
     private DatabaseReference mDatabase;
+    private boolean mOpponentFound;
 
     public SearchOpponentInteractorImpl(SearchOpponentPresenter presenter) {
         this.mPresenter = presenter;
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        mOpponentFound = false;
     }
 
     @Override
@@ -30,9 +33,9 @@ public class SearchOpponentInteractorImpl implements SearchOpponentInteractor {
     }
 
     @Override
-    public void removeUser(User user) {
+    public void removeUser(String uid) {
         mDatabase.child(FirebaseConstants.FIREBASE_USERS_ONLINE)
-                .child(user.getId()).removeValue();
+                .child(uid).removeValue();
     }
 
     @Override
@@ -42,32 +45,54 @@ public class SearchOpponentInteractorImpl implements SearchOpponentInteractor {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         String opponentUid = dataSnapshot.getKey();
-                        if (!Objects.equals(user.getId(), opponentUid)) {
+                        if (!mOpponentFound && !Objects.equals(user.getId(), opponentUid)) {
+                            mOpponentFound = true;
                             User opponentUser = dataSnapshot.getValue(User.class);
                             Log.d("Random Opponent found:", opponentUser.getUsername());
                             mPresenter.sendOpponentUser(opponentUser);
-                            mDatabase.child(FirebaseConstants.FIREBASE_USERS_ONLINE).removeEventListener(this);
                         }
                     }
 
                     @Override
                     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
                     }
 
                     @Override
                     public void onChildRemoved(DataSnapshot dataSnapshot) {
-
                     }
 
                     @Override
                     public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+    }
 
+    @Override
+    public void createCurrentGameRoom(String currentUserId, String opponentUserId) {
+        final String gameRoomCurrentChild = currentUserId + "_" + opponentUserId;
+        mDatabase.child(FirebaseConstants.FIREBASE_GAMES_CHILD)
+                .child(gameRoomCurrentChild).setValue(true);
+    }
+
+    @Override
+    public void listenForOpponentGameRoom(final String currentUserId, String opponentUserId) {
+        final String gameRoomOpponentChild = opponentUserId + "_" + currentUserId;
+        mDatabase.child(FirebaseConstants.FIREBASE_GAMES_CHILD).child(gameRoomOpponentChild)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getValue() != null) {
+                            mPresenter.startGame();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
                     }
                 });
     }

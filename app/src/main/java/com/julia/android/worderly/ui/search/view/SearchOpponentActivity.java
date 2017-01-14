@@ -1,5 +1,6 @@
-package com.julia.android.worderly.ui.randomopponent.view;
+package com.julia.android.worderly.ui.search.view;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,8 +13,9 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.julia.android.worderly.R;
 import com.julia.android.worderly.model.User;
-import com.julia.android.worderly.ui.randomopponent.presenter.SearchOpponentPresenter;
-import com.julia.android.worderly.ui.randomopponent.presenter.SearchOpponentPresenterImpl;
+import com.julia.android.worderly.ui.game.view.GameActivity;
+import com.julia.android.worderly.ui.search.presenter.SearchOpponentPresenter;
+import com.julia.android.worderly.ui.search.presenter.SearchOpponentPresenterImpl;
 import com.julia.android.worderly.utils.Constants;
 
 import java.util.Objects;
@@ -25,7 +27,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.julia.android.worderly.utils.Constants.PREF_NAME;
 import static com.julia.android.worderly.utils.Constants.PREF_USER;
 
-public class SearchOpponentActivity extends AppCompatActivity implements RandomOpponentView {
+public class SearchOpponentActivity extends AppCompatActivity implements SearchOpponentView {
 
     private static final String TAG = SearchOpponentActivity.class.getSimpleName();
 
@@ -39,7 +41,7 @@ public class SearchOpponentActivity extends AppCompatActivity implements RandomO
     TextView mUsernameOpponentTextView;
     @BindView(R.id.text_uid_opponent)
     TextView mUidOpponentTextView;
-    User mUser;
+
     private SearchOpponentPresenter mPresenter;
 
     @Override
@@ -47,8 +49,8 @@ public class SearchOpponentActivity extends AppCompatActivity implements RandomO
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_opponent);
         ButterKnife.bind(this);
-        getSharedPrefs();
         mPresenter = new SearchOpponentPresenterImpl(this);
+        getSharedPrefs();
         setUpActionBar();
     }
 
@@ -57,23 +59,9 @@ public class SearchOpponentActivity extends AppCompatActivity implements RandomO
         Gson gson = new Gson();
         String json = mPrefs.getString(PREF_USER, Constants.PREF_USER_DEFAULT_VALUE);
         if (!Objects.equals(json, Constants.PREF_USER_DEFAULT_VALUE)) {
-            mUser = gson.fromJson(json, User.class);
+            User user = gson.fromJson(json, User.class);
+            mPresenter.setUserFetchedFromJson(user);
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mPresenter.onStart();
-        mPresenter.addUserToOnlineUsers(mUser);
-        mPresenter.searchForOpponent(mUser);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mPresenter.removeUserFromOnlineUsers(mUser);
-        mPresenter.onDestroy();
     }
 
     private void setUpActionBar() {
@@ -85,8 +73,20 @@ public class SearchOpponentActivity extends AppCompatActivity implements RandomO
     }
 
     @Override
-    public void addOpponentView(String uid, String username, String photoUrl) {
-        mSearchingOpponentTextView.setText("Opponent found:");
+    protected void onStart() {
+        super.onStart();
+        mPresenter.onStart();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.onDestroy();
+    }
+
+    @Override
+    public void addOpponentFoundView(String uid, String username, String photoUrl) {
+        mSearchingOpponentTextView.setText(R.string.msg_opponent_found);
         if (photoUrl == null) {
             photoUrl = Constants.DEFAULT_USER_PHOTO_URL;
         }
@@ -96,5 +96,14 @@ public class SearchOpponentActivity extends AppCompatActivity implements RandomO
 
         mUsernameOpponentTextView.setText(username);
         mUidOpponentTextView.setText(uid);
+    }
+
+    /**
+     * Opponent found -> launch the Game activity
+     */
+    @Override
+    public void navigateToGameActivity() {
+        startActivity(new Intent(this, GameActivity.class));
+        finish();
     }
 }

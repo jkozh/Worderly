@@ -33,4 +33,6 @@
 
     <!-- Errors -->
     <string name="error_sign_in_failed">Sign In failed.</string>
+    <string name="msg_opponent_found">Opponent found:</string>
+    <string name="msg_searching_for_opponent">Searching for opponent...</string>
 </resources>

@@ -22,7 +22,7 @@ import com.julia.android.worderly.R;
 import com.julia.android.worderly.model.User;
 import com.julia.android.worderly.ui.main.presenter.MainPresenter;
 import com.julia.android.worderly.ui.main.presenter.MainPresenterImpl;
-import com.julia.android.worderly.ui.randomopponent.view.SearchOpponentActivity;
+import com.julia.android.worderly.ui.search.view.SearchOpponentActivity;
 import com.julia.android.worderly.ui.signin.SignInActivity;
 import com.julia.android.worderly.utils.Constants;
 

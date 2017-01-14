@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:padding="20dp"
-            android:text="Searching for opponent..."
+            android:text="@string/msg_searching_for_opponent"
             android:textSize="20sp"/>
 
         <de.hdodenhof.circleimageview.CircleImageView
