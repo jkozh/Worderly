@@ -83,21 +83,14 @@ public class SearchOpponentInteractorImpl implements SearchOpponentInteractor {
     @Override
     public void listenForOpponentGameRoom(final String currentUserId, String opponentUserId) {
         final String gameRoomOpponentChild = opponentUserId + "_" + currentUserId;
-        Log.d(TAG, "gameRoomOpponentChild:" + gameRoomOpponentChild);
+
         mDatabase.child(FirebaseConstants.FIREBASE_GAMES_CHILD).child(gameRoomOpponentChild)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
 
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Log.d(TAG, "Value of dataSnapshot: " + dataSnapshot.getValue());
-                        if (dataSnapshot.getValue() != null) {
-                            Log.d(TAG, "Value of dataSnapshot: " + dataSnapshot.getValue());
-                            removeUser(currentUserId);
-                            mPresenter.startGame();
-                        } else {
-                            Log.d(TAG, "Value of dataSnapshot: " + dataSnapshot.getValue());
-                        }
-                        Log.d(TAG, "Current UserID: " + currentUserId);
+                        removeUser(currentUserId);
+                        mPresenter.startGame();
                     }
 
                     @Override

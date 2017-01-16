@@ -1,6 +1,5 @@
 package com.julia.android.worderly.ui.game.interactor;
 
-
 import android.util.Log;
 
 import com.google.firebase.database.DatabaseReference;
