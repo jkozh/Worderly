@@ -16,6 +16,7 @@ import java.util.Objects;
 
 public class SearchOpponentInteractorImpl implements SearchOpponentInteractor {
 
+    private static final String TAG = SearchOpponentInteractorImpl.class.getSimpleName();
     private final SearchOpponentPresenter mPresenter;
     private DatabaseReference mDatabase;
     private boolean mOpponentFound;
@@ -48,7 +49,7 @@ public class SearchOpponentInteractorImpl implements SearchOpponentInteractor {
                         if (!mOpponentFound && !Objects.equals(user.getId(), opponentUid)) {
                             mOpponentFound = true;
                             User opponentUser = dataSnapshot.getValue(User.class);
-                            Log.d("Random Opponent found:", opponentUser.getUsername());
+                            Log.d(TAG, "Random Opponent found: " + opponentUser.getUsername());
                             mPresenter.sendOpponentUser(opponentUser);
                         }
                     }
@@ -76,19 +77,27 @@ public class SearchOpponentInteractorImpl implements SearchOpponentInteractor {
         final String gameRoomCurrentChild = currentUserId + "_" + opponentUserId;
         mDatabase.child(FirebaseConstants.FIREBASE_GAMES_CHILD)
                 .child(gameRoomCurrentChild).setValue(true);
+        listenForOpponentGameRoom(currentUserId, opponentUserId);
     }
 
     @Override
     public void listenForOpponentGameRoom(final String currentUserId, String opponentUserId) {
         final String gameRoomOpponentChild = opponentUserId + "_" + currentUserId;
+        Log.d(TAG, "gameRoomOpponentChild:" + gameRoomOpponentChild);
         mDatabase.child(FirebaseConstants.FIREBASE_GAMES_CHILD).child(gameRoomOpponentChild)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
 
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.d(TAG, "Value of dataSnapshot: " + dataSnapshot.getValue());
                         if (dataSnapshot.getValue() != null) {
+                            Log.d(TAG, "Value of dataSnapshot: " + dataSnapshot.getValue());
+                            removeUser(currentUserId);
                             mPresenter.startGame();
+                        } else {
+                            Log.d(TAG, "Value of dataSnapshot: " + dataSnapshot.getValue());
                         }
+                        Log.d(TAG, "Current UserID: " + currentUserId);
                     }
 
                     @Override

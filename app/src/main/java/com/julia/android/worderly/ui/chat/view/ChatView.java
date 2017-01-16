@@ -1,5 +1,4 @@
-package com.julia.android.worderly.chat.view;
+package com.julia.android.worderly.ui.chat.view;
 
-
-public class ChatView {
+public interface ChatView {
 }

@@ -1,5 +1,7 @@
-package com.julia.android.worderly.game.view;
+package com.julia.android.worderly.ui.game.view;
 
-
-public class GameView {
+public interface GameView {
+    void addCurrentUserView(String username);
+    void addOpponentUserView(String username);
+    void navigateToChatActivity(String opponentUid);
 }

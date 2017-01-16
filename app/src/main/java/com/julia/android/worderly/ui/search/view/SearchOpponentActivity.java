@@ -60,7 +60,7 @@ public class SearchOpponentActivity extends AppCompatActivity implements SearchO
         String json = mPrefs.getString(PREF_USER, Constants.PREF_USER_DEFAULT_VALUE);
         if (!Objects.equals(json, Constants.PREF_USER_DEFAULT_VALUE)) {
             User user = gson.fromJson(json, User.class);
-            mPresenter.setUserFetchedFromJson(user);
+            mPresenter.setUserFromJson(user);
         }
     }
 
@@ -102,8 +102,13 @@ public class SearchOpponentActivity extends AppCompatActivity implements SearchO
      * Opponent found -> launch the Game activity
      */
     @Override
-    public void navigateToGameActivity() {
-        startActivity(new Intent(this, GameActivity.class));
+    public void navigateToGameActivity(User opponentUser) {
+        Intent i = new Intent(this, GameActivity.class);
+        i.putExtra(Constants.EXTRA_OPPONENT_ID, opponentUser.getId());
+        i.putExtra(Constants.EXTRA_OPPONENT_USERNAME, opponentUser.getUsername());
+        i.putExtra(Constants.EXTRA_OPPONENT_EMAIL, opponentUser.getEmail());
+        i.putExtra(Constants.EXTRA_OPPONENT_PHOTO_URL, opponentUser.getPhotoUrl());
+        startActivity(i);
         finish();
     }
 }

@@ -1,5 +1,13 @@
-package com.julia.android.worderly.chat.presenter;
+package com.julia.android.worderly.ui.chat.presenter;
 
+import com.julia.android.worderly.model.User;
 
-public class ChatPresenter {
+public interface ChatPresenter {
+    void setUserFromJson(User user);
+
+    String getChatRoomChild();
+
+    void setChatRoomChild(String opponentId);
+
+    void onSendButtonClick(String message);
 }

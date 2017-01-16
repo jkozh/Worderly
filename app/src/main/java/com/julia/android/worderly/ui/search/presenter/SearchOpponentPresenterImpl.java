@@ -39,19 +39,18 @@ public class SearchOpponentPresenterImpl implements SearchOpponentPresenter {
                 mOpponentUser.getId(),
                 mOpponentUser.getUsername(),
                 mOpponentUser.getPhotoUrl());
+        //mInteractor.listenForOpponentGameRoom(mCurrentUser.getId(), mOpponentUser.getId());
         mInteractor.createCurrentGameRoom(mCurrentUser.getId(), mOpponentUser.getId());
-        mInteractor.listenForOpponentGameRoom(mCurrentUser.getId(), mOpponentUser.getId());
     }
 
     @Override
-    public void setUserFetchedFromJson(User user) {
+    public void setUserFromJson(User user) {
         this.mCurrentUser = user;
     }
 
     @Override
     public void startGame() {
-        removeUserFromOnlineUsers(mCurrentUser.getId());
-        mSearchOpponentView.navigateToGameActivity();
+        mSearchOpponentView.navigateToGameActivity(mOpponentUser);
     }
 
     @Override

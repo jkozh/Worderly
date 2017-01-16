@@ -1,6 +1,8 @@
 package com.julia.android.worderly.ui.search.view;
 
+import com.julia.android.worderly.model.User;
+
 public interface SearchOpponentView {
     void addOpponentFoundView(String uid, String username, String photoUrl);
-    void navigateToGameActivity();
+    void navigateToGameActivity(User opponentUser);
 }

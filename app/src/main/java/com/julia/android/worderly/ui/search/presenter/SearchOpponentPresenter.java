@@ -10,6 +10,6 @@ public interface SearchOpponentPresenter {
     void removeUserFromOnlineUsers(String uid);
     void searchForOpponent(User user);
     void sendOpponentUser(User opponentUser);
-    void setUserFetchedFromJson(User user);
+    void setUserFromJson(User user);
     void startGame();
 }

@@ -1,5 +1,6 @@
-package com.julia.android.worderly.game.interactor;
+package com.julia.android.worderly.ui.game.interactor;
 
 
-public class GameInteractor {
+public interface GameInteractor {
+    void removeUserFromOnlineUsers(String id);
 }
