@@ -127,9 +127,10 @@ public class GameActivity extends AppCompatActivity implements GameView {
      * Launch from GameActivity -> ChatActivity
      */
     @Override
-    public void navigateToChatActivity(String opponentUid) {
+    public void navigateToChatActivity(String opponentUid, String opponentUsername) {
         Intent i = new Intent(this, ChatActivity.class);
         i.putExtra(Constants.EXTRA_OPPONENT_ID, opponentUid);
+        i.putExtra(Constants.EXTRA_OPPONENT_USERNAME, opponentUsername);
         startActivity(i);
     }
 }

@@ -26,6 +26,9 @@
     <!-- Messages in Chat Activity -->
     <string name="msg_send">SEND</string>
 
+    <!-- Title in Chat Activity -->
+    <string name="title_chat_with">Chat with %1$s</string>
+
     <!-- Dialog -->
     <string name="title_enter_nickname">Enter your nickname</string>
     <string name="msg_by_default">By default: \"%1$s\"</string>

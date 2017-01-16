@@ -18,10 +18,10 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.julia.android.worderly.R;
-import com.julia.android.worderly.adapter.ChatFirebaseAdapter;
-import com.julia.android.worderly.adapter.MessageViewHolder;
 import com.julia.android.worderly.model.Message;
 import com.julia.android.worderly.model.User;
+import com.julia.android.worderly.ui.chat.adapter.ChatFirebaseAdapter;
+import com.julia.android.worderly.ui.chat.adapter.MessageViewHolder;
 import com.julia.android.worderly.ui.chat.presenter.ChatPresenter;
 import com.julia.android.worderly.ui.chat.presenter.ChatPresenterImpl;
 import com.julia.android.worderly.utils.Constants;
@@ -80,11 +80,18 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
                 new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mFirebaseAdapter.cleanup();
+    }
+
     private void getBundleExtras() {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             String opponentId = extras.getString(Constants.EXTRA_OPPONENT_ID);
-            mPresenter.setChatRoomChild(opponentId);
+            String opponentUsername = extras.getString(Constants.EXTRA_OPPONENT_USERNAME);
+            mPresenter.setOpponentInfo(opponentId, opponentUsername);
         }
     }
 
@@ -103,8 +110,13 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         final ActionBar ab = getSupportActionBar();
         if (ab != null) {
             ab.setDisplayHomeAsUpEnabled(true);
-            ab.setDisplayShowTitleEnabled(false);
+            //ab.setDisplayShowTitleEnabled(false);
         }
+    }
+
+    @Override
+    public void setToolbarTitle(String title) {
+        mToolbar.setTitle(getString(R.string.title_chat_with, title));
     }
 
     private void setUpFirebaseAdapter() {
@@ -137,9 +149,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         mMessageRecyclerView.setAdapter(mFirebaseAdapter);
 
         // Hide ProgressBar when empty chat log
-        if (mFirebaseAdapter.getItemCount() == 0) {
-            mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-        }
+        hideProgressBar();
     }
 
     @OnTextChanged(value = R.id.messageEditText)
@@ -155,5 +165,13 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     public void onClick() {
         mPresenter.onSendButtonClick(mMessageEditText.getText().toString());
         mMessageEditText.setText("");
+    }
+
+
+    @Override
+    public void hideProgressBar() {
+        if (mFirebaseAdapter.getItemCount() == 0) {
+            mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+        }
     }
 }

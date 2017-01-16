@@ -1,4 +1,4 @@
-package com.julia.android.worderly.adapter;
+package com.julia.android.worderly.ui.chat.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

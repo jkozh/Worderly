@@ -4,10 +4,10 @@ import com.julia.android.worderly.model.User;
 
 public interface ChatPresenter {
     void setUserFromJson(User user);
-
+    String getCurrentUserUsername();
     String getChatRoomChild();
-
-    void setChatRoomChild(String opponentId);
-
+    void setChatRoomChild();
+    void setChatRoomInvertChild();
+    void setOpponentInfo(String opponentId, String opponentUsername);
     void onSendButtonClick(String message);
 }

@@ -13,10 +13,17 @@ public class ChatPresenterImpl implements ChatPresenter {
     private String mChatRoomInvertChild;
     private User mCurrentUser;
     private ChatInteractor mInteractor;
+    private String mOpponentId;
+    private String mOpponentUsername;
 
     public ChatPresenterImpl(ChatView chatView) {
         this.mChatView = chatView;
         this.mInteractor = new ChatInteractorImpl(this);
+    }
+
+    @Override
+    public String getCurrentUserUsername() {
+        return mCurrentUser.getUsername();
     }
 
     @Override
@@ -30,9 +37,22 @@ public class ChatPresenterImpl implements ChatPresenter {
     }
 
     @Override
-    public void setChatRoomChild(String opponentId) {
-        this.mChatRoomChild = mCurrentUser.getId() + "_" + opponentId;
-        this.mChatRoomInvertChild = opponentId + "_" +  mCurrentUser.getId();
+    public void setChatRoomChild() {
+        this.mChatRoomChild = mCurrentUser.getId() + "_" + mOpponentId;
+    }
+
+    @Override
+    public void setChatRoomInvertChild() {
+        this.mChatRoomInvertChild = mOpponentId + "_" + mCurrentUser.getId();
+    }
+
+    @Override
+    public void setOpponentInfo(String opponentId, String opponentUsername) {
+        this.mOpponentId = opponentId;
+        this.mOpponentUsername = opponentUsername;
+        setChatRoomChild();
+        setChatRoomInvertChild();
+        mChatView.setToolbarTitle(opponentUsername);
     }
 
     @Override

@@ -31,7 +31,7 @@ public class GamePresenterImpl implements GamePresenter {
     @Override
     public void setUserFromJson(User user) {
         this.mCurrentUser = user;
-        mInteractor.removeUserFromOnlineUsers(mCurrentUser.getId());
+        //mInteractor.removeUserFromOnlineUsers(mCurrentUser.getId());
     }
 
     @Override
@@ -41,7 +41,7 @@ public class GamePresenterImpl implements GamePresenter {
 
     @Override
     public void onChatButtonClick() {
-        mGameView.navigateToChatActivity(mOpponentUser.getId());
+        mGameView.navigateToChatActivity(mOpponentUser.getId(), mOpponentUser.getUsername());
     }
 
     public GameView getGameView() {
