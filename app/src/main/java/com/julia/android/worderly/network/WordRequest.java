@@ -15,6 +15,7 @@ import com.google.gson.GsonBuilder;
 import com.julia.android.worderly.BuildConfig;
 import com.julia.android.worderly.model.Result;
 import com.julia.android.worderly.model.Word;
+import com.julia.android.worderly.ui.game.presenter.GamePresenter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,7 +26,7 @@ import java.util.Map;
 
 public class WordRequest {
 
-    public WordRequest(RequestQueue requestQueue) {
+    public WordRequest(RequestQueue requestQueue, final GamePresenter presenter) {
 
         final String LOG_TAG = WordRequest.class.getSimpleName();
 
@@ -71,6 +72,8 @@ public class WordRequest {
                 for (Result result : results) {
                     Log.i(LOG_TAG, "definition: " + result.getDefinition());
                 }
+
+                presenter.setWord(word.getWord());
 
             }
 

@@ -3,18 +3,26 @@ package com.julia.android.worderly.ui.game.view;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.julia.android.worderly.R;
 import com.julia.android.worderly.model.User;
+import com.julia.android.worderly.network.WordRequest;
 import com.julia.android.worderly.ui.chat.view.ChatActivity;
 import com.julia.android.worderly.ui.game.presenter.GamePresenter;
 import com.julia.android.worderly.ui.game.presenter.GamePresenterImpl;
@@ -24,6 +32,8 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnTextChanged;
 
 import static com.julia.android.worderly.utils.Constants.PREF_NAME;
 import static com.julia.android.worderly.utils.Constants.PREF_USER;
@@ -35,8 +45,18 @@ public class GameActivity extends AppCompatActivity implements GameView {
     Toolbar mToolbar;
     @BindView(R.id.text_current_user)
     TextView mCurrentUserTextView;
+    @BindView(R.id.text_score_current_user)
+    TextView mScoreCurrentUserTextView;
     @BindView(R.id.text_username_opponent)
     TextView mOpponentUserTextView;
+    @BindView(R.id.text_word)
+    TextView mWordTextView;
+    @BindView(R.id.text_countdown)
+    TextView mCountDownTextView;
+    @BindView(R.id.edit_word)
+    EditText mWordEditText;
+    @BindView(R.id.button_send_word)
+    Button mSendWordButton;
 
     private GamePresenter mPresenter;
 
@@ -49,6 +69,10 @@ public class GameActivity extends AppCompatActivity implements GameView {
         getBundleExtras();
         getSharedPrefs();
         setUpActionBar();
+
+        // Fetching word from API
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        new WordRequest(requestQueue, mPresenter);
     }
 
     private void getBundleExtras() {
@@ -123,6 +147,11 @@ public class GameActivity extends AppCompatActivity implements GameView {
         mOpponentUserTextView.setText(username);
     }
 
+    @Override
+    public void setWordView(String word) {
+        mWordTextView.setText(word);
+    }
+
     /**
      * Launch from GameActivity -> ChatActivity
      */
@@ -132,5 +161,71 @@ public class GameActivity extends AppCompatActivity implements GameView {
         i.putExtra(Constants.EXTRA_OPPONENT_ID, opponentUid);
         i.putExtra(Constants.EXTRA_OPPONENT_USERNAME, opponentUsername);
         startActivity(i);
+    }
+
+    @Override
+    public void startCountDown() {
+        new CountDownTimer(5000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                mCountDownTextView.setText(String.valueOf(millisUntilFinished / 1000));
+            }
+
+            public void onFinish() {
+                // Show modal dialog with info
+                showRoundFinishDialog(2, "wlwlwl");
+            }
+        }.start();
+    }
+
+    @Override
+    public void showRoundFinishDialog(int roundNumber, String word) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Round " + roundNumber + "/5 finished");
+        builder.setMessage("Word: " + word + "\n"
+                + "Your score: 10" + "\n"
+                + "Opponent score: 11");
+
+        final TextView countdownView = new TextView(this);
+
+        builder.setView(countdownView);
+
+        final AlertDialog dialog = builder.create();
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+
+        new CountDownTimer(5000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                countdownView.setText("Next Round starts in #..." + String.valueOf(millisUntilFinished / 1000));
+            }
+
+            public void onFinish() {
+                dialog.cancel();
+                // next round
+            }
+        }.start();
+    }
+
+    @Override
+    public void setScoreView(int score) {
+        mScoreCurrentUserTextView.setText("Score: " + score);
+    }
+
+
+    @OnTextChanged(value = R.id.edit_word)
+    void onMessageInput(Editable editable) {
+        if (editable.toString().trim().length() > 0) {
+            mSendWordButton.setEnabled(true);
+        } else {
+            mSendWordButton.setEnabled(false);
+        }
+    }
+
+    @OnClick(R.id.button_send_word)
+    public void onClick() {
+        mPresenter.onSendWordButtonClick(mWordEditText.getText().toString());
+        //mWordEditText.setText("");
     }
 }

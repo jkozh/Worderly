@@ -29,19 +29,19 @@ public class SearchOpponentInteractorImpl implements SearchOpponentInteractor {
 
     @Override
     public void addUser(User user) {
-        mDatabase.child(FirebaseConstants.FIREBASE_USERS_ONLINE)
+        mDatabase.child(FirebaseConstants.FIREBASE_USERS_ONLINE_CHILD)
                 .child(user.getId()).setValue(user);
     }
 
     @Override
     public void removeUser(String uid) {
-        mDatabase.child(FirebaseConstants.FIREBASE_USERS_ONLINE)
+        mDatabase.child(FirebaseConstants.FIREBASE_USERS_ONLINE_CHILD)
                 .child(uid).removeValue();
     }
 
     @Override
     public void searchForOpponent(final User user) {
-        mDatabase.child(FirebaseConstants.FIREBASE_USERS_ONLINE)
+        mDatabase.child(FirebaseConstants.FIREBASE_USERS_ONLINE_CHILD)
                 .addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
