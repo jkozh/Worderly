@@ -19,7 +19,7 @@
 
     <!-- Messages in Main Activity -->
     <string name="msg_play_with">Play with…</string>
-    <string name="msg_random_opponent">Random opponent</string>
+    <string name="msg_random_opponent">Find random opponent</string>
     <string name="msg_worderly_friends">Worderly Friends</string>
     <string name="msg_find_player">Find player</string>
 

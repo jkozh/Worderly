@@ -46,18 +46,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/msg_random_opponent" />
 
-            <Button
-                android:id="@+id/button_play_with_friends"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/msg_worderly_friends" />
-
-            <Button
-                android:id="@+id/button_find_player"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/msg_find_player" />
-
         </LinearLayout>
 
     </android.support.design.widget.CoordinatorLayout>

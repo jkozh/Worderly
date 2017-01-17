@@ -23,17 +23,7 @@ public class GamePresenterImpl implements GamePresenter {
         mInteractor = new GameInteractorImpl(this);
     }
 
-    public static String scramble(String word) {
-        char w[] = word.toCharArray();
-        // Scramble the letters using the standard Fisher-Yates shuffle
-        for(int i = 0; i < w.length - 1; i++) {
-            int j = new Random().nextInt(w.length - 1);
-            char temp = w[i];
-            w[i] = w[j];
-            w[j] = temp;
-        }
-        return new String(w);
-    }
+
 
     @Override
     public void onStart() {
@@ -64,8 +54,20 @@ public class GamePresenterImpl implements GamePresenter {
 
     @Override
     public void setWordView(String word) {
+        this.mWord = word;
+        mGameView.setWordView(scramble(word));
+    }
 
-        mGameView.setWordView(word);
+    private String scramble(String word) {
+        char w[] = word.toCharArray();
+        // Scramble the letters using the standard Fisher-Yates shuffle
+        for(int i = 0; i < w.length - 1; i++) {
+            int j = new Random().nextInt(w.length - 1);
+            char temp = w[i];
+            w[i] = w[j];
+            w[j] = temp;
+        }
+        return new String(w);
     }
 
     @Override
@@ -78,8 +80,7 @@ public class GamePresenterImpl implements GamePresenter {
 
     @Override
     public void setWord(String word) {
-        this.mWord = word;
-        mInteractor.addWord(mWord, mCurrentUser.getId(), mOpponentUser.getId());
+        mInteractor.addWord(word, mCurrentUser.getId(), mOpponentUser.getId());
         mInteractor.getWord(mCurrentUser.getId(), mOpponentUser.getId());
     }
 

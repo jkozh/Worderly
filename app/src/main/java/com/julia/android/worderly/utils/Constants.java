@@ -22,4 +22,27 @@ public class Constants {
     public static final String EXTRA_OPPONENT_PHOTO_URL = "EXTRA_OPPONENT_PHOTO_URL";
     public static final String EXTRA_OPPONENT_USERNAME = "EXTRA_OPPONENT_USERNAME";
     public static final String EXTRA_OPPONENT_EMAIL = "EXTRA_OPPONENT_EMAIL";
+
+    // Words Api Constants
+    public static final String MASHAPE_KEY_PARAM = "X-Mashape-Key";
+    public static final String ACCEPT_PARAM = "Accept";
+    public static final String TEXT_PLAIN = "text/plain";
+    public static final String MESSAGE = "message";
+
+    public static final String RANDOM = "true";
+    public static final int NUMBER_OF_LETTERS = 7;
+    public static final String PART_OF_SPEECH = "noun";
+    public static final String HAS_DEFINITION = "hasDefinition";
+    //String lettersPattern = "^[^\\d\\s]+$\"";
+
+    // Construct the URL for the WordsApi query
+    // Possible parameters are available at WordsApi page, at
+    // https://www.wordsapi.com/docs#search
+    public static final String WORDS_API_BASE_URL = "https://wordsapiv1.p.mashape.com/words";
+    public static final String RANDOM_PARAM = "random";
+    public static final String LETTERS_PARAM = "letters";
+    public static final String PART_OF_SPEECH_PARAM = "partOfSpeech";
+    public static final String HAS_DETAILS_PARAM = "hasDetails";
+    //final String LETTERS_PATTERN_PARAM = "lettersPattern";
+
 }

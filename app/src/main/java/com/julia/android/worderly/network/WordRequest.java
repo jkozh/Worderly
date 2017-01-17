@@ -24,57 +24,50 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.julia.android.worderly.utils.Constants.ACCEPT_PARAM;
+import static com.julia.android.worderly.utils.Constants.HAS_DEFINITION;
+import static com.julia.android.worderly.utils.Constants.HAS_DETAILS_PARAM;
+import static com.julia.android.worderly.utils.Constants.LETTERS_PARAM;
+import static com.julia.android.worderly.utils.Constants.MASHAPE_KEY_PARAM;
+import static com.julia.android.worderly.utils.Constants.MESSAGE;
+import static com.julia.android.worderly.utils.Constants.NUMBER_OF_LETTERS;
+import static com.julia.android.worderly.utils.Constants.PART_OF_SPEECH;
+import static com.julia.android.worderly.utils.Constants.PART_OF_SPEECH_PARAM;
+import static com.julia.android.worderly.utils.Constants.RANDOM;
+import static com.julia.android.worderly.utils.Constants.RANDOM_PARAM;
+import static com.julia.android.worderly.utils.Constants.TEXT_PLAIN;
+import static com.julia.android.worderly.utils.Constants.WORDS_API_BASE_URL;
+
 public class WordRequest {
 
-    public WordRequest(RequestQueue requestQueue, final GamePresenter presenter) {
+    private final String TAG = WordRequest.class.getSimpleName();
 
-        final String LOG_TAG = WordRequest.class.getSimpleName();
+    public WordRequest(RequestQueue requestQueue, final GamePresenter presenter) {
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         final Gson gson = gsonBuilder.create();
 
-        String random = "true";
-        int letters = 7;
-        String partOfSpeech = "noun";
-        String hasDefinition = "hasDefinition";
-        //String lettersPattern = "^[^\\d\\s]+$\"";
-
-        // Construct the URL for the WordsApi query
-        // Possible parameters are available at WordsApi page, at
-        // https://www.wordsapi.com/docs#search
-        final String WORDS_API_BASE_URL = "https://wordsapiv1.p.mashape.com/words";
-        final String RANDOM_PARAM = "random";
-        final String LETTERS_PARAM = "letters";
-        final String PART_OF_SPEECH_PARAM = "partOfSpeech";
-        final String HAS_DETAILS_PARAM = "hasDetails";
-        //final String LETTERS_PATTERN_PARAM = "lettersPattern";
-
         String uri = Uri.parse(WORDS_API_BASE_URL).buildUpon()
-                .appendQueryParameter(RANDOM_PARAM, random)
-                .appendQueryParameter(LETTERS_PARAM, Integer.toString(letters))
-                .appendQueryParameter(PART_OF_SPEECH_PARAM, partOfSpeech)
-                .appendQueryParameter(HAS_DETAILS_PARAM, hasDefinition)
+                .appendQueryParameter(RANDOM_PARAM, RANDOM)
+                .appendQueryParameter(LETTERS_PARAM, Integer.toString(NUMBER_OF_LETTERS))
+                .appendQueryParameter(PART_OF_SPEECH_PARAM, PART_OF_SPEECH)
+                .appendQueryParameter(HAS_DETAILS_PARAM, HAS_DEFINITION)
                 //.appendQueryParameter(LETTERS_PATTERN_PARAM, lettersPattern)
                 .build().toString();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, uri, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, uri,
+                new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
-                Log.d("VolleyResponse", "response: " + response);
-
+                Log.d(TAG, "response: " + response);
                 Word word = gson.fromJson(response, Word.class);
-
                 List<Result> results = word.getResults();
-
-                Log.i(LOG_TAG, "word: " + word.getWord());
-
+                Log.i(TAG, "word: " + word.getWord());
                 for (Result result : results) {
-                    Log.i(LOG_TAG, "definition: " + result.getDefinition());
+                    Log.i(TAG, "definition: " + result.getDefinition());
                 }
-
                 presenter.setWord(word.getWord());
-
             }
 
         }, new Response.ErrorListener() {
@@ -88,10 +81,9 @@ public class WordRequest {
 
                     try{
                         JSONObject obj = new JSONObject(json);
-                        json = obj.getString("message");
-                        Log.e("VolleyError",
-                                "Status code: " + Integer.toString(networkResponse.statusCode)
-                                        + "; " + "Message: " + json);
+                        json = obj.getString(MESSAGE);
+                        Log.e(TAG, "Status code: " + Integer.toString(networkResponse.statusCode));
+                        Log.e(TAG, "Message: " + json);
 
                     } catch(JSONException e){
                         e.printStackTrace();
@@ -99,44 +91,37 @@ public class WordRequest {
 
                     switch (networkResponse.statusCode) {
                         case 400:
-                            Log.e("VolleyError", "Message: "
-                                    + "Bad Request - Often missing a required parameter, " +
-                                    "or a parameter was not the right type");
+                            Log.e(TAG, "Bad Request - Often missing a required parameter, "
+                                    + "or a parameter was not the right type");
                             break;
                         case 401:
                         case 403:
-                            Log.e("VolleyError", "Message: "
-                                    + "Unauthorized - No access token, or it isn't valid");
+                            Log.e(TAG, "Unauthorized - No access token, or it isn't valid");
                             break;
                         case 404:
-                            Log.e("VolleyError", "Message: "
-                                    + "Not Found - The requested item doesn't exist");
+                            Log.e(TAG, "Not Found - The requested item doesn't exist");
                             break;
                         case 429:
-                            Log.e("VolleyError", "Message: "
-                                    + "Too Many Requests - Rate limit exceeded");
+                            Log.e(TAG, "Too Many Requests - Rate limit exceeded");
                             break;
                         case 500:
-                            Log.e("VolleyError", "Message: "
-                                    + "Server Error - Something went wrong with Words API");
+                            Log.e(TAG, "Server Error - Something went wrong with Words API");
                             break;
+                        default:
+                            Log.e(TAG, "Unknown error, status code: " + networkResponse.statusCode);
                     }
                 }
             }
-
         }) {
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String>  params = new HashMap<>();
-                params.put("X-Mashape-Key", BuildConfig.WORDS_API_KEY);
-                params.put("Accept", "text/plain");
+                params.put(MASHAPE_KEY_PARAM, BuildConfig.WORDS_API_KEY);
+                params.put(ACCEPT_PARAM, TEXT_PLAIN);
                 return params;
             }
-
         };
-
         requestQueue.add(stringRequest);
     }
-
 }

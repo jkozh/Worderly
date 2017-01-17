@@ -216,7 +216,8 @@ public class GameActivity extends AppCompatActivity implements GameView {
 
     @OnTextChanged(value = R.id.edit_word)
     void onMessageInput(Editable editable) {
-        if (editable.toString().trim().length() > 0) {
+        int wordLength = editable.toString().trim().length();
+        if (wordLength > 1 && wordLength <= Constants.NUMBER_OF_LETTERS) {
             mSendWordButton.setEnabled(true);
         } else {
             mSendWordButton.setEnabled(false);
