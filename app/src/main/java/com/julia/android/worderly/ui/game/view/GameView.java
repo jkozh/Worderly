@@ -8,4 +8,5 @@ public interface GameView {
     void startCountDown();
     void showRoundFinishDialog(int roundNumber, String word);
     void setScoreView(int score);
+    void clearWordInput();
 }

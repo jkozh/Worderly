@@ -12,6 +12,7 @@ import android.text.Editable;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -187,8 +188,8 @@ public class GameActivity extends AppCompatActivity implements GameView {
                 + "Opponent score: 11");
 
         final TextView countdownView = new TextView(this);
-
         builder.setView(countdownView);
+        countdownView.setGravity(View.TEXT_ALIGNMENT_CENTER);
 
         final AlertDialog dialog = builder.create();
         dialog.setCancelable(false);
@@ -198,7 +199,8 @@ public class GameActivity extends AppCompatActivity implements GameView {
         new CountDownTimer(5000, 1000) {
 
             public void onTick(long millisUntilFinished) {
-                countdownView.setText("Next Round starts in #..." + String.valueOf(millisUntilFinished / 1000));
+                long seconds = millisUntilFinished / 1000;
+                countdownView.setText(getString(R.string.msg_next_round_starts, seconds));
             }
 
             public void onFinish() {
@@ -210,12 +212,11 @@ public class GameActivity extends AppCompatActivity implements GameView {
 
     @Override
     public void setScoreView(int score) {
-        mScoreCurrentUserTextView.setText("Score: " + score);
+        mScoreCurrentUserTextView.setText(getString(R.string.msg_score, score));
     }
 
-
     @OnTextChanged(value = R.id.edit_word)
-    void onMessageInput(Editable editable) {
+    void onWordInput(Editable editable) {
         int wordLength = editable.toString().trim().length();
         if (wordLength > 1 && wordLength <= Constants.NUMBER_OF_LETTERS) {
             mSendWordButton.setEnabled(true);
@@ -227,6 +228,10 @@ public class GameActivity extends AppCompatActivity implements GameView {
     @OnClick(R.id.button_send_word)
     public void onClick() {
         mPresenter.onSendWordButtonClick(mWordEditText.getText().toString());
-        //mWordEditText.setText("");
+    }
+
+    @Override
+    public void clearWordInput() {
+        mWordEditText.setText("");
     }
 }

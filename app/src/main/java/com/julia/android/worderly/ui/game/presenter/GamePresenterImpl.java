@@ -21,15 +21,15 @@ public class GamePresenterImpl implements GamePresenter {
     public GamePresenterImpl(GameView gameView) {
         this.mGameView = gameView;
         mInteractor = new GameInteractorImpl(this);
+        mGameView.startCountDown();
+        mGameView.setScoreView(0);
     }
-
-
 
     @Override
     public void onStart() {
         mGameView.addCurrentUserView(mCurrentUser.getUsername());
         mGameView.addOpponentUserView(mOpponentUser.getUsername());
-        mGameView.startCountDown();
+
     }
 
     @Override
@@ -75,6 +75,7 @@ public class GamePresenterImpl implements GamePresenter {
         if (Objects.equals(mWord, word)) {
             mScore = word.length();
             mGameView.setScoreView(mScore);
+            mGameView.clearWordInput();
         }
     }
 
