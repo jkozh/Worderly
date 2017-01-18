@@ -58,6 +58,7 @@ public class GameActivity extends AppCompatActivity implements GameView {
     EditText mWordEditText;
     @BindView(R.id.button_send_word)
     Button mSendWordButton;
+    private MenuItem mChatMenuIcon;
 
     private GamePresenter mPresenter;
 
@@ -109,6 +110,7 @@ public class GameActivity extends AppCompatActivity implements GameView {
     protected void onStart() {
         super.onStart();
         mPresenter.onStart();
+        invalidateOptionsMenu();
     }
 
     @Override
@@ -121,6 +123,8 @@ public class GameActivity extends AppCompatActivity implements GameView {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.game_menu, menu);
+        mChatMenuIcon = menu.findItem(R.id.action_chat);
+        mChatMenuIcon.setIcon(R.drawable.ic_chat_bubble_white_24dp);
         return true;
     }
 
@@ -233,5 +237,18 @@ public class GameActivity extends AppCompatActivity implements GameView {
     @Override
     public void clearWordInput() {
         mWordEditText.setText("");
+    }
+
+    @Override
+    public void setTitleText(String username) {
+        mToolbar.setTitle("Playing with " + username);
+    }
+
+    @Override
+    public void changeChatIcon() {
+        if (mChatMenuIcon != null) {
+            // TODO: Create icons for all densities
+            mChatMenuIcon.setIcon(R.drawable.ic_chat_bubble_red_24dp);
+        }
     }
 }

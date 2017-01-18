@@ -10,21 +10,21 @@ public class ChatInteractorImpl implements ChatInteractor {
 
     private ChatPresenter mPresenter;
     private DatabaseReference mDatabase;
+    private DatabaseReference mGamesChildRef;
 
     public ChatInteractorImpl(ChatPresenter presenter) {
         this.mPresenter = presenter;
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        mGamesChildRef = mDatabase.child(FirebaseConstants.FIREBASE_GAMES_CHILD);
     }
 
     @Override
     public void sendMessage(Message msg, String mChatRoomChild, String mChatRoomInvertChild) {
-        mDatabase.child(FirebaseConstants.FIREBASE_GAMES_CHILD)
-                .child(mChatRoomChild)
+        mGamesChildRef.child(mChatRoomChild)
                 .child(FirebaseConstants.FIREBASE_MESSAGES_CHILD)
                 .push().setValue(msg);
 
-        mDatabase.child(FirebaseConstants.FIREBASE_GAMES_CHILD)
-                .child(mChatRoomInvertChild)
+        mGamesChildRef.child(mChatRoomInvertChild)
                 .child(FirebaseConstants.FIREBASE_MESSAGES_CHILD)
                 .push().setValue(msg);
     }

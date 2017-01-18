@@ -1,5 +1,6 @@
 package com.julia.android.worderly.ui.game.interactor;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,8 +33,6 @@ public class GameInteractorImpl implements GameInteractor {
 
     /**
      * Getting the same word for both players to be displayed.
-     * @param currentUserId
-     * @param opponentUserId
      */
     @Override
     public void getWord(String currentUserId, String opponentUserId) {
@@ -47,6 +46,34 @@ public class GameInteractorImpl implements GameInteractor {
                                 mPresenter.setWordView(childDataSnapshot.getValue().toString());
                             }
                         }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+    }
+
+    @Override
+    public void chatIconChange(String currentUserId, String opponentUserId) {
+        mGamesChildRef.child(opponentUserId + "_" + currentUserId)
+                .child(FirebaseConstants.FIREBASE_MESSAGES_CHILD)
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        mPresenter.changeChatIcon();
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
                     }
 
                     @Override

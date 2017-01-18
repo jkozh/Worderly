@@ -9,4 +9,6 @@ public interface GameView {
     void showRoundFinishDialog(int roundNumber, String word);
     void setScoreView(int score);
     void clearWordInput();
+    void setTitleText(String username);
+    void changeChatIcon();
 }

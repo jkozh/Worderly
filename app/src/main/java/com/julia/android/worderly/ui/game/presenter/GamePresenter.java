@@ -11,4 +11,5 @@ public interface GamePresenter {
     void setWord(String word);
     void setWordView(String word);
     void onSendWordButtonClick(String word);
+    void changeChatIcon();
 }
