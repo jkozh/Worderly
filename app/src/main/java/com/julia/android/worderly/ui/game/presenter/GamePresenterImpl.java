@@ -7,8 +7,6 @@ import com.julia.android.worderly.ui.game.view.GameView;
 
 import java.util.Objects;
 
-import static com.julia.android.worderly.utils.WordUtility.scramble;
-
 public class GamePresenterImpl implements GamePresenter {
 
     private static final String TAG = GamePresenterImpl.class.getSimpleName();
@@ -22,8 +20,8 @@ public class GamePresenterImpl implements GamePresenter {
     public GamePresenterImpl(GameView gameView) {
         this.mGameView = gameView;
         mInteractor = new GameInteractorImpl(this);
-        mGameView.startCountDown();
-        mGameView.setScoreView(0);
+        //mGameView.startCountDown();
+        //mGameView.setScoreView(0);
     }
 
     @Override
@@ -55,8 +53,8 @@ public class GamePresenterImpl implements GamePresenter {
 
     @Override
     public void setWordView(String word) {
-        this.mWord = word;
-        mGameView.setWordView(scramble(word));
+        //this.mWord = word;
+        //mGameView.setWordView(scramble(word));
     }
 
     @Override
@@ -75,9 +73,9 @@ public class GamePresenterImpl implements GamePresenter {
 
     @Override
     public void setWord(String word) {
-        mInteractor.addWord(word, mCurrentUser.getId(), mOpponentUser.getId());
-        mInteractor.getWord(mCurrentUser.getId(), mOpponentUser.getId());
-        mInteractor.chatIconChange(mCurrentUser.getId(), mOpponentUser.getId());
+        //mInteractor.addWord(word, mCurrentUser.getId(), mOpponentUser.getId());
+        //mInteractor.getWord(mCurrentUser.getId(), mOpponentUser.getId());
+        //mInteractor.chatIconChange(mCurrentUser.getId(), mOpponentUser.getId());
     }
 
     public GameView getGameView() {
