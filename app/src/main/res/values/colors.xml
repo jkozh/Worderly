@@ -5,4 +5,5 @@
     <color name="colorAccent">#D500F9</color>
     <color name="colorTitle">#ffffff</color>
     <color name="colorChatDark">#434343</color>
+    <color name="grey_800">#424242</color>
 </resources>

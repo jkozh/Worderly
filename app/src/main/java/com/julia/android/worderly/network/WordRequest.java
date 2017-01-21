@@ -67,7 +67,7 @@ public class WordRequest {
                 for (Result result : results) {
                     Log.i(TAG, "definition: " + result.getDefinition());
                 }
-                presenter.setWord(word.getWord());
+                //presenter.setWord(word.getWord());
             }
 
         }, new Response.ErrorListener() {

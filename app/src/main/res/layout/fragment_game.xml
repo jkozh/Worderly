@@ -1,6 +1,154 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/linear_layout_players"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingRight="1dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/image_avatar_current_user"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/ic_account_circle_black_36dp"/>
+
+            <TextView
+                android:id="@+id/text_current_user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/grey_800"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                tools:text="Julia"/>
+
+            <TextView
+                android:id="@+id/text_score_current_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textSize="18sp"
+                tools:text="13" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/grey_800" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingLeft="1dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/image_avatar_opponent_user"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/ic_account_circle_black_36dp"/>
+
+            <TextView
+                android:id="@+id/text_username_opponent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/grey_800"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                tools:text="Andrey"/>
+
+            <TextView
+                android:id="@+id/text_score_opponent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textSize="18sp"
+                tools:text="14" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view_horizontal_line_after_players"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/linear_layout_players"
+        android:background="@color/grey_800"/>
+
+    <TextView
+        android:id="@+id/text_countdown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view_horizontal_line_after_players"
+        android:layout_centerHorizontal="true"
+        android:background="@color/grey_800"
+        android:padding="5dp"
+        android:textAlignment="center"
+        android:textSize="22sp"
+        tools:text="33"/>
+
+    <View
+        android:id="@+id/view_horizontal_line_after_countdouwn"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/text_countdown"
+        android:background="@color/grey_800"/>
+
+    <TextView
+        android:id="@+id/text_word"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_countdown"
+        android:paddingTop="5dp"
+        android:textAlignment="center"
+        android:textSize="25sp"
+        tools:text="WORD" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:orientation="horizontal"
+        android:paddingStart="6dp">
+
+        <EditText
+            android:id="@+id/edit_word"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:hint="Enter word here..."
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/button_send_word"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_gravity="bottom"
+            android:enabled="false"
+            android:text="@string/msg_send"
+            android:textSize="20sp"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

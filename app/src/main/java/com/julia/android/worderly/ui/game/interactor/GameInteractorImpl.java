@@ -43,7 +43,7 @@ public class GameInteractorImpl implements GameInteractor {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.getChildrenCount() == 2) {
                             for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                                mPresenter.setWordView(childDataSnapshot.getValue().toString());
+                                //mPresenter.setWordView(childDataSnapshot.getValue().toString());
                             }
                         }
                     }
@@ -61,7 +61,7 @@ public class GameInteractorImpl implements GameInteractor {
                 .addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        mPresenter.changeChatIcon();
+                        //mPresenter.changeChatIcon();
                     }
 
                     @Override

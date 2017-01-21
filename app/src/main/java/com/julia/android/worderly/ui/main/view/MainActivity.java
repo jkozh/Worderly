@@ -3,7 +3,9 @@ package com.julia.android.worderly.ui.main.view;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -25,6 +27,7 @@ import com.julia.android.worderly.ui.main.presenter.MainPresenterImpl;
 import com.julia.android.worderly.ui.search.view.SearchOpponentActivity;
 import com.julia.android.worderly.ui.signin.SignInActivity;
 import com.julia.android.worderly.utils.Constants;
+import com.julia.android.worderly.utils.NetworkUtility;
 
 import java.util.Objects;
 
@@ -42,7 +45,8 @@ import static com.julia.android.worderly.utils.Constants.PREF_USER;
 public class MainActivity extends AbstractMainActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-
+    @BindView(R.id.coordinator_layout_main)
+    CoordinatorLayout mCoordinatorLayout;
     @BindView(R.id.button_random_play)
     Button mRandomPlayButton;
     @BindView(R.id.drawer_layout)
@@ -51,9 +55,7 @@ public class MainActivity extends AbstractMainActivity {
     NavigationView mNavigationView;
     @BindView(R.id.toolbar_main_activity)
     Toolbar mToolbar;
-
     private MainPresenter mPresenter;
-    private User mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,17 +66,7 @@ public class MainActivity extends AbstractMainActivity {
         mPresenter = new MainPresenterImpl(this);
         setGoogleApiClient();
         setUpActionBar();
-        // Set up Drawer after the username was fetched
-        setUpDrawer();
-    }
-
-    private void getSharedPrefs() {
-        SharedPreferences mPrefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-        Gson gson = new Gson();
-        String json = mPrefs.getString(PREF_USER, Constants.PREF_USER_DEFAULT_VALUE);
-        if (!Objects.equals(json, Constants.PREF_USER_DEFAULT_VALUE)) {
-            mUser = gson.fromJson(json, User.class);
-        }
+        mPresenter.showUserInfoInDrawer();
     }
 
     @Override
@@ -83,28 +75,84 @@ public class MainActivity extends AbstractMainActivity {
         mPresenter.onDestroy();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.sign_out_menu:
+                mPresenter.onSignOutClicked();
+                onSignOut(); // via Google
+                return true;
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void setUpDrawer(String username, String photoUrl) {
+        if (mNavigationView != null) {
+            View headerView = mNavigationView.getHeaderView(0);
+            TextView usernameTextView = ButterKnife.findById(headerView, R.id.usernameTextView);
+            ImageView avatarImageView = ButterKnife.findById(headerView, R.id.avatarImageView);
+            // Set up username in Navigation Drawer
+            setUsernameInDrawer(usernameTextView, username);
+            // Set up mUser photo in Navigation Drawer
+            setUserPhotoInDrawer(avatarImageView, photoUrl);
+        }
+    }
+
+    @Override
+    public void signInFail(String errorMessage) {
+        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Not signed in, launch the Sign In activity
+     */
+    @Override
+    public void navigateToSignInActivity() {
+        startActivity(new Intent(this, SignInActivity.class));
+        finish();
+    }
+
+    /**
+     * On click start the game with random opponent when network is available
+     */
+    @OnClick(R.id.button_random_play)
+    public void onClick() {
+        // Launch the SearchOpponentActivity if network is online
+        if (NetworkUtility.isNetworkAvailable(getApplicationContext())) {
+            startActivity(new Intent(this, SearchOpponentActivity.class));
+        } else {
+            Snackbar.make(mCoordinatorLayout, getString(R.string.error_network_offline),
+                    Snackbar.LENGTH_LONG).show();
+        }
+    }
+
+    private void getSharedPrefs() {
+        SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = prefs.getString(PREF_USER, Constants.PREF_USER_DEFAULT_VALUE);
+        if (!Objects.equals(json, Constants.PREF_USER_DEFAULT_VALUE)) {
+            User user = gson.fromJson(json, User.class);
+            mPresenter.setUserFromJson(user);
+        }
+    }
+
     private void setUpActionBar() {
         setSupportActionBar(mToolbar);
         final ActionBar ab = getSupportActionBar();
         if (ab != null) {
             ab.setHomeAsUpIndicator(R.drawable.ic_menu);
             ab.setDisplayHomeAsUpEnabled(true);
-        }
-    }
-
-    private void setUpDrawer() {
-        if (mNavigationView != null) {
-            View headerView = mNavigationView.getHeaderView(0);
-            TextView usernameTextView = ButterKnife.findById(headerView, R.id.usernameTextView);
-            ImageView avatarImageView = ButterKnife.findById(headerView, R.id.avatarImageView);
-
-            if (mUser != null) {
-                // Set up username in Navigation Drawer
-                setUsernameInDrawer(usernameTextView, mUser.getUsername());
-
-                // Set up mUser photo in Navigation Drawer
-                setUserPhotoInDrawer(avatarImageView, mUser.getPhotoUrl());
-            }
         }
     }
 
@@ -122,49 +170,5 @@ public class MainActivity extends AbstractMainActivity {
         Glide.with(MainActivity.this)
                 .load(photoUrl)
                 .into(avatarImageView);
-    }
-
-    /**
-     * Start the game with random opponent
-     */
-    @OnClick(R.id.button_random_play)
-    public void onClick() {
-        // Launch the SearchOpponentActivity
-        startActivity(new Intent(this, SearchOpponentActivity.class));
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.sign_out_menu:
-                mPresenter.onSignOutClicked();
-                onSignOut(); // Google
-                return true;
-            case android.R.id.home:
-                mDrawerLayout.openDrawer(GravityCompat.START);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public void signInFail(String errorMessage) {
-        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * Not signed in, launch the Sign In activity
-     */
-    @Override
-    public void navigateToSignInActivity() {
-        startActivity(new Intent(this, SignInActivity.class));
-        finish();
     }
 }

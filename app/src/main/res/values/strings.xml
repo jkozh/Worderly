@@ -31,8 +31,10 @@
     <!-- Dialog in Game Activity -->
     <string name="msg_next_round_starts">Next Round starts in %d</string>
 
-    <!-- Title in Chat Activity -->
-    <string name="title_chat_with">Chat with %1$s</string>
+    <!-- Title in Game Activity -->
+    <string name="title_game">GAME</string>
+    <string name="title_chat">CHAT</string>
+    <string name="title_chat_plus">CHAT +%d</string>
 
     <!-- Dialog in SignIn Activity -->
     <string name="title_enter_nickname">Enter your nickname</string>
@@ -41,6 +43,8 @@
 
     <!-- Errors -->
     <string name="error_sign_in_failed">Sign In failed.</string>
+    <string name="error_network_offline">Please connect to a network.</string>
+
     <string name="msg_opponent_found">Opponent found:</string>
     <string name="msg_searching_for_opponent">Searching for opponent…</string>
 </resources>
