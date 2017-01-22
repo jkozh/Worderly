@@ -27,6 +27,7 @@ import com.julia.android.worderly.model.User;
 import com.julia.android.worderly.ui.chat.adapter.ChatFirebaseAdapter;
 import com.julia.android.worderly.ui.chat.adapter.MessageViewHolder;
 import com.julia.android.worderly.ui.chat.presenter.ChatPresenter;
+import com.julia.android.worderly.ui.game.view.GameActivity;
 import com.julia.android.worderly.utils.Constants;
 import com.julia.android.worderly.utils.FirebaseConstants;
 
@@ -54,6 +55,7 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
     private LinearLayoutManager mLinearLayoutManager;
     private FirebaseRecyclerAdapter<Message, MessageViewHolder> mFirebaseAdapter;
     private ChatPresenter mPresenter;
+    private long mNumberOfMessagesInTab;
 
     @Override
     public void onAttach(Context context) {
@@ -68,6 +70,7 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
         mPresenter = new ChatPresenter(this);
         getUserPrefs();
         getOpponentBundleExtras();
+        mPresenter.addListenerForNewMessage();
     }
 
     @Override
@@ -147,6 +150,16 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
     public void hideProgressBar() {
         if (mFirebaseAdapter.getItemCount() == 0) {
             mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+        }
+    }
+
+    @Override
+    public void setChatTabTitleText() {
+        ++mNumberOfMessagesInTab;
+        if (getActivity() != null) {
+            ((GameActivity) getActivity()).setChatTabTitle(mNumberOfMessagesInTab);
+        } else {
+            Log.d(TAG, "((GameActivity) getActivity()) == null");
         }
     }
 

@@ -34,7 +34,7 @@
     <!-- Title in Game Activity -->
     <string name="title_game">GAME</string>
     <string name="title_chat">CHAT</string>
-    <string name="title_chat_plus">CHAT +%d</string>
+    <string name="title_chat_plus">CHAT +%d NEW</string>
 
     <!-- Dialog in SignIn Activity -->
     <string name="title_enter_nickname">Enter your nickname</string>

@@ -27,6 +27,33 @@ public class ChatPresenter {
         this.mCurrentUser = user;
     }
 
+    public void setOpponentFromBundle(User opponent) {
+        mOpponent = opponent;
+        setChatRoomChilds();
+    }
+
+    public void onDetach() {
+        //mWeakView = null;
+    }
+
+    public String getChatRoomChild() {
+        return mChatRoomChild;
+    }
+    private String getChatRoomChildInverted() {
+        return mChatRoomInvertChild;
+    }
+
+
+    public void onSendButtonClick(String message) {
+        Message msg = new Message(message, mCurrentUser.getUsername(), mCurrentUser.getPhotoUrl());
+        mInteractor.sendMessage(msg, mChatRoomChild, mChatRoomInvertChild);
+    }
+
+    private void setChatRoomChilds() {
+        mChatRoomChild = mCurrentUser.getId() + "_" + mOpponent.getId();
+        mChatRoomInvertChild = mOpponent.getId() + "_" + mCurrentUser.getId();
+    }
+
     @Nullable
     private ChatPresenter.View getView() {
         if (mWeakView == null) {
@@ -35,34 +62,19 @@ public class ChatPresenter {
         return mWeakView.get();
     }
 
-    public void onDetach() {
-        mWeakView = null;
+    public void addListenerForNewMessage() {
+        mInteractor.onNewMessageReceived(getChatRoomChildInverted());
     }
 
-    public String getCurrentUserUsername() {
-        return mCurrentUser.getUsername();
-    }
-
-    public String getChatRoomChild() {
-        return mChatRoomChild;
-    }
-
-    private void setChatRoomChilds() {
-        mChatRoomChild = mCurrentUser.getId() + "_" + mOpponent.getId();
-        mChatRoomInvertChild = mOpponent.getId() + "_" + mCurrentUser.getId();
-    }
-
-    public void onSendButtonClick(String message) {
-        Message msg = new Message(message, mCurrentUser.getUsername(), mCurrentUser.getPhotoUrl());
-        mInteractor.sendMessage(msg, mChatRoomChild, mChatRoomInvertChild);
-    }
-
-    public void setOpponentFromBundle(User opponent) {
-        mOpponent = opponent;
-        setChatRoomChilds();
+    public void notifyChatTabTitle() {
+        ChatPresenter.View view = mWeakView.get();
+        if (view != null) {
+            view.setChatTabTitleText();
+        }
     }
 
     public interface View {
         void hideProgressBar();
+        void setChatTabTitleText();
     }
 }

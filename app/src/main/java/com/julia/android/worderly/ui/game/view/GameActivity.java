@@ -17,12 +17,9 @@ import butterknife.ButterKnife;
 public class GameActivity extends AppCompatActivity implements GameActivityView {
 
     private static final String TAG = GameActivity.class.getSimpleName();
-    @BindView(R.id.toolbar_game_activity)
-    Toolbar mToolbar;
-    @BindView(R.id.viewpager)
-    ViewPager mViewPager;
-    @BindView(R.id.tabs)
-    TabLayout mTabLayout;
+    @BindView(R.id.toolbar_game_activity) Toolbar mToolbar;
+    @BindView(R.id.viewpager) ViewPager mViewPager;
+    @BindView(R.id.tabs) TabLayout mTabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +70,7 @@ public class GameActivity extends AppCompatActivity implements GameActivityView 
      * @param number number of new messages received
      */
     @Override
-    public void setChatTabTitle(int number) {
+    public void setChatTabTitle(long number) {
         TabLayout.Tab chatTab = mTabLayout.getTabAt(1);
         if (chatTab != null) {
             chatTab.setText(getString(R.string.title_chat_plus, number));
