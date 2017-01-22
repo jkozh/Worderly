@@ -62,8 +62,8 @@ public class MainActivity extends AbstractMainActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        getSharedPrefs();
         mPresenter = new MainPresenterImpl(this);
+        getSharedPrefs();
         setGoogleApiClient();
         setUpActionBar();
         mPresenter.showUserInfoInDrawer();

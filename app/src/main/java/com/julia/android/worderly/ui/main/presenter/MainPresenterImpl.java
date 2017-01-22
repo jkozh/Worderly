@@ -12,7 +12,6 @@ public class MainPresenterImpl implements MainPresenter {
     // Firebase instance variables
     private FirebaseAuth mFirebaseAuth;
     private MainView mMainView;
-
     private User mUser;
 
     public MainPresenterImpl(MainView mainView) {
@@ -41,7 +40,9 @@ public class MainPresenterImpl implements MainPresenter {
     }
     @Override
     public void showUserInfoInDrawer() {
-        mMainView.setUpDrawer(mUser.getUsername(), mUser.getPhotoUrl());
+        if (mMainView != null && mUser != null) {
+            mMainView.setUpDrawer(mUser.getUsername(), mUser.getPhotoUrl());
+        }
     }
 
     @Override

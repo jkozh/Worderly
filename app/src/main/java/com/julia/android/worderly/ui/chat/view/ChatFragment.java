@@ -46,19 +46,14 @@ import static com.julia.android.worderly.utils.Constants.PREF_USER;
 public class ChatFragment extends Fragment implements ChatPresenter.View {
 
     private static final String TAG = ChatFragment.class.getSimpleName();
-    @BindView(R.id.progressBar)
-    ProgressBar mProgressBar;
-    @BindView(R.id.messageRecyclerView)
-    RecyclerView mMessageRecyclerView;
-    @BindView(R.id.messageEditText)
-    EditText mMessageEditText;
-    @BindView(R.id.button_send)
-    Button mSendButton;
+    @BindView(R.id.progressBar) ProgressBar mProgressBar;
+    @BindView(R.id.messageRecyclerView) RecyclerView mMessageRecyclerView;
+    @BindView(R.id.messageEditText) EditText mMessageEditText;
+    @BindView(R.id.button_send) Button mSendButton;
     private Unbinder mUnbinder;
     private LinearLayoutManager mLinearLayoutManager;
     private FirebaseRecyclerAdapter<Message, MessageViewHolder> mFirebaseAdapter;
     private ChatPresenter mPresenter;
-    private User mCurrentUser;
 
     @Override
     public void onAttach(Context context) {
@@ -72,6 +67,7 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
         super.onCreate(savedInstanceState);
         mPresenter = new ChatPresenter(this);
         getUserPrefs();
+        getOpponentBundleExtras();
     }
 
     @Override
@@ -80,9 +76,6 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
         Log.d(TAG, "onCreateView CALLED");
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
         mUnbinder = ButterKnife.bind(this, view);
-
-//        getSharedPrefs();
-//        getBundleExtras();
 
         mLinearLayoutManager = new LinearLayoutManager(getContext());
         mLinearLayoutManager.setStackFromEnd(true);
@@ -147,16 +140,30 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
     public void onDetach() {
         Log.d(TAG, "onDetach CALLED");
         super.onDetach();
+        mPresenter.onDetach();
     }
 
-//    private void getBundleExtras() {
-//        Bundle extras = getIntent().getExtras();
-//        if (extras != null) {
-//            String opponentId = extras.getString(Constants.EXTRA_OPPONENT_ID);
-//            String opponentUsername = extras.getString(Constants.EXTRA_OPPONENT_USERNAME);
-//            mPresenter.setOpponentInfo(opponentId, opponentUsername);
-//        }
-//    }
+    @Override
+    public void hideProgressBar() {
+        if (mFirebaseAdapter.getItemCount() == 0) {
+            mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+        }
+    }
+
+    @OnTextChanged(value = R.id.messageEditText)
+    void onMessageInput(Editable editable) {
+        if (editable.toString().trim().length() > 0) {
+            mSendButton.setEnabled(true);
+        } else {
+            mSendButton.setEnabled(false);
+        }
+    }
+
+    @OnClick(R.id.button_send)
+    void onClick() {
+        mPresenter.onSendButtonClick(mMessageEditText.getText().toString());
+        mMessageEditText.setText("");
+    }
 
     private void setUpFirebaseAdapter() {
         mFirebaseAdapter = new ChatFirebaseAdapter(
@@ -165,7 +172,7 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
                 MessageViewHolder.class,
                 FirebaseDatabase.getInstance().getReference()
                         .child(FirebaseConstants.FIREBASE_GAMES_CHILD)
-                        //.child(mPresenter.getChatRoomChild())
+                        .child(mPresenter.getChatRoomChild())
                         .child(FirebaseConstants.FIREBASE_MESSAGES_CHILD));
 
         mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -188,30 +195,8 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
         mMessageRecyclerView.setAdapter(mFirebaseAdapter);
 
         // Hide ProgressBar when empty chat log
-        //hideProgressBar();
+        hideProgressBar();
     }
-
-    @OnTextChanged(value = R.id.messageEditText)
-    void onMessageInput(Editable editable) {
-        if (editable.toString().trim().length() > 0) {
-            mSendButton.setEnabled(true);
-        } else {
-            mSendButton.setEnabled(false);
-        }
-    }
-
-    @OnClick(R.id.button_send)
-    public void onClick() {
-        mPresenter.onSendButtonClick(mMessageEditText.getText().toString());
-        mMessageEditText.setText("");
-    }
-
-//    @Override
-//    public void hideProgressBar() {
-//        if (mFirebaseAdapter.getItemCount() == 0) {
-//            mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-//        }
-//    }
 
     private void getUserPrefs() {
         SharedPreferences mPrefs = getActivity().getSharedPreferences(PREF_NAME, MODE_PRIVATE);
@@ -220,6 +205,18 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
         if (!Objects.equals(json, Constants.PREF_USER_DEFAULT_VALUE)) {
             User user = gson.fromJson(json, User.class);
             mPresenter.setUserFromJson(user);
+        }
+    }
+
+    private void getOpponentBundleExtras() {
+        Bundle extras = getActivity().getIntent().getExtras();
+        if (extras != null) {
+            String id = extras.getString(Constants.EXTRA_OPPONENT_ID);
+            String username = extras.getString(Constants.EXTRA_OPPONENT_USERNAME);
+            String email = extras.getString(Constants.EXTRA_OPPONENT_EMAIL);
+            String photoUrl = extras.getString(Constants.EXTRA_OPPONENT_PHOTO_URL);
+            User opponent = new User(id, username, email, photoUrl);
+            mPresenter.setOpponentFromBundle(opponent);
         }
     }
 }

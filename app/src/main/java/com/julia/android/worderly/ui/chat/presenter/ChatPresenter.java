@@ -12,15 +12,14 @@ import java.lang.ref.WeakReference;
 public class ChatPresenter {
 
     private WeakReference<ChatPresenter.View> mWeakView;
+    private ChatInteractor mInteractor;
+    private User mCurrentUser;
+    private User mOpponent;
     private String mChatRoomChild;
     private String mChatRoomInvertChild;
-    private User mCurrentUser;
-    private ChatInteractor mInteractor;
-    private String mOpponentId;
-    private String mOpponentUsername;
 
     public ChatPresenter(ChatPresenter.View view) {
-        mWeakView = new WeakReference(view);
+        mWeakView = new WeakReference<>(view);
         mInteractor = new ChatInteractorImpl(this);
     }
 
@@ -36,12 +35,9 @@ public class ChatPresenter {
         return mWeakView.get();
     }
 
-
-
-//    @Override
-//    public void viewDetached(boolean changingConfigurations) {
-//        mWeakView = null;
-//    }
+    public void onDetach() {
+        mWeakView = null;
+    }
 
     public String getCurrentUserUsername() {
         return mCurrentUser.getUsername();
@@ -51,41 +47,22 @@ public class ChatPresenter {
         return mChatRoomChild;
     }
 
-    public void setChatRoomChild() {
-        this.mChatRoomChild = mCurrentUser.getId() + "_" + mOpponentId;
-    }
-
-    public void setChatRoomInvertChild() {
-        this.mChatRoomInvertChild = mOpponentId + "_" + mCurrentUser.getId();
-    }
-
-    public void setOpponentInfo(String opponentId, String opponentUsername) {
-        this.mOpponentId = opponentId;
-        this.mOpponentUsername = opponentUsername;
-        setChatRoomChild();
-        setChatRoomInvertChild();
+    private void setChatRoomChilds() {
+        mChatRoomChild = mCurrentUser.getId() + "_" + mOpponent.getId();
+        mChatRoomInvertChild = mOpponent.getId() + "_" + mCurrentUser.getId();
     }
 
     public void onSendButtonClick(String message) {
-        Message msg = new Message(message, "ok", "ok1");//mCurrentUser.getUsername(), mCurrentUser.getPhotoUrl());
-        mInteractor.sendMessage(msg, "ok", "okok");//mChatRoomChild, mChatRoomInvertChild);
+        Message msg = new Message(message, mCurrentUser.getUsername(), mCurrentUser.getPhotoUrl());
+        mInteractor.sendMessage(msg, mChatRoomChild, mChatRoomInvertChild);
     }
 
-//    public void loadXXX(String param1, String param2) {
-//        ChatPresenter.View view = mWeakView.get();
-//        if (view != null) {
-//            //view.showAsLoading();
-//            // Do stuff, e.g. make the Api call and finally call view.showUserDetails(userDetails);
-//        }
-//    }
+    public void setOpponentFromBundle(User opponent) {
+        mOpponent = opponent;
+        setChatRoomChilds();
+    }
 
     public interface View {
-//    void setUserFromJson(User user);
-//    String getCurrentUserUsername();
-//    String getChatRoomChild();
-//    void setChatRoomChild();
-//    void setChatRoomInvertChild();
-//    void setOpponentInfo(String opponentId, String opponentUsername);
-//    void onSendButtonClick(String message);
+        void hideProgressBar();
     }
 }

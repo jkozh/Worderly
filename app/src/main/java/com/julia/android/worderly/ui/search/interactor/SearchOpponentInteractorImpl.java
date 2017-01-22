@@ -22,6 +22,7 @@ public class SearchOpponentInteractorImpl implements SearchOpponentInteractor {
     private boolean mOpponentFound;
 
     public SearchOpponentInteractorImpl(SearchOpponentPresenter presenter) {
+        Log.d(TAG, "SearchOpponentInteractorImpl constructor");
         this.mPresenter = presenter;
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mOpponentFound = false;
@@ -41,11 +42,13 @@ public class SearchOpponentInteractorImpl implements SearchOpponentInteractor {
 
     @Override
     public void searchForOpponent(final User user) {
+        Log.d(TAG, "searchForOpponent");
         mDatabase.child(FirebaseConstants.FIREBASE_USERS_ONLINE_CHILD)
                 .addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         String opponentUid = dataSnapshot.getKey();
+                        Log.d(TAG, "mOpponentFound=" + mOpponentFound);
                         if (!mOpponentFound && !Objects.equals(user.getId(), opponentUid)) {
                             mOpponentFound = true;
                             User opponentUser = dataSnapshot.getValue(User.class);

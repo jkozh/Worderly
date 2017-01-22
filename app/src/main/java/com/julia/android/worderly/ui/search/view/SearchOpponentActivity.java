@@ -30,18 +30,11 @@ import static com.julia.android.worderly.utils.Constants.PREF_USER;
 public class SearchOpponentActivity extends AppCompatActivity implements SearchOpponentView {
 
     private static final String TAG = SearchOpponentActivity.class.getSimpleName();
-
-    @BindView(R.id.toolbar_randomopponent_activity)
-    Toolbar mToolbar;
-    @BindView(R.id.text_searching_opponent)
-    TextView mSearchingOpponentTextView;
-    @BindView(R.id.image_avatar_opponent)
-    CircleImageView mAvatarOpponentImageView;
-    @BindView(R.id.text_username_opponent)
-    TextView mUsernameOpponentTextView;
-    @BindView(R.id.text_uid_opponent)
-    TextView mUidOpponentTextView;
-
+    @BindView(R.id.toolbar_randomopponent_activity) Toolbar mToolbar;
+    @BindView(R.id.text_searching_opponent) TextView mSearchingOpponentTextView;
+    @BindView(R.id.image_avatar_opponent) CircleImageView mAvatarOpponentImageView;
+    @BindView(R.id.text_username_opponent) TextView mUsernameOpponentTextView;
+    @BindView(R.id.text_uid_opponent) TextView mUidOpponentTextView;
     private SearchOpponentPresenter mPresenter;
 
     @Override
@@ -52,6 +45,44 @@ public class SearchOpponentActivity extends AppCompatActivity implements SearchO
         mPresenter = new SearchOpponentPresenterImpl(this);
         getSharedPrefs();
         setUpActionBar();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mPresenter.onStart();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.onDestroy();
+    }
+
+    @Override
+    public void addOpponentFoundView(final String uid, final String username,
+                                     final String photoUrl) {
+        mSearchingOpponentTextView.setText(R.string.msg_opponent_found);
+        if(photoUrl != null) {
+            Glide.with(SearchOpponentActivity.this).load(photoUrl)
+                    .into(mAvatarOpponentImageView);
+        }
+        mUsernameOpponentTextView.setText(username);
+        mUidOpponentTextView.setText(uid);
+    }
+
+    /**
+     * Opponent found -> launch the Game activity
+     */
+    @Override
+    public void navigateToGameActivity(User opponentUser) {
+        Intent i = new Intent(this, GameActivity.class);
+        i.putExtra(Constants.EXTRA_OPPONENT_ID, opponentUser.getId());
+        i.putExtra(Constants.EXTRA_OPPONENT_USERNAME, opponentUser.getUsername());
+        i.putExtra(Constants.EXTRA_OPPONENT_EMAIL, opponentUser.getEmail());
+        i.putExtra(Constants.EXTRA_OPPONENT_PHOTO_URL, opponentUser.getPhotoUrl());
+        startActivity(i);
+        finish();
     }
 
     private void getSharedPrefs() {
@@ -70,45 +101,5 @@ public class SearchOpponentActivity extends AppCompatActivity implements SearchO
         if (ab != null) {
             ab.setDisplayHomeAsUpEnabled(true);
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mPresenter.onStart();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mPresenter.onDestroy();
-    }
-
-    @Override
-    public void addOpponentFoundView(String uid, String username, String photoUrl) {
-        mSearchingOpponentTextView.setText(R.string.msg_opponent_found);
-        if (photoUrl == null) {
-            photoUrl = Constants.DEFAULT_USER_PHOTO_URL;
-        }
-        Glide.with(SearchOpponentActivity.this)
-                .load(photoUrl)
-                .into(mAvatarOpponentImageView);
-
-        mUsernameOpponentTextView.setText(username);
-        mUidOpponentTextView.setText(uid);
-    }
-
-    /**
-     * Opponent found -> launch the Game activity
-     */
-    @Override
-    public void navigateToGameActivity(User opponentUser) {
-        Intent i = new Intent(this, GameActivity.class);
-        i.putExtra(Constants.EXTRA_OPPONENT_ID, opponentUser.getId());
-        i.putExtra(Constants.EXTRA_OPPONENT_USERNAME, opponentUser.getUsername());
-        i.putExtra(Constants.EXTRA_OPPONENT_EMAIL, opponentUser.getEmail());
-        i.putExtra(Constants.EXTRA_OPPONENT_PHOTO_URL, opponentUser.getPhotoUrl());
-        startActivity(i);
-        finish();
     }
 }

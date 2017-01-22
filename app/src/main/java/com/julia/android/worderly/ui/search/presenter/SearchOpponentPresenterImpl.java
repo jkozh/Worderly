@@ -39,7 +39,6 @@ public class SearchOpponentPresenterImpl implements SearchOpponentPresenter {
                 mOpponentUser.getId(),
                 mOpponentUser.getUsername(),
                 mOpponentUser.getPhotoUrl());
-        //mInteractor.listenForOpponentGameRoom(mCurrentUser.getId(), mOpponentUser.getId());
         mInteractor.createCurrentGameRoom(mCurrentUser.getId(), mOpponentUser.getId());
     }
 

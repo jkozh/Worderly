@@ -32,21 +32,13 @@ import static com.julia.android.worderly.utils.Constants.PREF_USER;
 public class GameFragment extends Fragment implements GamePresenter.View {
 
     private static final String TAG = GameFragment.class.getSimpleName();
-    @BindView(R.id.text_current_user)
-    TextView mCurrentUsernameTextView;
-    @BindView(R.id.text_score_current_user)
-    TextView mScoreCurrentUserTextView;
-    @BindView(R.id.text_username_opponent)
-    TextView mOpponentUsernameTextView;
-    @BindView(R.id.text_word)
-    TextView mWordTextView;
-    @BindView(R.id.text_countdown)
-    TextView mCountDownTextView;
-    @BindView(R.id.edit_word)
-    EditText mWordEditText;
-    @BindView(R.id.button_send_word)
-    Button mSendWordButton;
-    boolean isFirstTime;
+    @BindView(R.id.text_current_user) TextView mCurrentUsernameTextView;
+    @BindView(R.id.text_score_current_user) TextView mScoreCurrentUserTextView;
+    @BindView(R.id.text_username_opponent) TextView mOpponentUsernameTextView;
+    @BindView(R.id.text_word) TextView mWordTextView;
+    @BindView(R.id.text_countdown) TextView mCountDownTextView;
+    @BindView(R.id.edit_word) EditText mWordEditText;
+    @BindView(R.id.button_send_word) Button mSendWordButton;
     private Unbinder mUnbinder;
     private GamePresenter mPresenter;
 
@@ -62,6 +54,8 @@ public class GameFragment extends Fragment implements GamePresenter.View {
         super.onCreate(savedInstanceState);
         mPresenter = new GamePresenter(this);
         getUserPrefs();
+        getOpponentBundleExtras();
+        getOpponentBundleExtras();
     }
 
     @Override
@@ -71,6 +65,7 @@ public class GameFragment extends Fragment implements GamePresenter.View {
         View view = inflater.inflate(R.layout.fragment_game, container, false);
         mUnbinder = ButterKnife.bind(this, view);
         mPresenter.setCurrentUserView();
+        mPresenter.setOpponentUserView();
         return view;
     }
 
@@ -121,6 +116,7 @@ public class GameFragment extends Fragment implements GamePresenter.View {
     public void onDetach() {
         Log.d(TAG, "onDetach CALLED");
         super.onDetach();
+        mPresenter.onDetach();
     }
 
     @Override
@@ -129,29 +125,29 @@ public class GameFragment extends Fragment implements GamePresenter.View {
     }
 
     @Override
-    public void setOpponentUsernameView(String username) {
+    public void showOpponentUsernameView(String username) {
         mOpponentUsernameTextView.setText(username);
     }
 
     private void getUserPrefs() {
-        Log.d(TAG, "SHARED PREFS CALLED");
         SharedPreferences prefs = getActivity().getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-        isFirstTime = prefs.getBoolean("isFirstTime", true);
+        Gson gson = new Gson();
+        String json = prefs.getString(PREF_USER, Constants.PREF_USER_DEFAULT_VALUE);
+        if (!Objects.equals(json, Constants.PREF_USER_DEFAULT_VALUE)) {
+            User user = gson.fromJson(json, User.class);
+            mPresenter.setUserFromJson(user);
+        }
+    }
 
-        if (isFirstTime) {
-            Log.d(TAG, "FIRST TIME");
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putBoolean("isFirstTime", false);
-            editor.apply();
-
-            Gson gson = new Gson();
-            String json = prefs.getString(PREF_USER, Constants.PREF_USER_DEFAULT_VALUE);
-            if (!Objects.equals(json, Constants.PREF_USER_DEFAULT_VALUE)) {
-                User user = gson.fromJson(json, User.class);
-                mPresenter.setUserFromJson(user);
-            }
-        } else {
-            Log.d(TAG, "SECOND TIME");
+    private void getOpponentBundleExtras() {
+        Bundle extras = getActivity().getIntent().getExtras();
+        if (extras != null) {
+            String id = extras.getString(Constants.EXTRA_OPPONENT_ID);
+            String username = extras.getString(Constants.EXTRA_OPPONENT_USERNAME);
+            String email = extras.getString(Constants.EXTRA_OPPONENT_EMAIL);
+            String photoUrl = extras.getString(Constants.EXTRA_OPPONENT_PHOTO_URL);
+            User opponent = new User(id, username, email, photoUrl);
+            mPresenter.setOpponentFromBundle(opponent);
         }
     }
 }
