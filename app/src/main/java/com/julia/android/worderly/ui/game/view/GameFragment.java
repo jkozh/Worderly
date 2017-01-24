@@ -62,19 +62,19 @@ public class GameFragment extends Fragment implements GamePresenter.View {
         getUserPrefs();
         getOpponentBundleExtras();
         getOpponentBundleExtras();
-        isFirstTime = mPrefs.getBoolean("FIRST_TIME2", false);
-        if(!isFirstTime) {
-            Log.d(TAG, "FIRST TIME");
+//        isFirstTime = mPrefs.getBoolean("FIRST_TIME2", false);
+//        if(!isFirstTime) {
+//            Log.d(TAG, "FIRST TIME");
             // Fetching word from API
             RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-            new WordRequest(requestQueue, mPresenter);
+            new WordRequest(requestQueue, getContext());
 
-            SharedPreferences.Editor editor = mPrefs.edit();
-            editor.putBoolean("FIRST_TIME2", true);
-            editor.apply();
-        } else {
-            Log.d(TAG, "SECOND TIME");
-        }
+//            SharedPreferences.Editor editor = mPrefs.edit();
+//            editor.putBoolean("FIRST_TIME2", true);
+//            editor.apply();
+//        } else {
+//            Log.d(TAG, "SECOND TIME");
+//        }
     }
 
     @Override

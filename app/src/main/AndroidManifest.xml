@@ -21,6 +21,14 @@
         <activity android:name=".ui.search.view.SearchOpponentActivity" />
         <activity android:name=".ui.game.view.GameActivity" />
 
+        <!-- Register the GameContentProvider -->
+        <!-- Set name, authorities, and exported attributes -->
+        <!-- exported = false limits access to this ContentProvider to only this app -->
+        <provider
+            android:name="com.julia.android.worderly.data.database.WordContentProvider"
+            android:authorities="com.julia.android.worderly"
+            android:exported="false"/>
+
     </application>
 
 </manifest>

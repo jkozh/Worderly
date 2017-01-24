@@ -5,32 +5,32 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class GameDbHelper extends SQLiteOpenHelper {
+public class WordDbHelper extends SQLiteOpenHelper {
 
     // The name of the database
-    private static final String DATABASE_NAME = "gamesDb.db";
+    private static final String DATABASE_NAME = "wordsDb.db";
 
     // If you change the database schema, you must increment the database version
     private static final int VERSION = 1;
 
 
     // Constructor
-    GameDbHelper(Context context) {
+    WordDbHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION);
     }
 
 
     /**
-     * Called when the games database is created for the first time.
+     * Called when the words database is created for the first time.
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        // Create games table (careful to follow SQL formatting rules)
-        final String CREATE_TABLE = "CREATE TABLE " + GameContract.GameEntry.TABLE_NAME + " (" +
-                GameContract.GameEntry._ID          + " INTEGER PRIMARY KEY, " +
-                GameContract.GameEntry.COLUMN_WORD  + " TEXT NOT NULL, " +
-                GameContract.GameEntry.COLUMN_SCORE + " INTEGER NOT NULL);";
+        // Create words table (careful to follow SQL formatting rules)
+        final String CREATE_TABLE = "CREATE TABLE " + WordContract.WordEntry.TABLE_NAME + " (" +
+                WordContract.WordEntry._ID          + " INTEGER PRIMARY KEY, " +
+                WordContract.WordEntry.COLUMN_WORD  + " TEXT NOT NULL, " +
+                WordContract.WordEntry.COLUMN_SCORE + " INTEGER NOT NULL);";
 
         db.execSQL(CREATE_TABLE);
     }
@@ -42,7 +42,7 @@ public class GameDbHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + GameContract.GameEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + WordContract.WordEntry.TABLE_NAME);
         onCreate(db);
     }
 }

@@ -1,5 +1,7 @@
 package com.julia.android.worderly.network;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
@@ -13,9 +15,9 @@ import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.julia.android.worderly.BuildConfig;
+import com.julia.android.worderly.data.database.WordContract;
 import com.julia.android.worderly.model.Result;
 import com.julia.android.worderly.model.Word;
-import com.julia.android.worderly.ui.game.presenter.GamePresenter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,7 +44,7 @@ public class WordRequest {
 
     private final String TAG = WordRequest.class.getSimpleName();
 
-    public WordRequest(RequestQueue requestQueue, final GamePresenter presenter) {
+    public WordRequest(RequestQueue requestQueue, final Context context) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         final Gson gson = gsonBuilder.create();
 
@@ -66,7 +68,21 @@ public class WordRequest {
                 for (Result result : results) {
                     Log.i(TAG, "definition: " + result.getDefinition());
                 }
-                presenter.addWordFromRequest(word.getWord());
+
+                // Insert new word data via a ContentResolver
+                // Create new empty ContentValues object
+                ContentValues contentValues = new ContentValues();
+                // Put the word and score into the ContentValues
+                contentValues.put(WordContract.WordEntry.COLUMN_WORD, word.getWord());
+                contentValues.put(WordContract.WordEntry.COLUMN_SCORE, word.getWord().length());
+                // Insert the content values via a ContentResolver
+                Uri uri = context.getContentResolver().insert(
+                        WordContract.WordEntry.CONTENT_URI, contentValues);
+
+                // the URI that's returned
+                if(uri != null) {
+                    Log.d(TAG, "uri.toString()=" + uri.toString());
+                }
             }
 
         }, new Response.ErrorListener() {
