@@ -2,11 +2,15 @@ package com.julia.android.worderly.data.database;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
 public class GameContentProvider extends ContentProvider {
+
+    // Member variable for a TaskDbHelper that's initialized in the onCreate() method
+    private GameDbHelper mGameDbHelper;
 
     /* onCreate() is where you should initialize anything you’ll need to setup
       your underlying data source.
@@ -15,10 +19,9 @@ public class GameContentProvider extends ContentProvider {
        */
     @Override
     public boolean onCreate() {
-        // TODO (2) Complete onCreate() and initialize a TaskDbHelper on startup
-        // [Hint] Declare the DbHelper as a global variable
-
-        return false;
+        Context context = getContext();
+        mGameDbHelper = new GameDbHelper(context);
+        return true;
     }
 
     @Override
