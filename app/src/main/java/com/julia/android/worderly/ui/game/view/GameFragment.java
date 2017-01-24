@@ -13,9 +13,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.julia.android.worderly.R;
 import com.julia.android.worderly.model.User;
+import com.julia.android.worderly.network.WordRequest;
 import com.julia.android.worderly.ui.game.presenter.GamePresenter;
 import com.julia.android.worderly.utils.Constants;
 
@@ -41,6 +44,8 @@ public class GameFragment extends Fragment implements GamePresenter.View {
     @BindView(R.id.button_send_word) Button mSendWordButton;
     private Unbinder mUnbinder;
     private GamePresenter mPresenter;
+    private SharedPreferences mPrefs;
+    private boolean isFirstTime;
 
     @Override
     public void onAttach(Context context) {
@@ -53,9 +58,23 @@ public class GameFragment extends Fragment implements GamePresenter.View {
         Log.d(TAG, "onCreate CALLED");
         super.onCreate(savedInstanceState);
         mPresenter = new GamePresenter(this);
+        mPrefs = getActivity().getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         getUserPrefs();
         getOpponentBundleExtras();
         getOpponentBundleExtras();
+        isFirstTime = mPrefs.getBoolean("FIRST_TIME2", false);
+        if(!isFirstTime) {
+            Log.d(TAG, "FIRST TIME");
+            // Fetching word from API
+            RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+            new WordRequest(requestQueue, mPresenter);
+
+            SharedPreferences.Editor editor = mPrefs.edit();
+            editor.putBoolean("FIRST_TIME2", true);
+            editor.apply();
+        } else {
+            Log.d(TAG, "SECOND TIME");
+        }
     }
 
     @Override
@@ -129,10 +148,14 @@ public class GameFragment extends Fragment implements GamePresenter.View {
         mOpponentUsernameTextView.setText(username);
     }
 
+    @Override
+    public void showWordView(String word) {
+        mWordTextView.setText(word);
+    }
+
     private void getUserPrefs() {
-        SharedPreferences prefs = getActivity().getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         Gson gson = new Gson();
-        String json = prefs.getString(PREF_USER, Constants.PREF_USER_DEFAULT_VALUE);
+        String json = mPrefs.getString(PREF_USER, Constants.PREF_USER_DEFAULT_VALUE);
         if (!Objects.equals(json, Constants.PREF_USER_DEFAULT_VALUE)) {
             User user = gson.fromJson(json, User.class);
             mPresenter.setUserFromJson(user);

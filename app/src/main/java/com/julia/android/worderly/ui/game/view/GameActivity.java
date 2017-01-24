@@ -14,9 +14,12 @@ import com.julia.android.worderly.ui.game.adapter.GamePagerAdapter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class GameActivity extends AppCompatActivity implements GameActivityView {
+public class GameActivity extends AppCompatActivity implements GameActivityView,
+        ViewPager.OnPageChangeListener {
 
     private static final String TAG = GameActivity.class.getSimpleName();
+    private final int GAME_TAB = 0;
+    private final int CHAT_TAB = 1;
     @BindView(R.id.toolbar_game_activity) Toolbar mToolbar;
     @BindView(R.id.viewpager) ViewPager mViewPager;
     @BindView(R.id.tabs) TabLayout mTabLayout;
@@ -30,6 +33,7 @@ public class GameActivity extends AppCompatActivity implements GameActivityView 
         setSupportActionBar(mToolbar);
         if (mViewPager != null) {
             setupViewPager(mViewPager);
+            mViewPager.addOnPageChangeListener(this);
         }
         mTabLayout.setupWithViewPager(mViewPager);
         setupTabIcons();
@@ -66,31 +70,45 @@ public class GameActivity extends AppCompatActivity implements GameActivityView 
     }
 
     /**
-     * Method used to indicate the number of new chat messages received
-     * @param number number of new messages received
+     * Method used to indicate the number of new chat messages received.
      */
     @Override
-    public void setChatTabTitle(long number) {
-        TabLayout.Tab chatTab = mTabLayout.getTabAt(1);
+    public void setChatTabNewMessageTitle() {
+        TabLayout.Tab chatTab = mTabLayout.getTabAt(CHAT_TAB);
         if (chatTab != null) {
-            chatTab.setText(getString(R.string.title_chat_plus, number));
+            chatTab.setText(getString(R.string.title_chat_new));
         }
     }
 
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        // TODO: Remove viewed messages notification in tab layout
+//        if (position == CHAT_TAB)
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+    }
+
     private void setupTabIcons() {
-        TabLayout.Tab chatTab = mTabLayout.getTabAt(1);
+        TabLayout.Tab chatTab = mTabLayout.getTabAt(CHAT_TAB);
         if (chatTab != null) {
             chatTab.setIcon(R.drawable.ic_tab_chat);
         }
     }
 
     /**
-     * This method will call Adapter for ViewPager
+     * This method will call Adapter for ViewPager.
      */
     private void setupViewPager(ViewPager viewPager) {
         GamePagerAdapter adapter = new GamePagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new GameFragment(), getString(R.string.title_game));
         adapter.addFragment(new ChatFragment(), getString(R.string.title_chat));
         viewPager.setAdapter(adapter);
+//        mChatFragment = (ChatFragment) adapter.getItem(CHAT_TAB);
     }
 }

@@ -1,6 +1,7 @@
 package com.julia.android.worderly.ui.game.presenter;
 
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.julia.android.worderly.model.User;
 import com.julia.android.worderly.ui.game.interactor.GameInteractor;
@@ -14,6 +15,7 @@ public class GamePresenter {
     private GameInteractor mInteractor;
     private User mCurrentUser;
     private User mOpponentUser;
+    private String mWord;
 
     public GamePresenter(GamePresenter.View view) {
         mWeakView = new WeakReference<>(view);
@@ -42,6 +44,24 @@ public class GamePresenter {
         }
     }
 
+    private void setWordView() {
+        GamePresenter.View view = mWeakView.get();
+        if (view != null) {
+            view.showWordView(mWord);
+            Log.d("GAME PRESENTER", "WORD:"+mWord);
+        }
+    }
+
+    public void onDetach() {
+//        mWeakView = null;
+    }
+
+    public void addWordFromRequest(String word) {
+        mWord = word;
+        Log.d("GAME PRESENTER", "mWORD:"+mWord);
+        setWordView();
+    }
+
     @Nullable
     private GamePresenter.View getView() {
         if (mWeakView == null) {
@@ -50,21 +70,9 @@ public class GamePresenter {
         return mWeakView.get();
     }
 
-    public void onDetach() {
-        mWeakView = null;
-    }
-
     public interface View {
         void showCurrentUsernameView(String username);
         void showOpponentUsernameView(String username);
-//    void onStart();
-//    void onDestroy();
-//    void setUserFromJson(User user);
-//    void setUserFromBundle(String id, String username, String email, String photoUrl);
-//    void onChatButtonClick();
-//    void setWord(String word);
-//    void setWordView(String word);
-//    void onSendWordButtonClick(String word);
-//    void changeChatIcon();
+        void showWordView(String word);
     }
 }

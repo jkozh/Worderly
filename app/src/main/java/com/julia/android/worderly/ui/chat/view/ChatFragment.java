@@ -55,7 +55,7 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
     private LinearLayoutManager mLinearLayoutManager;
     private FirebaseRecyclerAdapter<Message, MessageViewHolder> mFirebaseAdapter;
     private ChatPresenter mPresenter;
-    private long mNumberOfMessagesInTab;
+    private SharedPreferences mPrefs;
 
     @Override
     public void onAttach(Context context) {
@@ -68,6 +68,7 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
         Log.d(TAG, "onCreate CALLED");
         super.onCreate(savedInstanceState);
         mPresenter = new ChatPresenter(this);
+        mPrefs = getActivity().getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         getUserPrefs();
         getOpponentBundleExtras();
         mPresenter.addListenerForNewMessage();
@@ -155,11 +156,10 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
 
     @Override
     public void setChatTabTitleText() {
-        ++mNumberOfMessagesInTab;
         if (getActivity() != null) {
-            ((GameActivity) getActivity()).setChatTabTitle(mNumberOfMessagesInTab);
+            ((GameActivity) getActivity()).setChatTabNewMessageTitle();
         } else {
-            Log.d(TAG, "((GameActivity) getActivity()) == null");
+            Log.d(TAG, "getActivity() is null");
         }
     }
 
@@ -212,7 +212,6 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
     }
 
     private void getUserPrefs() {
-        SharedPreferences mPrefs = getActivity().getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         Gson gson = new Gson();
         String json = mPrefs.getString(PREF_USER, Constants.PREF_USER_DEFAULT_VALUE);
         if (!Objects.equals(json, Constants.PREF_USER_DEFAULT_VALUE)) {

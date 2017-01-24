@@ -43,7 +43,6 @@ public class WordRequest {
     private final String TAG = WordRequest.class.getSimpleName();
 
     public WordRequest(RequestQueue requestQueue, final GamePresenter presenter) {
-
         GsonBuilder gsonBuilder = new GsonBuilder();
         final Gson gson = gsonBuilder.create();
 
@@ -67,7 +66,7 @@ public class WordRequest {
                 for (Result result : results) {
                     Log.i(TAG, "definition: " + result.getDefinition());
                 }
-                //presenter.setWord(word.getWord());
+                presenter.addWordFromRequest(word.getWord());
             }
 
         }, new Response.ErrorListener() {
