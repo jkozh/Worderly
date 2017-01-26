@@ -15,7 +15,8 @@ public class GamePresenter {
     private GameInteractor mInteractor;
     private User mCurrentUser;
     private User mOpponentUser;
-    private String mWord;
+    private String mCurrentWord;
+    private String mScrambledCurrentWord;
 
     public GamePresenter(GamePresenter.View view) {
         mWeakView = new WeakReference<>(view);
@@ -44,22 +45,22 @@ public class GamePresenter {
         }
     }
 
-    private void setWordView() {
-        GamePresenter.View view = mWeakView.get();
-        if (view != null) {
-            view.showWordView(mWord);
-            Log.d("GAME PRESENTER", "WORD:"+mWord);
-        }
-    }
+//    private void setWordView() {
+//        GamePresenter.View view = mWeakView.get();
+//        if (view != null) {
+//            view.showWordView(mWord);
+//            Log.d("GAME PRESENTER", "WORD:"+mWord);
+//        }
+//    }
 
     public void onDetach() {
 //        mWeakView = null;
     }
 
     public void addWordFromRequest(String word) {
-        mWord = word;
-        Log.d("GAME PRESENTER", "mWORD:"+mWord);
-        setWordView();
+        //mWord = word;
+        //Log.d("GAME PRESENTER", "mWORD:"+mWord);
+        //setWordView();
     }
 
     @Nullable
@@ -70,9 +71,35 @@ public class GamePresenter {
         return mWeakView.get();
     }
 
+    public void setCurrentWord(String word) {
+        mCurrentWord = word;
+        GamePresenter.View view = mWeakView.get();
+        if (view != null) {
+
+            // TODO: If the word was scrambled, then do not scramble it again
+            // i.e. after screen rotation
+
+            //mScrambledCurrentWord = scrambleWord(mCurrentWord);
+
+            //view.showCurrentWordView(mScrambledCurrentWord);
+            Log.d("GAME PRESENTER", "setCurrentWord mCurrentWORD:" + mCurrentWord);
+            //Log.d("GAME PRESENTER", "mScrambledCurrentWord:" + mScrambledCurrentWord);
+        }
+    }
+
+    public void initLoader() {
+        GamePresenter.View view = mWeakView.get();
+        if (view != null) {
+            view.initLoader();
+            Log.d("GAME PRESENTER", "Loader was INITIALIZED!!!!");
+        }
+    }
+
     public interface View {
         void showCurrentUsernameView(String username);
         void showOpponentUsernameView(String username);
-        void showWordView(String word);
+        void showOpponentWordView(String word);
+        void showCurrentWordView(String word);
+        void initLoader();
     }
 }

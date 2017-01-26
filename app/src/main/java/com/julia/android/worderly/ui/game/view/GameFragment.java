@@ -2,9 +2,12 @@ package com.julia.android.worderly.ui.game.view;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,10 +20,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.julia.android.worderly.R;
+import com.julia.android.worderly.data.database.WordContract;
 import com.julia.android.worderly.model.User;
 import com.julia.android.worderly.network.WordRequest;
 import com.julia.android.worderly.ui.game.presenter.GamePresenter;
 import com.julia.android.worderly.utils.Constants;
+import com.julia.android.worderly.utils.WordUtility;
 
 import java.util.Objects;
 
@@ -32,14 +37,16 @@ import static android.content.Context.MODE_PRIVATE;
 import static com.julia.android.worderly.utils.Constants.PREF_NAME;
 import static com.julia.android.worderly.utils.Constants.PREF_USER;
 
-public class GameFragment extends Fragment implements GamePresenter.View {
+public class GameFragment extends Fragment implements GamePresenter.View,
+        LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = GameFragment.class.getSimpleName();
+    private static final int CURSOR_LOADER_ID = 0;
     @BindView(R.id.text_current_user) TextView mCurrentUsernameTextView;
     @BindView(R.id.text_score_current_user) TextView mScoreCurrentUserTextView;
     @BindView(R.id.text_username_opponent) TextView mOpponentUsernameTextView;
-    @BindView(R.id.text_word) TextView mWordTextView;
-    @BindView(R.id.text_countdown) TextView mCountDownTextView;
+    @BindView(R.id.text_word_current) TextView mWordCurrentTextView;
+    @BindView(R.id.text_word_opponent) TextView mWordOpponentTextView;
     @BindView(R.id.edit_word) EditText mWordEditText;
     @BindView(R.id.button_send_word) Button mSendWordButton;
     private Unbinder mUnbinder;
@@ -62,15 +69,14 @@ public class GameFragment extends Fragment implements GamePresenter.View {
         getUserPrefs();
         getOpponentBundleExtras();
         getOpponentBundleExtras();
-//        isFirstTime = mPrefs.getBoolean("FIRST_TIME2", false);
+//        isFirstTime = mPrefs.getBoolean("FIRST_TIME7", false);
 //        if(!isFirstTime) {
 //            Log.d(TAG, "FIRST TIME");
-            // Fetching word from API
-            RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-            new WordRequest(requestQueue, getContext());
-
+        // Fetching word from API
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        new WordRequest(requestQueue, getContext(), mPresenter);
 //            SharedPreferences.Editor editor = mPrefs.edit();
-//            editor.putBoolean("FIRST_TIME2", true);
+//            editor.putBoolean("FIRST_TIME7", true);
 //            editor.apply();
 //        } else {
 //            Log.d(TAG, "SECOND TIME");
@@ -86,12 +92,6 @@ public class GameFragment extends Fragment implements GamePresenter.View {
         mPresenter.setCurrentUserView();
         mPresenter.setOpponentUserView();
         return view;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "onActivityCreated CALLED");
-        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -136,6 +136,7 @@ public class GameFragment extends Fragment implements GamePresenter.View {
         Log.d(TAG, "onDetach CALLED");
         super.onDetach();
         mPresenter.onDetach();
+//        getContext().getContentResolver().delete(WordContract.WordEntry.CONTENT_URI, null, null);
     }
 
     @Override
@@ -149,8 +150,45 @@ public class GameFragment extends Fragment implements GamePresenter.View {
     }
 
     @Override
-    public void showWordView(String word) {
-        mWordTextView.setText(word);
+    public void showCurrentWordView(String word) {
+        mWordCurrentTextView.setText(word);
+    }
+
+    @Override
+    public void showOpponentWordView(String word) {
+        mWordOpponentTextView.setText(word);
+    }
+
+    @Override
+    public void initLoader() {
+        Log.d(TAG, "LOADER WAS INITIALIZED!!!");
+        getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(
+                getActivity(), WordContract.WordEntry.CONTENT_URI, null, null, null, null);
+    }
+
+    // Set the cursor in our CursorAdapter once the Cursor is loaded
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        data.moveToFirst();
+        String word = data.getString(data.getColumnIndex(WordContract.WordEntry.COLUMN_WORD));
+        mPresenter.setCurrentWord(word);
+        String scrambledWord = mPrefs.getString("SCRAMBLED_WORD", "");
+        if (Objects.equals(scrambledWord, ""))  {
+            SharedPreferences.Editor editor = mPrefs.edit();
+            editor.putString("SCRAMBLED_WORD", WordUtility.scrambleWord(word));
+            editor.apply();
+        }
+        showCurrentWordView(scrambledWord);
+    }
+
+    // Reset CursorAdapter on Loader Reset
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader){
     }
 
     private void getUserPrefs() {
@@ -173,4 +211,5 @@ public class GameFragment extends Fragment implements GamePresenter.View {
             mPresenter.setOpponentFromBundle(opponent);
         }
     }
+
 }

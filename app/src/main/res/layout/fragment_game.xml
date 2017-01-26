@@ -58,30 +58,16 @@
         android:layout_below="@+id/linear_layout_players"/>
 
     <TextView
-        android:id="@+id/text_countdown"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/text_word_current"
+        style="@style/WordTextView"
         android:layout_below="@+id/view_horizontal_line_after_players"
-        android:layout_centerHorizontal="true"
-        android:background="@color/grey_800"
-        android:padding="5dp"
-        android:textAlignment="center"
-        android:textSize="22sp"
-        tools:text="33"/>
-
-    <View
-        style="@style/HorizontalDividerView"
-        android:layout_below="@+id/text_countdown"/>
+        tools:text="WORDABC" />
 
     <TextView
-        android:id="@+id/text_word"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/text_countdown"
-        android:paddingTop="5dp"
-        android:textAlignment="center"
-        android:textSize="25sp"
-        tools:text="WORD" />
+        android:id="@+id/text_word_opponent"
+        style="@style/WordTextView"
+        android:layout_below="@+id/text_word_current"
+        tools:text="WORDDEF" />
 
     <LinearLayout
         android:layout_width="match_parent"
