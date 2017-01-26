@@ -1,100 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/linear_layout_players"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        style="@style/LinearLayoutVertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout style="@style/PlayerLinearLayout">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/image_avatar_current_user"
-                style="@style/PlayerAvatarImage" />
-
-            <TextView
-                android:id="@+id/text_current_user"
-                style="@style/PlayerUsernameTextView"
-                tools:text="Julia"/>
-
-            <TextView
-                android:id="@+id/text_score_current_user"
-                style="@style/PlayerScoreTextView"
-                tools:text="13" />
-
-        </LinearLayout>
-
-        <View style="@style/VerticalDividerView"/>
-
-        <LinearLayout style="@style/PlayerLinearLayout">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/image_avatar_opponent_user"
-                style="@style/PlayerAvatarImage" />
-
-            <TextView
-                android:id="@+id/text_username_opponent"
-                style="@style/PlayerUsernameTextView"
-                tools:text="Andrey"/>
-
-            <TextView
-                android:id="@+id/text_score_opponent"
-                style="@style/PlayerScoreTextView"
-                tools:text="14" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <View
-        android:id="@+id/view_horizontal_line_after_players"
-        style="@style/HorizontalDividerView"
-        android:layout_below="@+id/linear_layout_players"/>
-
-    <TextView
-        android:id="@+id/text_word_current"
-        style="@style/WordTextView"
-        android:layout_below="@+id/view_horizontal_line_after_players"
-        tools:text="WORDABC" />
-
-    <TextView
-        android:id="@+id/text_word_opponent"
-        style="@style/WordTextView"
-        android:layout_below="@+id/text_word_current"
-        tools:text="WORDDEF" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:orientation="horizontal"
-        android:paddingStart="6dp">
-
-        <EditText
-            android:id="@+id/edit_word"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/players"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:hint="@string/msg_enter_word_here"
-            android:textSize="20sp" />
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/button_send_word"
-            android:layout_width="100dp"
-            android:layout_height="60dp"
-            android:layout_gravity="bottom"
-            android:enabled="false"
-            android:text="@string/msg_send"
-            android:textSize="20sp"/>
+            <TextView
+                style="@style/PlayersTextView" />
 
-    </LinearLayout>
+            <TextView
+                style="@style/PlayersTextView" />
 
-</RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linear_layout_players"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/players"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.CardView
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                style="@style/PlayerCardView"
+                card_view:cardCornerRadius="5dp"
+                card_view:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    style="@style/LinearLayoutVertical">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/image_avatar_current_user"
+                        style="@style/PlayerAvatarImage" />
+
+                    <TextView
+                        android:id="@+id/text_current_user"
+                        style="@style/PlayerUsernameTextView"
+                        tools:text="Julia"/>
+
+                    <TextView
+                        android:id="@+id/text_score_current_user"
+                        style="@style/PlayerScoreTextView"
+                        tools:text="13" />
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                style="@style/PlayerCardView"
+                card_view:cardCornerRadius="5dp"
+                card_view:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    style="@style/LinearLayoutVertical">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/image_avatar_opponent_user"
+                        style="@style/PlayerAvatarImage" />
+
+                    <TextView
+                        android:id="@+id/text_username_opponent"
+                        style="@style/PlayerUsernameTextView"
+                        tools:text="Andrey"/>
+
+                    <TextView
+                        android:id="@+id/text_score_opponent"
+                        style="@style/PlayerScoreTextView"
+                        tools:text="14" />
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/LinearLayoutVertical"
+            android:layout_below="@+id/linear_layout_players"
+            android:padding="15dp">
+
+            <TextView
+                android:id="@+id/text_word"
+                style="@style/WordTextView"
+                tools:text="worderly" />
+
+            <View
+                style="@style/HorizontalDividerView"/>
+
+            <TextView
+                android:id="@+id/text_word_definition"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="10dp"
+                android:textSize="17sp"
+                tools:text="a single distinct meaningful element of speech or writing, used with others (or sometimes alone) to form a sentence and typically shown with a space on either side when written or printed." />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/edit_word"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:hint="@string/msg_enter_word_here"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/button_send_word"
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:layout_gravity="bottom"
+                android:enabled="false"
+                android:text="@string/msg_send"
+                android:textSize="20sp"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>

@@ -8,6 +8,6 @@ public class FirebaseConstants {
     public static final String FIREBASE_USERS_CHILD = "users";
     public static final String FIREBASE_MESSAGES_CHILD = "messages";
     public static final String FIREBASE_USERS_ONLINE_CHILD = "usersOnline";
-    public static final String FIREBASE_WORDS_CHILD = "words";
+    public static final String FIREBASE_WORD_CHILD = "word";
 
 }

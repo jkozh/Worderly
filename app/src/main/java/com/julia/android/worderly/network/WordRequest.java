@@ -15,10 +15,10 @@ import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.julia.android.worderly.BuildConfig;
-import com.julia.android.worderly.data.database.WordContract;
+import com.julia.android.worderly.data.database.WordContract.WordEntry;
 import com.julia.android.worderly.model.Result;
 import com.julia.android.worderly.model.Word;
-import com.julia.android.worderly.ui.game.presenter.GamePresenter;
+import com.julia.android.worderly.utils.WordUtility;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,8 +45,7 @@ public class WordRequest {
 
     private final String TAG = WordRequest.class.getSimpleName();
 
-    public WordRequest(RequestQueue requestQueue, final Context context,
-                       final GamePresenter presenter) {
+    public WordRequest(RequestQueue requestQueue, final Context context) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         final Gson gson = gsonBuilder.create();
 
@@ -65,7 +64,6 @@ public class WordRequest {
                             Log.i(TAG, "definition: " + result.getDefinition());
                         }
                         setContentValues(context, word.getWord(), results.get(0).getDefinition());
-                        presenter.initLoader();
                     }
 
                 }, new Response.ErrorListener() {
@@ -102,12 +100,12 @@ public class WordRequest {
         // Insert new word data via a ContentResolver
         // Create new empty ContentValues object
         ContentValues contentValues = new ContentValues();
-        // Put the word and definition into the ContentValues
-        contentValues.put(WordContract.WordEntry.COLUMN_WORD, word);
-        contentValues.put(WordContract.WordEntry.COLUMN_DEFINITION, definition);
+        // Put the word, scrambled, and definition into the ContentValues
+        contentValues.put(WordEntry.COLUMN_WORD, word);
+        contentValues.put(WordEntry.COLUMN_SCRAMBLED_WORD, WordUtility.scrambleWord(word));
+        contentValues.put(WordEntry.COLUMN_DEFINITION, definition);
         // Insert the content values via a ContentResolver
-        Uri uri = context.getContentResolver().insert(
-                WordContract.WordEntry.CONTENT_URI, contentValues);
+        Uri uri = context.getContentResolver().insert(WordEntry.CONTENT_URI, contentValues);
 
         // The URI that's returned
         if(uri != null) {

@@ -131,7 +131,7 @@ public class WordContentProvider extends ContentProvider {
     @Override
     public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
 
-        // COMPLETED (1) Get access to the database and write URI matching code to recognize a single item
+        // Get access to the database and write URI matching code to recognize a single item
         final SQLiteDatabase db = mWordDbHelper.getWritableDatabase();
 
         int match = sUriMatcher.match(uri);

@@ -6,6 +6,10 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.julia.android.worderly.R;
 import com.julia.android.worderly.ui.chat.view.ChatFragment;
@@ -14,8 +18,7 @@ import com.julia.android.worderly.ui.game.adapter.GamePagerAdapter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class GameActivity extends AppCompatActivity implements GameActivityView,
-        ViewPager.OnPageChangeListener {
+public class GameActivity extends AppCompatActivity implements GameActivityView {
 
     private static final String TAG = GameActivity.class.getSimpleName();
     private final int GAME_TAB = 0;
@@ -23,6 +26,7 @@ public class GameActivity extends AppCompatActivity implements GameActivityView,
     @BindView(R.id.toolbar_game_activity) Toolbar mToolbar;
     @BindView(R.id.viewpager) ViewPager mViewPager;
     @BindView(R.id.tabs) TabLayout mTabLayout;
+    GameFragment mGameFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +37,6 @@ public class GameActivity extends AppCompatActivity implements GameActivityView,
         setSupportActionBar(mToolbar);
         if (mViewPager != null) {
             setupViewPager(mViewPager);
-            mViewPager.addOnPageChangeListener(this);
         }
         mTabLayout.setupWithViewPager(mViewPager);
         setupTabIcons();
@@ -69,8 +72,28 @@ public class GameActivity extends AppCompatActivity implements GameActivityView,
         super.onDestroy();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d(TAG, "onCreateOptionsMenu CALLED");
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.game_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_resign:
+                Toast.makeText(this, "Resigned", Toast.LENGTH_SHORT).show();
+                mGameFragment.resign();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     /**
-     * Method used to indicate the number of new chat messages received.
+     * Method used to indicate the new message received.
      */
     @Override
     public void setChatTabNewMessageTitle() {
@@ -78,20 +101,6 @@ public class GameActivity extends AppCompatActivity implements GameActivityView,
         if (chatTab != null) {
             chatTab.setText(getString(R.string.title_chat_new));
         }
-    }
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        // TODO: Remove viewed messages notification in tab layout
-//        if (position == CHAT_TAB)
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
     }
 
     private void setupTabIcons() {
@@ -109,6 +118,6 @@ public class GameActivity extends AppCompatActivity implements GameActivityView,
         adapter.addFragment(new GameFragment(), getString(R.string.title_game));
         adapter.addFragment(new ChatFragment(), getString(R.string.title_chat));
         viewPager.setAdapter(adapter);
-//        mChatFragment = (ChatFragment) adapter.getItem(CHAT_TAB);
+        mGameFragment = (GameFragment) adapter.getItem(GAME_TAB);
     }
 }

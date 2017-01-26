@@ -7,12 +7,18 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.julia.android.worderly.R;
 import com.julia.android.worderly.model.User;
+import com.julia.android.worderly.network.WordRequest;
 import com.julia.android.worderly.ui.game.view.GameActivity;
 import com.julia.android.worderly.ui.search.presenter.SearchOpponentPresenter;
 import com.julia.android.worderly.ui.search.presenter.SearchOpponentPresenterImpl;
@@ -31,6 +37,7 @@ public class SearchOpponentActivity extends AppCompatActivity implements SearchO
 
     private static final String TAG = SearchOpponentActivity.class.getSimpleName();
     @BindView(R.id.toolbar_randomopponent_activity) Toolbar mToolbar;
+    @BindView(R.id.progressBar) ProgressBar mProgressBar;
     @BindView(R.id.text_searching_opponent) TextView mSearchingOpponentTextView;
     @BindView(R.id.image_avatar_opponent) CircleImageView mAvatarOpponentImageView;
     @BindView(R.id.text_username_opponent) TextView mUsernameOpponentTextView;
@@ -75,14 +82,26 @@ public class SearchOpponentActivity extends AppCompatActivity implements SearchO
      * Opponent found -> launch the Game activity
      */
     @Override
-    public void navigateToGameActivity(User opponentUser) {
-        Intent i = new Intent(this, GameActivity.class);
-        i.putExtra(Constants.EXTRA_OPPONENT_ID, opponentUser.getId());
-        i.putExtra(Constants.EXTRA_OPPONENT_USERNAME, opponentUser.getUsername());
-        i.putExtra(Constants.EXTRA_OPPONENT_EMAIL, opponentUser.getEmail());
-        i.putExtra(Constants.EXTRA_OPPONENT_PHOTO_URL, opponentUser.getPhotoUrl());
-        startActivity(i);
-        finish();
+    public void navigateToGameActivity(final User opponentUser) {
+        // Fetching word from API
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        new WordRequest(requestQueue, this);
+        requestQueue.addRequestFinishedListener(
+                new RequestQueue.RequestFinishedListener<String>() {
+                    @Override
+                    public void onRequestFinished(Request<String> request) {
+                        Log.d(TAG, "I AM FINISHED!!!!!!!!!!!!!!!!!");
+
+                        Intent i = new Intent(SearchOpponentActivity.this, GameActivity.class);
+                        i.putExtra(Constants.EXTRA_OPPONENT_ID, opponentUser.getId());
+                        i.putExtra(Constants.EXTRA_OPPONENT_USERNAME, opponentUser.getUsername());
+                        i.putExtra(Constants.EXTRA_OPPONENT_EMAIL, opponentUser.getEmail());
+                        i.putExtra(Constants.EXTRA_OPPONENT_PHOTO_URL, opponentUser.getPhotoUrl());
+                        mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+                        startActivity(i);
+                        finish();
+                    }
+                });
     }
 
     private void getSharedPrefs() {

@@ -22,7 +22,9 @@ public class WordContract {
         // Since WordEntry implements the interface "BaseColumns", it has an automatically produced
         // "_ID" column in addition to the two below
         public static final String COLUMN_WORD = "word";
+        public static final String COLUMN_SCRAMBLED_WORD = "scrambled";
         public static final String COLUMN_DEFINITION = "definition";
+
         // Word table and column names
         static final String TABLE_NAME = "words";
 
@@ -31,19 +33,19 @@ public class WordContract {
         With the name of the table and columns on top, and potential contents in rows
         Note: Because this implements BaseColumns, the _id column is generated automatically
         words
-         - - - - - - - - - - - - - - - - -
-        | _id  |    word    | definition |
-         - - - - - - - - - - - - - - - - -
-        |  1   |  passion   | some def...|
-         - - - - - - - - - - - - - - - - -
-        |  2   |  ruining   | some def...|
-         - - - - - - - - - - - - - - - - -
+         - - - - - - - - - - - - - - - - - - - - - - - - - -
+        | _id  |    word    |   scrambled   |  definition  |
+         - - - - - - - - - - - - - - - - - - - - - - - - - -
+        |  1   |  passion   |    sasonip    |  some def... |
+         - - - - - - - - - - - - - - - - - - - - - - - - - -
+        |  2   |  ruining   |    uniigrn    |  some def... |
+         - - - - - - - - - - - - - - - - - - - - - - - - - -
         .
         .
         .
-         - - - - - - - - - - - - - - - - -
-        |  43  |  letters   | some def...|
-         - - - - - - - - - - - - - - - - -
+         - - - - - - - - - - - - - - - - - - - - - - - - - -
+        |  43  |  letters   |    etreslt    |  some def... |
+         - - - - - - - - - - - - - - - - - - - - - - - - - -
          */
     }
 }

@@ -1,6 +1,5 @@
 package com.julia.android.worderly.data.database;
 
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -11,7 +10,7 @@ class WordDbHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "wordsDb.db";
 
     // If you change the database schema, you must increment the database version
-    private static final int VERSION = 2;
+    private static final int VERSION = 3;
 
 
     // Constructor
@@ -28,9 +27,10 @@ class WordDbHelper extends SQLiteOpenHelper {
 
         // Create words table (careful to follow SQL formatting rules)
         final String CREATE_TABLE = "CREATE TABLE " + WordContract.WordEntry.TABLE_NAME + " (" +
-                WordContract.WordEntry._ID               + " INTEGER PRIMARY KEY, " +
-                WordContract.WordEntry.COLUMN_WORD       + " TEXT NOT NULL, " +
-                WordContract.WordEntry.COLUMN_DEFINITION + " TEXT NOT NULL);";
+                WordContract.WordEntry._ID                   + " INTEGER PRIMARY KEY, " +
+                WordContract.WordEntry.COLUMN_WORD           + " TEXT NOT NULL, " +
+                WordContract.WordEntry.COLUMN_SCRAMBLED_WORD + " TEXT NOT NULL, " +
+                WordContract.WordEntry.COLUMN_DEFINITION     + " TEXT NOT NULL);";
 
         db.execSQL(CREATE_TABLE);
     }

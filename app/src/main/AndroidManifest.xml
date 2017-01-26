@@ -19,7 +19,8 @@
         </activity>
         <activity android:name=".ui.signin.SignInActivity" />
         <activity android:name=".ui.search.view.SearchOpponentActivity" />
-        <activity android:name=".ui.game.view.GameActivity" />
+        <activity android:name=".ui.game.view.GameActivity"
+            android:windowSoftInputMode="stateHidden"/>
 
         <!-- Register the GameContentProvider -->
         <!-- Set name, authorities, and exported attributes -->

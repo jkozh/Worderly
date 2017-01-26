@@ -47,5 +47,7 @@
 
     <string name="msg_opponent_found">Opponent found:</string>
     <string name="msg_searching_for_opponent">Searching for opponent…</string>
-    <string name="msg_enter_word_here">Enter word here...</string>
+    <string name="msg_enter_word_here">Guess word by definition…</string>
+    <string name="msg_you">You:</string>
+    <string name="msg_opponent">Opponent:</string>
 </resources>

@@ -16,16 +16,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.julia.android.worderly.R;
 import com.julia.android.worderly.data.database.WordContract;
 import com.julia.android.worderly.model.User;
-import com.julia.android.worderly.network.WordRequest;
 import com.julia.android.worderly.ui.game.presenter.GamePresenter;
 import com.julia.android.worderly.utils.Constants;
-import com.julia.android.worderly.utils.WordUtility;
 
 import java.util.Objects;
 
@@ -45,14 +41,13 @@ public class GameFragment extends Fragment implements GamePresenter.View,
     @BindView(R.id.text_current_user) TextView mCurrentUsernameTextView;
     @BindView(R.id.text_score_current_user) TextView mScoreCurrentUserTextView;
     @BindView(R.id.text_username_opponent) TextView mOpponentUsernameTextView;
-    @BindView(R.id.text_word_current) TextView mWordCurrentTextView;
-    @BindView(R.id.text_word_opponent) TextView mWordOpponentTextView;
+    @BindView(R.id.text_word) TextView mWordTextView;
+    @BindView(R.id.text_word_definition) TextView mWordDefinitionTextView;
     @BindView(R.id.edit_word) EditText mWordEditText;
     @BindView(R.id.button_send_word) Button mSendWordButton;
     private Unbinder mUnbinder;
     private GamePresenter mPresenter;
     private SharedPreferences mPrefs;
-    private boolean isFirstTime;
 
     @Override
     public void onAttach(Context context) {
@@ -62,35 +57,23 @@ public class GameFragment extends Fragment implements GamePresenter.View,
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate CALLED");
         super.onCreate(savedInstanceState);
         mPresenter = new GamePresenter(this);
         mPrefs = getActivity().getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         getUserPrefs();
         getOpponentBundleExtras();
         getOpponentBundleExtras();
-//        isFirstTime = mPrefs.getBoolean("FIRST_TIME7", false);
-//        if(!isFirstTime) {
-//            Log.d(TAG, "FIRST TIME");
-        // Fetching word from API
-        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-        new WordRequest(requestQueue, getContext(), mPresenter);
-//            SharedPreferences.Editor editor = mPrefs.edit();
-//            editor.putBoolean("FIRST_TIME7", true);
-//            editor.apply();
-//        } else {
-//            Log.d(TAG, "SECOND TIME");
-//        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView CALLED");
         View view = inflater.inflate(R.layout.fragment_game, container, false);
         mUnbinder = ButterKnife.bind(this, view);
         mPresenter.setCurrentUserView();
         mPresenter.setOpponentUserView();
+        getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
         return view;
     }
 
@@ -136,7 +119,6 @@ public class GameFragment extends Fragment implements GamePresenter.View,
         Log.d(TAG, "onDetach CALLED");
         super.onDetach();
         mPresenter.onDetach();
-//        getContext().getContentResolver().delete(WordContract.WordEntry.CONTENT_URI, null, null);
     }
 
     @Override
@@ -150,19 +132,13 @@ public class GameFragment extends Fragment implements GamePresenter.View,
     }
 
     @Override
-    public void showCurrentWordView(String word) {
-        mWordCurrentTextView.setText(word);
+    public void showWordView(String word) {
+        mWordTextView.setText(word);
     }
 
     @Override
-    public void showOpponentWordView(String word) {
-        mWordOpponentTextView.setText(word);
-    }
-
-    @Override
-    public void initLoader() {
-        Log.d(TAG, "LOADER WAS INITIALIZED!!!");
-        getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
+    public void showDefinitionView(String definition) {
+        mWordDefinitionTextView.setText(definition);
     }
 
     @Override
@@ -174,21 +150,37 @@ public class GameFragment extends Fragment implements GamePresenter.View,
     // Set the cursor in our CursorAdapter once the Cursor is loaded
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Log.d(TAG, "DATA="+data);
+        Log.d(TAG, "loader="+loader);
         data.moveToFirst();
-        String word = data.getString(data.getColumnIndex(WordContract.WordEntry.COLUMN_WORD));
-        mPresenter.setCurrentWord(word);
-        String scrambledWord = mPrefs.getString("SCRAMBLED_WORD", "");
-        if (Objects.equals(scrambledWord, ""))  {
-            SharedPreferences.Editor editor = mPrefs.edit();
-            editor.putString("SCRAMBLED_WORD", WordUtility.scrambleWord(word));
-            editor.apply();
-        }
-        showCurrentWordView(scrambledWord);
+        String word = data.getString(1);
+        String scrambledWord = data.getString(2);
+        String definition = data.getString(3);
+        mPresenter.setWord(word);
+        mPresenter.setScrambledWord(scrambledWord);
+        mPresenter.setDefinition(definition);
     }
 
     // Reset CursorAdapter on Loader Reset
     @Override
     public void onLoaderReset(Loader<Cursor> loader){
+    }
+
+    public void resign() {
+        Log.d(TAG, "TRYING TO DELETE DATABASE");
+//        for (int i = 1; i < 2; i++) {
+//            Uri uri = WordContract.WordEntry.CONTENT_URI;
+//            uri = uri.buildUpon().appendPath(i+"").build();
+//            getContext().getContentResolver().delete(uri, null, null);
+//            SharedPreferences.Editor editor = mPrefs.edit();
+//            editor.putString("SCRAMBLED_WORD", "");
+//            editor.apply();
+//            startActivity(new Intent(getActivity(), MainActivity.class));
+//            getActivity().finish();
+//        }
+
+        // Restart the loader to re-query for all words after a deletion
+        //getActivity().getSupportLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);
     }
 
     private void getUserPrefs() {
