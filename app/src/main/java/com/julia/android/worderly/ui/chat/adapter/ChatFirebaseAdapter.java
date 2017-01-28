@@ -1,11 +1,9 @@
 package com.julia.android.worderly.ui.chat.adapter;
 
-import android.support.v4.content.ContextCompat;
 import android.text.format.DateUtils;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.Query;
-import com.julia.android.worderly.R;
 import com.julia.android.worderly.model.Message;
 
 import java.text.DateFormat;
@@ -25,15 +23,15 @@ public class ChatFirebaseAdapter extends FirebaseRecyclerAdapter<Message, Messag
         viewHolder.messageTextView.setText(message.getText());
         viewHolder.timeTextView.setText(getTime(message));
         // Set striped background view for the messages
-        setStripedBackground(viewHolder, position);
+//        setStripedBackground(viewHolder, position);
     }
 
     private void setStripedBackground(MessageViewHolder viewHolder, int position) {
         // TODO: make it work for only opponent messages
-        if(position % 2 == 0) {
-            viewHolder.itemView.setBackgroundColor(ContextCompat.getColor(
-                    viewHolder.itemView.getContext(), R.color.colorChatDark));
-        }
+//        if(position % 2 == 0) {
+//            viewHolder.itemView.setBackgroundColor(ContextCompat.getColor(
+//                    viewHolder.itemView.getContext(), R.color.colorChatDark));
+//        }
     }
 
     private String getTime(Message message) {

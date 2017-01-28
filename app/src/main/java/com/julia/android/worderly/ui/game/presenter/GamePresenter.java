@@ -8,6 +8,7 @@ import com.julia.android.worderly.ui.game.interactor.GameInteractor;
 import com.julia.android.worderly.ui.game.interactor.GameInteractorImpl;
 
 import java.lang.ref.WeakReference;
+import java.util.Objects;
 
 public class GamePresenter {
 
@@ -59,7 +60,7 @@ public class GamePresenter {
     public void setWord(String word) {
         mWord = word;
         Log.d("GAME PRESENTER", "setWord mWord:" + mWord);
-
+        mInteractor.listenOpponentUserWin(mCurrentUser.getId(), mOpponentUser.getId());
     }
 
     public void setScrambledWord(String scrambledWord) {
@@ -78,10 +79,29 @@ public class GamePresenter {
         }
     }
 
+    public void onSendWordClick(String sendWord) {
+        if (Objects.equals(sendWord.toUpperCase(), mWord.toUpperCase())) {
+            GamePresenter.View view = mWeakView.get();
+            if (view != null) {
+                mInteractor.notifyOpponentUserWin(mCurrentUser.getId(), mOpponentUser.getId());
+                view.showWinDialog();
+            }
+        }
+    }
+
+    public void showLossDialog() {
+        GamePresenter.View view = mWeakView.get();
+        if (view != null) {
+            view.showLossDialog(mWord);
+        }
+    }
+
     public interface View {
         void showCurrentUsernameView(String username);
         void showOpponentUsernameView(String username);
         void showWordView(String word);
         void showDefinitionView(String definition);
+        void showWinDialog();
+        void showLossDialog(String word);
     }
 }

@@ -13,12 +13,12 @@
     <string name="enter_message_hint">Enter your message here</string>
 
     <!-- Messages in SignIn Activity -->
-    <string name="msg_sign_in">Sign In</string>
-    <string name="msg_skip_this">Skip this</string>
+    <string name="msg_sign_in">SIGN IN:</string>
+    <string name="msg_skip_this">ENTER AS A GUEST</string>
     <string name="msg_loading">Loading…</string>
 
     <!-- Messages in Main Activity -->
-    <string name="msg_play_with">Play with…</string>
+    <string name="msg_play_with">Play with:</string>
     <string name="msg_random_opponent">Find random opponent</string>
     <string name="msg_worderly_friends">Worderly Friends</string>
     <string name="msg_find_player">Find player</string>
