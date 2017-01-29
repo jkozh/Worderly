@@ -6,12 +6,16 @@
     <dimen name="definition_padding_top">10dp</dimen>
     <dimen name="send_btn_width">100dp</dimen>
     <dimen name="send_btn_height">60dp</dimen>
+    <dimen name="card_view_corner_radius">5dp</dimen>
+    <dimen name="linear_layout_padding">15dp</dimen>
 
     <dimen name="text_size_medium">18sp</dimen>
     <dimen name="text_size_large">25sp</dimen>
 
     <!-- Dimensions for Main Activity -->
     <dimen name="play_with_padding">20dp</dimen>
+    <dimen name="nav_header_padding">16dp</dimen>
+    <dimen name="nav_header_height">200dp</dimen>
 
     <!-- Dimens for SignIn Activity -->
     <dimen name="text_size_extra_large">38sp</dimen>
@@ -24,8 +28,10 @@
     <!-- Dimensions for SearchOpponent Activity -->
     <dimen name="searching_opponent_padding">20dp</dimen>
 
-
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_chat_horizontal_margin">16dp</dimen>
     <dimen name="activity_chat_vertical_margin">16dp</dimen>
+    <dimen name="item_message_margin_start">10dp</dimen>
+    <dimen name="item_message_text_size">22sp</dimen>
+
 </resources>

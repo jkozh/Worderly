@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
@@ -11,15 +12,15 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/image_avatar_messenger"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="@dimen/player_avatar_size"
+        android:layout_height="@dimen/player_avatar_size"
         android:layout_gravity="top"
         android:src="@drawable/ic_account_circle_black_36dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="@dimen/item_message_margin_start"
         android:gravity="center_vertical"
         android:orientation="vertical">
 
@@ -33,13 +34,14 @@
             android:id="@+id/text_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="22sp"/>
+            android:textSize="@dimen/item_message_text_size"/>
 
         <TextView
             android:id="@+id/text_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
+
     </LinearLayout>
 
 </LinearLayout>

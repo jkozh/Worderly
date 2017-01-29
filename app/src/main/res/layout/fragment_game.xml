@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     style="@style/LinearLayoutVertical"
     android:background="@color/blue_grey_50"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -42,7 +40,7 @@
                 <android.support.v7.widget.CardView
                     xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     style="@style/PlayerCardView"
-                    card_view:cardCornerRadius="5dp"
+                    card_view:cardCornerRadius="@dimen/card_view_corner_radius"
                     card_view:cardUseCompatPadding="true">
 
                     <LinearLayout
@@ -54,13 +52,7 @@
 
                         <TextView
                             android:id="@+id/text_current_user"
-                            style="@style/PlayerUsernameTextView"
-                            tools:text="Julia"/>
-
-                        <TextView
-                            android:id="@+id/text_score_current_user"
-                            style="@style/PlayerScoreTextView"
-                            tools:text="13" />
+                            style="@style/PlayerUsernameTextView" />
 
                     </LinearLayout>
 
@@ -69,7 +61,7 @@
                 <android.support.v7.widget.CardView
                     xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     style="@style/PlayerCardView"
-                    card_view:cardCornerRadius="5dp"
+                    card_view:cardCornerRadius="@dimen/card_view_corner_radius"
                     card_view:cardUseCompatPadding="true">
 
                     <LinearLayout
@@ -81,13 +73,7 @@
 
                         <TextView
                             android:id="@+id/text_username_opponent"
-                            style="@style/PlayerUsernameTextView"
-                            tools:text="Andrey"/>
-
-                        <TextView
-                            android:id="@+id/text_score_opponent"
-                            style="@style/PlayerScoreTextView"
-                            tools:text="14" />
+                            style="@style/PlayerUsernameTextView" />
 
                     </LinearLayout>
 
@@ -97,12 +83,11 @@
 
             <LinearLayout
                 style="@style/LinearLayoutVertical"
-                android:padding="15dp">
+                android:padding="@dimen/linear_layout_padding">
 
                 <TextView
                     android:id="@+id/text_word"
-                    style="@style/WordTextView"
-                    tools:text="worderly" />
+                    style="@style/WordTextView" />
 
                 <View
                     style="@style/HorizontalDividerView"/>
@@ -112,8 +97,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingTop="@dimen/definition_padding_top"
-                    android:textSize="@dimen/text_size_medium"
-                    tools:text="a single distinct meaningful element of speech or writing, used with others (or sometimes alone) to form a sentence and typically shown with a space on either side when written or printed." />
+                    android:textSize="@dimen/text_size_medium" />
 
             </LinearLayout>
 

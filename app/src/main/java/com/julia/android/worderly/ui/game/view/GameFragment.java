@@ -1,8 +1,10 @@
 package com.julia.android.worderly.ui.game.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -20,9 +22,11 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.julia.android.worderly.R;
+import com.julia.android.worderly.data.database.WordContract;
 import com.julia.android.worderly.data.database.WordContract.WordEntry;
 import com.julia.android.worderly.model.User;
 import com.julia.android.worderly.ui.game.presenter.GamePresenter;
+import com.julia.android.worderly.ui.main.view.MainActivity;
 import com.julia.android.worderly.utils.Constants;
 
 import java.util.Objects;
@@ -51,7 +55,6 @@ public class GameFragment extends Fragment implements GamePresenter.View,
 
     // Member variables for binding views using ButterKnife
     @BindView(R.id.text_current_user) TextView mCurrentUsernameTextView;
-    @BindView(R.id.text_score_current_user) TextView mScoreCurrentUserTextView;
     @BindView(R.id.text_username_opponent) TextView mOpponentUsernameTextView;
     @BindView(R.id.text_word) TextView mWordTextView;
     @BindView(R.id.text_word_definition) TextView mWordDefinitionTextView;
@@ -93,47 +96,9 @@ public class GameFragment extends Fragment implements GamePresenter.View,
     }
 
     @Override
-    public void onStart() {
-        Log.d(TAG, "onStart CALLED");
-        super.onStart();
-    }
-
-    @Override
-    public void onResume() {
-        Log.d(TAG, "onResume CALLED");
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        Log.d(TAG, "onPause CALLED");
-        super.onPause();
-    }
-
-    @Override
-    public void onStop() {
-        Log.d(TAG, "onStop CALLED");
-        super.onStop();
-    }
-
-    @Override
     public void onDestroyView() {
-        Log.d(TAG, "onDestroyView CALLED");
         super.onDestroyView();
         mUnbinder.unbind();
-    }
-
-    @Override
-    public void onDestroy() {
-        Log.d(TAG, "onDestroy CALLED");
-        super.onDestroy();
-    }
-
-    @Override
-    public void onDetach() {
-        Log.d(TAG, "onDetach CALLED");
-        super.onDetach();
-        mPresenter.onDetach();
     }
 
     @Override
@@ -159,6 +124,7 @@ public class GameFragment extends Fragment implements GamePresenter.View,
     @Override
     public void showWinDialog() {
         Toast.makeText(getContext(), "YOU WON! (Dialog)", Toast.LENGTH_LONG).show();
+
     }
 
     @Override
@@ -227,9 +193,12 @@ public class GameFragment extends Fragment implements GamePresenter.View,
     public void resign() {
         Log.d(TAG, "TRYING TO DELETE DATABASE");
 //        for (int i = 1; i < 2; i++) {
-//            Uri uri = WordContract.WordEntry.CONTENT_URI;
-//            uri = uri.buildUpon().appendPath(i+"").build();
-//            getContext().getContentResolver().delete(uri, null, null);
+        Uri uri = WordContract.WordEntry.CONTENT_URI;
+        uri = uri.buildUpon().appendPath("1").build();
+        getContext().getContentResolver().delete(uri, null, null);
+        Intent i = new Intent(getActivity(), MainActivity.class);
+        startActivity(i);
+        getActivity().finish();
 //            SharedPreferences.Editor editor = mPrefs.edit();
 //            editor.putString("SCRAMBLED_WORD", "");
 //            editor.apply();

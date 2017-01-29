@@ -1,9 +1,7 @@
 package com.julia.android.worderly.ui.chat.view;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -58,14 +56,7 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
     private SharedPreferences mPrefs;
 
     @Override
-    public void onAttach(Context context) {
-        Log.d(TAG, "onAttach CALLED");
-        super.onAttach(context);
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate CALLED");
         super.onCreate(savedInstanceState);
         mPresenter = new ChatPresenter(this);
         mPrefs = getActivity().getSharedPreferences(PREF_NAME, MODE_PRIVATE);
@@ -77,7 +68,6 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView CALLED");
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
         mUnbinder = ButterKnife.bind(this, view);
 
@@ -97,52 +87,19 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "onActivityCreated CALLED");
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onStart() {
-        Log.d(TAG, "onStart CALLED");
-        super.onStart();
-    }
-
-    @Override
-    public void onResume() {
-        Log.d(TAG, "onResume CALLED");
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        Log.d(TAG, "onPause CALLED");
-        super.onPause();
-    }
-
-    @Override
-    public void onStop() {
-        Log.d(TAG, "onStop CALLED");
-        super.onStop();
-    }
-
-    @Override
     public void onDestroyView() {
-        Log.d(TAG, "onDestroyView CALLED");
         super.onDestroyView();
         mUnbinder.unbind();
     }
 
     @Override
     public void onDestroy() {
-        Log.d(TAG, "onDestroy CALLED");
         super.onDestroy();
         mFirebaseAdapter.cleanup();
     }
 
     @Override
     public void onDetach() {
-        Log.d(TAG, "onDetach CALLED");
         super.onDetach();
         mPresenter.onDetach();
     }
@@ -159,7 +116,7 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
         if (getActivity() != null) {
             ((GameActivity) getActivity()).setChatTabNewMessageTitle();
         } else {
-            Log.d(TAG, "getActivity() is null");
+            Log.d(TAG, "Parent activity is null");
         }
     }
 

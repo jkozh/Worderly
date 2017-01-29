@@ -20,7 +20,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -46,8 +45,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/image_avatar_opponent"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/player_avatar_size"
+            android:layout_height="@dimen/player_avatar_size"
             android:layout_gravity="center"/>
 
         <TextView
@@ -55,14 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textSize="20sp"/>
-
-        <TextView
-            android:id="@+id/text_uid_opponent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textSize="15sp"/>
+            android:textSize="@dimen/text_size_medium"/>
 
     </LinearLayout>
 

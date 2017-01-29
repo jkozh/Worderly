@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -16,6 +17,7 @@ import com.julia.android.worderly.model.User;
 import com.julia.android.worderly.ui.main.view.MainActivity;
 import com.julia.android.worderly.utils.Constants;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -23,6 +25,8 @@ public class SignInActivity extends AbstractSignInActivity {
 
     private static final String TAG = SignInActivity.class.getSimpleName();
     private static final int REQUEST_SIGN_IN_GOOGLE = 9001;
+    @BindView(R.id.toolbar_signin_activity)
+    Toolbar mToolbar;
     private ProgressDialog mProgressDialog;
     private SignInPresenter mPresenter;
 
@@ -34,6 +38,7 @@ public class SignInActivity extends AbstractSignInActivity {
         // Configure Google Sign In
         setUpGoogleSignIn();
         mPresenter = new SignInPresenterImpl(this);
+        setSupportActionBar(mToolbar);
     }
 
     @Override
@@ -126,27 +131,4 @@ public class SignInActivity extends AbstractSignInActivity {
             mProgressDialog.dismiss();
         }
     }
-
-//    @Override
-//    public void showEnterNicknameDialog(String username) {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setTitle(getString(R.string.title_enter_nickname));
-//        builder.setMessage(getString(R.string.msg_by_default, username));
-//        final EditText nicknameEditText = new EditText(this);
-//        nicknameEditText.setFilters(new InputFilter[] {
-//                // Maximum 20 characters
-//                new InputFilter.LengthFilter(Constants.MAX_USERNAME_INPUT_DIALOG),
-//        });
-//        builder.setView(nicknameEditText);
-//
-//        builder.setPositiveButton(getString(R.string.action_ok),
-//                new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        mPresenter.setUsernameFromDialog(nicknameEditText.getText().toString());
-//                    }
-//                });
-//        final AlertDialog dialog = builder.create();
-//        dialog.show();
-//    }
 }

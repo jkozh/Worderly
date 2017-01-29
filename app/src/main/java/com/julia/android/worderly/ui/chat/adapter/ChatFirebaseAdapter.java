@@ -22,17 +22,8 @@ public class ChatFirebaseAdapter extends FirebaseRecyclerAdapter<Message, Messag
         viewHolder.messengerTextView.setText(message.getName());
         viewHolder.messageTextView.setText(message.getText());
         viewHolder.timeTextView.setText(getTime(message));
-        // Set striped background view for the messages
-//        setStripedBackground(viewHolder, position);
     }
 
-    private void setStripedBackground(MessageViewHolder viewHolder, int position) {
-        // TODO: make it work for only opponent messages
-//        if(position % 2 == 0) {
-//            viewHolder.itemView.setBackgroundColor(ContextCompat.getColor(
-//                    viewHolder.itemView.getContext(), R.color.colorChatDark));
-//        }
-    }
 
     private String getTime(Message message) {
         String time = "";
@@ -41,7 +32,6 @@ public class ChatFirebaseAdapter extends FirebaseRecyclerAdapter<Message, Messag
             if (DateUtils.isToday((long)ts)) {
                 time = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault()).format(ts);
             } else {
-                // TODO: Think about it below
                 time = new SimpleDateFormat("EEE d, hh:mm", Locale.getDefault()).format(ts);
             }
         }

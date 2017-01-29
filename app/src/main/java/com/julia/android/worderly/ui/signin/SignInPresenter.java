@@ -8,6 +8,4 @@ interface SignInPresenter {
     void onDestroy();
     void firebaseAuthWithGoogle(GoogleSignInAccount account);
     void firebaseAuthAnonymous();
-    //void setSharedPrefs(User user);
-    //void setUsernameFromDialog();
 }

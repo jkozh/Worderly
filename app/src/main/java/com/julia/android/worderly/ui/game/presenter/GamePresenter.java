@@ -45,10 +45,6 @@ public class GamePresenter {
         }
     }
 
-    public void onDetach() {
-//        mWeakView = null;
-    }
-
     @Nullable
     private GamePresenter.View getView() {
         if (mWeakView == null) {

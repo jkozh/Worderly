@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -41,7 +40,6 @@ public class SearchOpponentActivity extends AppCompatActivity implements SearchO
     @BindView(R.id.text_searching_opponent) TextView mSearchingOpponentTextView;
     @BindView(R.id.image_avatar_opponent) CircleImageView mAvatarOpponentImageView;
     @BindView(R.id.text_username_opponent) TextView mUsernameOpponentTextView;
-    @BindView(R.id.text_uid_opponent) TextView mUidOpponentTextView;
     private SearchOpponentPresenter mPresenter;
 
     @Override
@@ -67,15 +65,13 @@ public class SearchOpponentActivity extends AppCompatActivity implements SearchO
     }
 
     @Override
-    public void addOpponentFoundView(final String uid, final String username,
-                                     final String photoUrl) {
+    public void addOpponentFoundView(final String username, final String photoUrl) {
         mSearchingOpponentTextView.setText(R.string.msg_opponent_found);
         if(photoUrl != null) {
             Glide.with(SearchOpponentActivity.this).load(photoUrl)
                     .into(mAvatarOpponentImageView);
         }
         mUsernameOpponentTextView.setText(username);
-        mUidOpponentTextView.setText(uid);
     }
 
     /**
@@ -90,8 +86,6 @@ public class SearchOpponentActivity extends AppCompatActivity implements SearchO
                 new RequestQueue.RequestFinishedListener<String>() {
                     @Override
                     public void onRequestFinished(Request<String> request) {
-                        Log.d(TAG, "I AM FINISHED!!!!!!!!!!!!!!!!!");
-
                         Intent i = new Intent(SearchOpponentActivity.this, GameActivity.class);
                         i.putExtra(Constants.EXTRA_OPPONENT_ID, opponentUser.getId());
                         i.putExtra(Constants.EXTRA_OPPONENT_USERNAME, opponentUser.getUsername());

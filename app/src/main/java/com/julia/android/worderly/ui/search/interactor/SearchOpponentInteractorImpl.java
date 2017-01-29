@@ -19,77 +19,72 @@ public class SearchOpponentInteractorImpl implements SearchOpponentInteractor {
     private static final String TAG = SearchOpponentInteractorImpl.class.getSimpleName();
     private final SearchOpponentPresenter mPresenter;
     private DatabaseReference mDatabase;
+    private DatabaseReference mUsersOnlineChildRef;
+    private DatabaseReference mGamesChildRef;
     private boolean mOpponentFound;
 
     public SearchOpponentInteractorImpl(SearchOpponentPresenter presenter) {
-        Log.d(TAG, "SearchOpponentInteractorImpl constructor");
         this.mPresenter = presenter;
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        mUsersOnlineChildRef = mDatabase.child(FirebaseConstants.FIREBASE_USERS_ONLINE_CHILD);
+        mGamesChildRef = mDatabase.child(FirebaseConstants.FIREBASE_GAMES_CHILD);
         mOpponentFound = false;
     }
 
     @Override
     public void addUser(User user) {
-        mDatabase.child(FirebaseConstants.FIREBASE_USERS_ONLINE_CHILD)
-                .child(user.getId()).setValue(user);
+        mUsersOnlineChildRef.child(user.getId()).setValue(user);
     }
 
     @Override
     public void removeUser(String uid) {
-        mDatabase.child(FirebaseConstants.FIREBASE_USERS_ONLINE_CHILD)
-                .child(uid).removeValue();
+        mUsersOnlineChildRef.child(uid).removeValue();
     }
 
     @Override
     public void searchForOpponent(final User user) {
-        Log.d(TAG, "searchForOpponent");
-        mDatabase.child(FirebaseConstants.FIREBASE_USERS_ONLINE_CHILD)
-                .addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        String opponentUid = dataSnapshot.getKey();
-                        Log.d(TAG, "mOpponentFound=" + mOpponentFound);
-                        if (!mOpponentFound && !Objects.equals(user.getId(), opponentUid)) {
-                            mOpponentFound = true;
-                            User opponentUser = dataSnapshot.getValue(User.class);
-                            Log.d(TAG, "Random Opponent found: " + opponentUser.getUsername());
-                            mPresenter.sendOpponentUser(opponentUser);
-                        }
-                    }
+        mUsersOnlineChildRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                String opponentUid = dataSnapshot.getKey();
+                if (!mOpponentFound && !Objects.equals(user.getId(), opponentUid)) {
+                    mOpponentFound = true;
+                    User opponentUser = dataSnapshot.getValue(User.class);
+                    Log.d(TAG, "Random opponent found: " + opponentUser.getUsername());
+                    mPresenter.sendOpponentUser(opponentUser);
+                }
+            }
 
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                    }
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
 
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-                    }
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
 
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                    }
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
     @Override
     public void createCurrentGameRoom(String currentUserId, String opponentUserId) {
         final String gameRoomCurrentChild = currentUserId + "_" + opponentUserId;
-        mDatabase.child(FirebaseConstants.FIREBASE_GAMES_CHILD)
-                .child(gameRoomCurrentChild).setValue(true);
+        mGamesChildRef.child(gameRoomCurrentChild).setValue(true);
         listenForOpponentGameRoom(currentUserId, opponentUserId);
     }
 
     @Override
     public void listenForOpponentGameRoom(final String currentUserId, String opponentUserId) {
         final String gameRoomOpponentChild = opponentUserId + "_" + currentUserId;
-
-        mDatabase.child(FirebaseConstants.FIREBASE_GAMES_CHILD).child(gameRoomOpponentChild)
+        mGamesChildRef.child(gameRoomOpponentChild)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
-
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         removeUser(currentUserId);

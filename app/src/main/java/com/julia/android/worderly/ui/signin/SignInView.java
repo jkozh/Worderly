@@ -8,5 +8,4 @@ interface SignInView {
     void navigateToMainActivity();
     void showProgressDialog();
     void hideProgressDialog();
-    //void showEnterNicknameDialog(String username);
 }

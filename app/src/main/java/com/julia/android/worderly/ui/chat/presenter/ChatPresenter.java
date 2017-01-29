@@ -33,7 +33,7 @@ public class ChatPresenter {
     }
 
     public void onDetach() {
-        //mWeakView = null;
+        mWeakView = null;
     }
 
     public String getChatRoomChild() {

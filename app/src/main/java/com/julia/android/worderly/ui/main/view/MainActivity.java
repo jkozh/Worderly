@@ -45,16 +45,11 @@ import static com.julia.android.worderly.utils.Constants.PREF_USER;
 public class MainActivity extends AbstractMainActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    @BindView(R.id.coordinator_layout_main)
-    CoordinatorLayout mCoordinatorLayout;
-    @BindView(R.id.button_random_play)
-    Button mRandomPlayButton;
-    @BindView(R.id.drawer_layout)
-    DrawerLayout mDrawerLayout;
-    @BindView(R.id.nav_view)
-    NavigationView mNavigationView;
-    @BindView(R.id.toolbar_main_activity)
-    Toolbar mToolbar;
+    @BindView(R.id.coordinator_layout_main) CoordinatorLayout mCoordinatorLayout;
+    @BindView(R.id.button_random_play) Button mRandomPlayButton;
+    @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
+    @BindView(R.id.nav_view) NavigationView mNavigationView;
+    @BindView(R.id.toolbar_main_activity) Toolbar mToolbar;
     private MainPresenter mPresenter;
 
     @Override
@@ -67,12 +62,6 @@ public class MainActivity extends AbstractMainActivity {
         setGoogleApiClient();
         setUpActionBar();
         mPresenter.showUserInfoInDrawer();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mPresenter.onDestroy();
     }
 
     @Override

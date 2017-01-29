@@ -1,7 +1,5 @@
 package com.julia.android.worderly.ui.chat.interactor;
 
-import android.util.Log;
-
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,12 +34,10 @@ public class ChatInteractorImpl implements ChatInteractor {
 
     @Override
     public void onNewMessageReceived(String chatRoomInvertChild) {
-        mGamesChildRef.child(chatRoomInvertChild)
-                .child(FirebaseConstants.FIREBASE_MESSAGES_CHILD)
+        mGamesChildRef.child(chatRoomInvertChild).child(FirebaseConstants.FIREBASE_MESSAGES_CHILD)
                 .addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        Log.d("onNewMessageReceived", "dataSnapshot: " + dataSnapshot);
                         mPresenter.notifyChatTabTitle();
                     }
 

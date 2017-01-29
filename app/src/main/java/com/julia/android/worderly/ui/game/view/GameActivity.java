@@ -5,7 +5,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -30,7 +29,6 @@ public class GameActivity extends AppCompatActivity implements GameActivityView 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate CALLED");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         ButterKnife.bind(this);
@@ -43,38 +41,7 @@ public class GameActivity extends AppCompatActivity implements GameActivityView 
     }
 
     @Override
-    protected void onStart() {
-        Log.d(TAG, "onStart CALLED");
-        super.onStart();
-    }
-
-    @Override
-    protected void onResume() {
-        Log.d(TAG, "onResume CALLED");
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        Log.d(TAG, "onPause CALLED");
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        Log.d(TAG, "onStop CALLED");
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        Log.d(TAG, "onDestroy CALLED");
-        super.onDestroy();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.d(TAG, "onCreateOptionsMenu CALLED");
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.game_menu, menu);
         return true;

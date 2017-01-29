@@ -1,45 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/sign_in_layout"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinator_layout_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/app_name"
-        android:textAllCaps="true"
-        android:textColor="@color/colorPrimaryText"
-        android:textSize="@dimen/text_size_extra_large"
-        android:textStyle="bold"/>
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="@dimen/sign_in_margin_bottom"
-        android:layout_marginTop="@dimen/sign_in_margin_top"
-        android:text="@string/msg_sign_in"
-        android:textColor="@color/grey_800"
-        android:textSize="@dimen/text_size_medium"
-        android:textStyle="bold"/>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_signin_activity"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/sign_in_google_button"
-        android:layout_width="@dimen/sign_in_btn_width"
-        android:layout_height="@dimen/sign_in_btn_height"
-        android:layout_gravity="center"
-        android:visibility="visible"/>
+    </android.support.design.widget.AppBarLayout>
 
-    <Button
-        android:id="@+id/sign_in_anonymous_button"
-        android:layout_width="@dimen/sign_in_btn_width"
-        android:layout_height="@dimen/sign_in_btn_height"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/sign_in_btn_margin_top"
-        android:text="@string/msg_skip_this"/>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/sign_in_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
 
-</LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/app_name"
+            android:textAllCaps="true"
+            android:textColor="@color/colorPrimaryText"
+            android:textSize="@dimen/text_size_extra_large"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/sign_in_margin_bottom"
+            android:layout_marginTop="@dimen/sign_in_margin_top"
+            android:text="@string/msg_sign_in"
+            android:textColor="@color/grey_800"
+            android:textSize="@dimen/text_size_medium"
+            android:textStyle="bold"/>
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_in_google_button"
+            android:layout_width="@dimen/sign_in_btn_width"
+            android:layout_height="@dimen/sign_in_btn_height"
+            android:layout_gravity="center"
+            android:visibility="visible"/>
+
+        <Button
+            android:id="@+id/sign_in_anonymous_button"
+            android:layout_width="@dimen/sign_in_btn_width"
+            android:layout_height="@dimen/sign_in_btn_height"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/sign_in_btn_margin_top"
+            android:text="@string/msg_skip_this"/>
+
+    </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>

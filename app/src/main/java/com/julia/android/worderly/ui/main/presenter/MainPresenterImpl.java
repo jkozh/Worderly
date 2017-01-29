@@ -27,11 +27,6 @@ public class MainPresenterImpl implements MainPresenter {
     }
 
     @Override
-    public void onDestroy() {
-        mMainView = null;
-    }
-
-    @Override
     public void onSignOutClicked() {
         mFirebaseAuth.signOut();
         if (mMainView != null) {

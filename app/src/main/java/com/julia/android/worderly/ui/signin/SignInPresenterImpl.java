@@ -127,18 +127,6 @@ class SignInPresenterImpl implements SignInPresenter {
                         });
     }
 
-
-//    @Override
-//    public void setUsernameFromDialog(String username) {
-//        if (!Objects.equals(username, "")) {
-//            mUser.setUsername(username);
-//        }
-//        if (mSignInView != null) {
-//            //mSignInView.setSharedPreferences(mUser);
-//            mSignInView.navigateToMainActivity(mUser);
-//        }
-//    }
-
     public SignInView getSignInView() {
         return mSignInView;
     }
