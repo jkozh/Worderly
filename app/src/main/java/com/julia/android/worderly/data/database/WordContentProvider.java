@@ -141,6 +141,10 @@ public class WordContentProvider extends ContentProvider {
         // Write the code to delete a single row of data
         // [Hint] Use selections to delete an item by its row ID
         switch (match) {
+            // Delete all rows from database
+            case WORDS:
+                wordsDeleted = db.delete(TABLE_NAME, null, null);
+                break;
             // Handle the single item case, recognized by the ID included in the URI path
             case WORD_WITH_ID:
                 // Get the word ID from the URI path

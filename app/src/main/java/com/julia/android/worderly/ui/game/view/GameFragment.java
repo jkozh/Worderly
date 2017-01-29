@@ -1,6 +1,7 @@
 package com.julia.android.worderly.ui.game.view;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -10,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -121,15 +123,40 @@ public class GameFragment extends Fragment implements GamePresenter.View,
         mWordDefinitionTextView.setText(definition);
     }
 
+    /**
+     * If the user sends a wrong word, then show him a toast and empty edit text
+     */
     @Override
-    public void showWinDialog() {
-        Toast.makeText(getContext(), "YOU WON! (Dialog)", Toast.LENGTH_LONG).show();
-
+    public void showWrongWordToast() {
+        Toast.makeText(
+                getActivity(), getString(R.string.msg_wrong_word), Toast.LENGTH_SHORT).show();
+        // Remove letters from Edit Text
+        mWordEditText.setText("");
     }
 
     @Override
-    public void showLossDialog(String word) {
-        Toast.makeText(getContext(), "YOU LOSE! (Dialog)", Toast.LENGTH_LONG).show();
+    public void showEndGameDialog(boolean isWon, String word) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        if (isWon) {
+            builder.setTitle(getString(R.string.title_you_won));
+            builder.setMessage(getString(R.string.msg_good_game));
+        } else {
+            builder.setTitle(getString(R.string.title_you_lose));
+            builder.setMessage(getString(R.string.msg_opponent_faster));
+            builder.setMessage(getString(R.string.msg_word_was, word));
+        }
+
+        builder.setPositiveButton(getString(R.string.action_ok),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteWord();
+                        navigateToMainActivity();
+                    }
+                });
+        final AlertDialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
     }
 
     /**
@@ -148,13 +175,15 @@ public class GameFragment extends Fragment implements GamePresenter.View,
      */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        data.moveToFirst();
-        String word = data.getString(INDEX_WORD);
-        String scrambledWord = data.getString(INDEX_SCRAMBLED_WORD);
-        String definition = data.getString(INDEX_DEFINITION);
-        mPresenter.setWord(word);
-        mPresenter.setScrambledWord(scrambledWord);
-        mPresenter.setDefinition(definition);
+        if (data != null && data.moveToFirst()) {
+            String word = data.getString(INDEX_WORD);
+            String scrambledWord = data.getString(INDEX_SCRAMBLED_WORD);
+            String definition = data.getString(INDEX_DEFINITION);
+            mPresenter.setWord(word);
+            mPresenter.setScrambledWord(scrambledWord);
+            mPresenter.setDefinition(definition);
+            data.close();
+        }
     }
 
     /**
@@ -190,24 +219,17 @@ public class GameFragment extends Fragment implements GamePresenter.View,
         mPresenter.onSendWordClick(mWordEditText.getText().toString());
     }
 
-    public void resign() {
-        Log.d(TAG, "TRYING TO DELETE DATABASE");
-//        for (int i = 1; i < 2; i++) {
-        Uri uri = WordContract.WordEntry.CONTENT_URI;
-        uri = uri.buildUpon().appendPath("1").build();
-        getContext().getContentResolver().delete(uri, null, null);
+    private void navigateToMainActivity() {
         Intent i = new Intent(getActivity(), MainActivity.class);
         startActivity(i);
         getActivity().finish();
-//            SharedPreferences.Editor editor = mPrefs.edit();
-//            editor.putString("SCRAMBLED_WORD", "");
-//            editor.apply();
-//            startActivity(new Intent(getActivity(), MainActivity.class));
-//            getActivity().finish();
-//        }
+    }
 
-        // Restart the loader to re-query for all words after a deletion
-        //getActivity().getSupportLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);
+    private void deleteWord() {
+        // Remove word from database
+        Uri uri = WordContract.WordEntry.CONTENT_URI;
+        getContext().getContentResolver().delete(uri, null, null);
+
     }
 
     private void getUserPrefs() {

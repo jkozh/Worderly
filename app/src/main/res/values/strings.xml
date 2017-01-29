@@ -36,9 +36,15 @@
     <string name="title_chat">CHAT</string>
     <string name="title_chat_new">CHAT: NEW!</string>
 
-    <!-- Dialog in SignIn Activity -->
-    <string name="title_enter_nickname">Enter your nickname</string>
-    <string name="msg_by_default">By default: \"%1$s\"</string>
+    <!-- Messages in Game Fragment -->
+    <string name="msg_wrong_word">Wrong word!</string>
+
+    <!-- Dialog in Game Fragment -->
+    <string name="title_you_lose">You lose!</string>
+    <string name="title_you_won">You won!</string>
+    <string name="msg_word_was">The word was: \"%1$s\".</string>
+    <string name="msg_good_game">It was a good game!</string>
+    <string name="msg_opponent_faster">Your opponent was faster than you!</string>
     <string name="action_ok">OK</string>
 
     <!-- Errors -->

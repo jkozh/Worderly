@@ -80,7 +80,14 @@ public class GamePresenter {
             GamePresenter.View view = mWeakView.get();
             if (view != null) {
                 mInteractor.notifyOpponentUserWin(mCurrentUser.getId(), mOpponentUser.getId());
-                view.showWinDialog();
+                // Clean the database from finished game room
+                mInteractor.deleteGameRoom(mCurrentUser.getId(), mOpponentUser.getId());
+                view.showEndGameDialog(true, mWord);
+            }
+        } else {
+            GamePresenter.View view = mWeakView.get();
+            if (view != null) {
+                view.showWrongWordToast();
             }
         }
     }
@@ -88,7 +95,9 @@ public class GamePresenter {
     public void showLossDialog() {
         GamePresenter.View view = mWeakView.get();
         if (view != null) {
-            view.showLossDialog(mWord);
+            // Clean the database from finished game room
+            mInteractor.deleteGameRoom(mCurrentUser.getId(), mOpponentUser.getId());
+            view.showEndGameDialog(false, mWord);
         }
     }
 
@@ -97,7 +106,7 @@ public class GamePresenter {
         void showOpponentUsernameView(String username);
         void showWordView(String word);
         void showDefinitionView(String definition);
-        void showWinDialog();
-        void showLossDialog(String word);
+        void showWrongWordToast();
+        void showEndGameDialog(boolean isWon, String word);
     }
 }
