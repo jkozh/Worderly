@@ -136,27 +136,29 @@ public class GameFragment extends Fragment implements GamePresenter.View,
 
     @Override
     public void showEndGameDialog(boolean isWon, String word) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        if (isWon) {
-            builder.setTitle(getString(R.string.title_you_won));
-            builder.setMessage(getString(R.string.msg_good_game));
-        } else {
-            builder.setTitle(getString(R.string.title_you_lose));
-            builder.setMessage(getString(R.string.msg_opponent_faster));
-            builder.setMessage(getString(R.string.msg_word_was, word));
-        }
+        if (getActivity() != null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            if (isWon) {
+                builder.setTitle(getString(R.string.title_you_won));
+                builder.setMessage(getString(R.string.msg_good_game));
+            } else {
+                builder.setTitle(getString(R.string.title_you_lose));
+                builder.setMessage(getString(R.string.msg_opponent_faster));
+                builder.setMessage(getString(R.string.msg_word_was, word));
+            }
 
-        builder.setPositiveButton(getString(R.string.action_ok),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        deleteWord();
-                        navigateToMainActivity();
-                    }
-                });
-        final AlertDialog dialog = builder.create();
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.show();
+            builder.setPositiveButton(getString(R.string.action_ok),
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            deleteWord();
+                            navigateToMainActivity();
+                        }
+                    });
+            final AlertDialog dialog = builder.create();
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.show();
+        }
     }
 
     /**
@@ -219,6 +221,12 @@ public class GameFragment extends Fragment implements GamePresenter.View,
         mPresenter.onSendWordClick(mWordEditText.getText().toString());
     }
 
+    public void resign() {
+        mPresenter.notifyOpponentAboutResign();
+        mPresenter.deleteGameRoom();
+        mPresenter.showLoseDialog();
+    }
+
     private void navigateToMainActivity() {
         Intent i = new Intent(getActivity(), MainActivity.class);
         startActivity(i);
@@ -252,5 +260,4 @@ public class GameFragment extends Fragment implements GamePresenter.View,
             mPresenter.setOpponentFromBundle(opponent);
         }
     }
-
 }

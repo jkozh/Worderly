@@ -45,18 +45,11 @@ public class GamePresenter {
         }
     }
 
-    @Nullable
-    private GamePresenter.View getView() {
-        if (mWeakView == null) {
-            return null;
-        }
-        return mWeakView.get();
-    }
-
     public void setWord(String word) {
         mWord = word;
         Log.d("GAME PRESENTER", "setWord mWord:" + mWord);
         mInteractor.listenOpponentUserWin(mCurrentUser.getId(), mOpponentUser.getId());
+        mInteractor.listenOpponentUserResign(mCurrentUser.getId(), mOpponentUser.getId());
     }
 
     public void setScrambledWord(String scrambledWord) {
@@ -76,29 +69,50 @@ public class GamePresenter {
     }
 
     public void onSendWordClick(String sendWord) {
-        if (Objects.equals(sendWord.toUpperCase(), mWord.toUpperCase())) {
-            GamePresenter.View view = mWeakView.get();
-            if (view != null) {
+        GamePresenter.View view = mWeakView.get();
+        if (view != null) {
+            if (Objects.equals(sendWord.toUpperCase(), mWord.toUpperCase())) {
                 mInteractor.notifyOpponentUserWin(mCurrentUser.getId(), mOpponentUser.getId());
                 // Clean the database from finished game room
                 mInteractor.deleteGameRoom(mCurrentUser.getId(), mOpponentUser.getId());
                 view.showEndGameDialog(true, mWord);
-            }
-        } else {
-            GamePresenter.View view = mWeakView.get();
-            if (view != null) {
+            } else {
                 view.showWrongWordToast();
             }
         }
     }
 
-    public void showLossDialog() {
+    public void showLoseDialog() {
         GamePresenter.View view = mWeakView.get();
         if (view != null) {
-            // Clean the database from finished game room
-            mInteractor.deleteGameRoom(mCurrentUser.getId(), mOpponentUser.getId());
+            deleteGameRoom();
             view.showEndGameDialog(false, mWord);
         }
+    }
+
+    public void showWinDialog() {
+        GamePresenter.View view = mWeakView.get();
+        if (view != null) {
+            deleteGameRoom();
+            view.showEndGameDialog(true, mWord);
+        }
+    }
+
+    public void deleteGameRoom() {
+        // Clean the database from finished game room
+        mInteractor.deleteGameRoom(mCurrentUser.getId(), mOpponentUser.getId());
+    }
+
+    public void notifyOpponentAboutResign() {
+        mInteractor.notifyOpponentAboutResign(mCurrentUser.getId(), mOpponentUser.getId());
+    }
+
+    @Nullable
+    private GamePresenter.View getView() {
+        if (mWeakView == null) {
+            return null;
+        }
+        return mWeakView.get();
     }
 
     public interface View {

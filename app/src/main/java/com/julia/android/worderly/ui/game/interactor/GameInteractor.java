@@ -4,4 +4,6 @@ public interface GameInteractor {
     void notifyOpponentUserWin(String currentUserId, String opponentUserId);
     void listenOpponentUserWin(String currentUserId, String opponentUserId);
     void deleteGameRoom(String currentUserId, String opponentUserId);
+    void listenOpponentUserResign(String currentUserId, String opponentUserId);
+    void notifyOpponentAboutResign(String currentUserId, String opponentUserId);
 }

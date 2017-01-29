@@ -52,7 +52,7 @@ public class GameActivity extends AppCompatActivity implements GameActivityView 
         switch (item.getItemId()) {
             case R.id.action_resign:
                 Toast.makeText(this, "Resigned", Toast.LENGTH_SHORT).show();
-                //mGameFragment.resign();
+                mGameFragment.resign();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

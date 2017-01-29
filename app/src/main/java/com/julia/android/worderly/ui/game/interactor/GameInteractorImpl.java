@@ -8,6 +8,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.julia.android.worderly.ui.game.presenter.GamePresenter;
 import com.julia.android.worderly.utils.FirebaseConstants;
 
+import static com.julia.android.worderly.utils.FirebaseConstants.FIREBASE_RESIGN_CHILD;
 import static com.julia.android.worderly.utils.FirebaseConstants.FIREBASE_WIN_CHILD;
 
 public class GameInteractorImpl implements GameInteractor {
@@ -36,7 +37,7 @@ public class GameInteractorImpl implements GameInteractor {
                 new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        mPresenter.showLossDialog();
+                        mPresenter.showLoseDialog();
                     }
 
                     @Override
@@ -60,5 +61,39 @@ public class GameInteractorImpl implements GameInteractor {
     @Override
     public void deleteGameRoom(String currentUserId, String opponentUserId) {
         mGamesChildRef.child(currentUserId + "_" + opponentUserId).removeValue();
+    }
+
+    @Override
+    public void listenOpponentUserResign(String currentUserId, String opponentUserId) {
+        mGamesChildRef.child(opponentUserId + "_" + currentUserId)
+                .child(FIREBASE_RESIGN_CHILD).addChildEventListener(
+                new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        mPresenter.showWinDialog();
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+    }
+
+    @Override
+    public void notifyOpponentAboutResign(String currentUserId, String opponentUserId) {
+        mGamesChildRef.child(currentUserId + "_" + opponentUserId)
+                .child(FIREBASE_RESIGN_CHILD).push().setValue(true);
     }
 }
