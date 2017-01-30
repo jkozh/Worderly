@@ -1,6 +1,5 @@
 package com.julia.android.worderly.ui.game.view;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,7 +12,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,8 +38,10 @@ import butterknife.OnTextChanged;
 import butterknife.Unbinder;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.julia.android.worderly.utils.Constants.ACTION_DATA_UPDATED;
 import static com.julia.android.worderly.utils.Constants.PREF_NAME;
 import static com.julia.android.worderly.utils.Constants.PREF_USER;
+import static com.julia.android.worderly.utils.Constants.PREF_WORDS_FOR_LEARNING;
 
 public class GameFragment extends Fragment implements GamePresenter.View,
         LoaderManager.LoaderCallbacks<Cursor> {
@@ -65,12 +65,6 @@ public class GameFragment extends Fragment implements GamePresenter.View,
     private Unbinder mUnbinder;
     private GamePresenter mPresenter;
     private SharedPreferences mPrefs;
-
-    @Override
-    public void onAttach(Context context) {
-        Log.d(TAG, "onAttach CALLED");
-        super.onAttach(context);
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -145,6 +139,14 @@ public class GameFragment extends Fragment implements GamePresenter.View,
                 builder.setTitle(getString(R.string.title_you_lose));
                 builder.setMessage(getString(R.string.msg_opponent_faster));
                 builder.setMessage(getString(R.string.msg_word_was, word));
+                String prefs = mPrefs.getString(PREF_WORDS_FOR_LEARNING, Constants.PREF_USER_DEFAULT_VALUE);
+                if (!Objects.equals(prefs, Constants.PREF_USER_DEFAULT_VALUE)) {
+                    mPrefs.edit().putString(PREF_WORDS_FOR_LEARNING, prefs + word + ",").apply();
+                } else {
+                    mPrefs.edit().putString(PREF_WORDS_FOR_LEARNING, word + ",").apply();
+                }
+                // Updating the widget
+                updateWidget();
             }
 
             builder.setPositiveButton(getString(R.string.action_ok),
@@ -159,6 +161,12 @@ public class GameFragment extends Fragment implements GamePresenter.View,
             dialog.setCanceledOnTouchOutside(false);
             dialog.show();
         }
+    }
+
+    private void updateWidget() {
+        Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED)
+                .setPackage(getContext().getPackageName());
+        getContext().sendBroadcast(dataUpdatedIntent);
     }
 
     /**
@@ -184,7 +192,6 @@ public class GameFragment extends Fragment implements GamePresenter.View,
             mPresenter.setWord(word);
             mPresenter.setScrambledWord(scrambledWord);
             mPresenter.setDefinition(definition);
-            //data.close();
         }
     }
 
@@ -237,7 +244,6 @@ public class GameFragment extends Fragment implements GamePresenter.View,
         // Remove word from database
         Uri uri = WordContract.WordEntry.CONTENT_URI;
         getContext().getContentResolver().delete(uri, null, null);
-
     }
 
     private void getUserPrefs() {

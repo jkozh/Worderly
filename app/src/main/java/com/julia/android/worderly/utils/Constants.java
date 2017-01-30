@@ -16,6 +16,10 @@ public class Constants {
     public static final String PREF_NAME = "com.julia.android.worderly";
     public static final String PREF_USER = "PREF_USER";
     public static final String PREF_USER_DEFAULT_VALUE = "missing_value";
+    public static final String PREF_WORDS_FOR_LEARNING = "PREF_WORDS_FOR_LEARNING";
+
+    public static final String ACTION_DATA_UPDATED =
+            "com.julia.android.worderly.ACTION_DATA_UPDATED";
 
     // Extra from SearchOpponentActivity -> GameActivity
     public static final String EXTRA_OPPONENT_ID = "EXTRA_OPPONENT_ID";

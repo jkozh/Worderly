@@ -7,4 +7,6 @@
     <color name="blue_grey_100">#CFD8DC</color>
     <color name="blue_grey_50">#ECEFF1</color>
     <color name="grey_800">#424242</color>
+    <color name="widget_background">#bbDEDFDE</color>
+    <color name="widget_background_second">#aaDEDFDE</color>
 </resources>
