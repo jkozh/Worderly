@@ -48,7 +48,7 @@ public class User {
         if (email != null) {
             this.mEmail = email;
         } else {
-            this.mEmail = "0";
+            this.mEmail = Constants.DEFAULT_EMAIL_VALUE;
         }
     }
 

@@ -10,6 +10,7 @@ public class Constants {
 
     // Length Limit
     public static final int DEFAULT_MSG_LENGTH_LIMIT = 256;
+    public static final String DEFAULT_EMAIL_VALUE = "0";
 
     // Shared Preferences SignInActivity -> MainActivity
     public static final String PREF_NAME = "com.julia.android.worderly";
