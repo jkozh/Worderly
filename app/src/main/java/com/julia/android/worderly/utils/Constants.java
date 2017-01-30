@@ -9,7 +9,6 @@ public class Constants {
     public static final String GUEST = "Guest";
 
     // Length Limit
-    public static final int MAX_USERNAME_INPUT_DIALOG = 20;
     public static final int DEFAULT_MSG_LENGTH_LIMIT = 256;
 
     // Shared Preferences SignInActivity -> MainActivity

@@ -8,7 +8,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.julia.android.worderly.R;
 import com.julia.android.worderly.ui.chat.view.ChatFragment;
@@ -51,12 +50,19 @@ public class GameActivity extends AppCompatActivity implements GameActivityView 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_resign:
-                Toast.makeText(this, "Resigned", Toast.LENGTH_SHORT).show();
                 mGameFragment.resign();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    /**
+     * When back button pressed - don't close the current game, just minimize it.
+     */
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
     }
 
     /**

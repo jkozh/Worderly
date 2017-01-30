@@ -130,7 +130,7 @@ public class GameFragment extends Fragment implements GamePresenter.View,
     public void showWrongWordToast() {
         Toast.makeText(
                 getActivity(), getString(R.string.msg_wrong_word), Toast.LENGTH_SHORT).show();
-        // Remove letters from Edit Text
+        // Clear letters from Edit Text
         mWordEditText.setText("");
     }
 
@@ -184,7 +184,7 @@ public class GameFragment extends Fragment implements GamePresenter.View,
             mPresenter.setWord(word);
             mPresenter.setScrambledWord(scrambledWord);
             mPresenter.setDefinition(definition);
-            data.close();
+            //data.close();
         }
     }
 

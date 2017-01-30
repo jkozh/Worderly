@@ -35,9 +35,11 @@ public class SearchOpponentPresenterImpl implements SearchOpponentPresenter {
     @Override
     public void sendOpponentUser(User opponentUser) {
         this.mOpponentUser = opponentUser;
-        mSearchOpponentView.addOpponentFoundView(
-                mOpponentUser.getUsername(), mOpponentUser.getPhotoUrl());
-        mInteractor.createCurrentGameRoom(mCurrentUser.getId(), mOpponentUser.getId());
+        if (mSearchOpponentView != null) {
+            mSearchOpponentView.addOpponentFoundView(
+                    mOpponentUser.getUsername(), mOpponentUser.getPhotoUrl());
+            mInteractor.createCurrentGameRoom(mCurrentUser.getId(), mOpponentUser.getId());
+        }
     }
 
     @Override

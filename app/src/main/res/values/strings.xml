@@ -7,7 +7,6 @@
 
     <!-- Actions in Main Activity -->
     <string name="action_sign_out">Sign Out</string>
-    <string name="action_invite">Invite</string>
 
     <!-- Hints in Chat Activity -->
     <string name="enter_message_hint">Enter your message here</string>
@@ -20,16 +19,9 @@
     <!-- Messages in Main Activity -->
     <string name="msg_play_with">Play with:</string>
     <string name="msg_random_opponent">Find random opponent</string>
-    <string name="msg_worderly_friends">Worderly Friends</string>
-    <string name="msg_find_player">Find player</string>
 
     <!-- Messages in Chat Activity -->
     <string name="msg_send">SEND</string>
-
-    <!-- Messages in Game Activity -->
-    <string name="msg_score">Score: %d</string>
-    <!-- Dialog in Game Activity -->
-    <string name="msg_next_round_starts">Next Round starts in %d</string>
 
     <!-- Title in Game Activity -->
     <string name="title_game">GAME</string>
