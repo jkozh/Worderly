@@ -118,13 +118,13 @@ public class GameFragment extends Fragment implements GamePresenter.View,
     }
 
     /**
-     * If the user sends a wrong word, then show him a toast and empty edit text
+     * If the user sends a wrong word, then show him a toast, and empty edit text
      */
     @Override
     public void showWrongWordToast() {
         Toast.makeText(
                 getActivity(), getString(R.string.msg_wrong_word), Toast.LENGTH_SHORT).show();
-        // Clear letters from Edit Text
+        // Remove letters in Edit Text
         mWordEditText.setText("");
     }
 
