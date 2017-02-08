@@ -89,12 +89,12 @@
                 android:layout_height="110dp"
                 android:visibility="gone">
 
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/recycler_view_top"
-                        android:layout_width="wrap_content"
-                        android:layout_height="110dp"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="50dp" />
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view_top"
+                    android:layout_width="wrap_content"
+                    android:layout_height="110dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="50dp" />
 
             </FrameLayout>
 
@@ -103,19 +103,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="110dp"
                 android:layout_gravity="center"
-                android:src="@drawable/holder"/>
+                android:contentDescription="@null"
+                android:src="@drawable/holder" />
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/line"/>
+                android:contentDescription="@null"
+                android:src="@drawable/line" />
 
             <!--<View-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="1dp"-->
-                <!--android:layout_marginStart="20dp"-->
-                <!--android:layout_marginEnd="20dp"-->
-                <!--android:background="#cccccc"/>-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:layout_marginStart="20dp"-->
+            <!--android:layout_marginEnd="20dp"-->
+            <!--android:background="#cccccc"/>-->
 
             <FrameLayout
                 android:id="@+id/frame_bottom"
@@ -134,13 +136,14 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/line"/>
+                android:contentDescription="@null"
+                android:src="@drawable/line" />
             <!--<View-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="1dp"-->
-                <!--android:layout_marginStart="20dp"-->
-                <!--android:layout_marginEnd="20dp"-->
-                <!--android:background="#cccccc"/>-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:layout_marginStart="20dp"-->
+            <!--android:layout_marginEnd="20dp"-->
+            <!--android:background="#cccccc"/>-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -159,7 +162,6 @@
                     android:textColor="#1e88e5"
                     android:textSize="22sp"/>
 
-
                 <Button
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -170,7 +172,6 @@
                     android:text="SEND"
                     android:textColor="#f8bbd0"
                     android:textSize="28sp"/>
-
 
                 <Button
                     android:layout_width="0dp"
