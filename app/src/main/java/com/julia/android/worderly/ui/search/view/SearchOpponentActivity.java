@@ -11,14 +11,10 @@ import android.view.MenuItem;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.julia.android.worderly.R;
 import com.julia.android.worderly.model.User;
-import com.julia.android.worderly.network.WordRequest;
 import com.julia.android.worderly.ui.game.view.GameActivity;
 import com.julia.android.worderly.ui.search.presenter.SearchOpponentPresenter;
 import com.julia.android.worderly.ui.search.presenter.SearchOpponentPresenterImpl;
@@ -91,12 +87,13 @@ public class SearchOpponentActivity extends AppCompatActivity implements SearchO
     @Override
     public void navigateToGameActivity(final User opponentUser) {
         // Fetching word from API
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        new WordRequest(requestQueue, this);
-        requestQueue.addRequestFinishedListener(
-                new RequestQueue.RequestFinishedListener<String>() {
-                    @Override
-                    public void onRequestFinished(Request<String> request) {
+        // TODO: Comment these temporarily
+//        RequestQueue requestQueue = Volley.newRequestQueue(this);
+//        new WordRequest(requestQueue, this);
+//        requestQueue.addRequestFinishedListener(
+//                new RequestQueue.RequestFinishedListener<String>() {
+//                    @Override
+//                    public void onRequestFinished(Request<String> request) {
                         Intent i = new Intent(SearchOpponentActivity.this, GameActivity.class);
                         i.putExtra(Constants.EXTRA_OPPONENT_ID, opponentUser.getId());
                         i.putExtra(Constants.EXTRA_OPPONENT_USERNAME, opponentUser.getUsername());
@@ -105,8 +102,8 @@ public class SearchOpponentActivity extends AppCompatActivity implements SearchO
                         mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                         startActivity(i);
                         finish();
-                    }
-                });
+//                    }
+//                });
     }
 
     private void getSharedPrefs() {

@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/LinearLayoutVertical"
-    android:background="@color/blue_grey_50"
+    android:background="@color/background_dark_blue"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <ScrollView
@@ -19,7 +19,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="invisible">
 
                 <TextView
                     style="@style/PlayersTextView"
@@ -35,7 +36,8 @@
                 android:id="@+id/linear_layout_players"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="invisible">
 
                 <android.support.v7.widget.CardView
                     xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -81,50 +83,105 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                style="@style/LinearLayoutVertical"
-                android:padding="@dimen/linear_layout_padding">
+            <FrameLayout
+                android:id="@+id/frame_top"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:visibility="gone">
 
-                <TextView
-                    android:id="@+id/text_word"
-                    style="@style/WordTextView" />
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_view_top"
+                        android:layout_width="wrap_content"
+                        android:layout_height="110dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="50dp" />
 
-                <View
-                    style="@style/HorizontalDividerView"/>
+            </FrameLayout>
 
-                <TextView
-                    android:id="@+id/text_word_definition"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingTop="@dimen/definition_padding_top"
-                    android:textSize="@dimen/text_size_medium" />
+            <ImageView
+                android:id="@+id/image_holder"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:layout_gravity="center"
+                android:src="@drawable/holder"/>
 
-            </LinearLayout>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/line"/>
+
+            <!--<View-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="1dp"-->
+                <!--android:layout_marginStart="20dp"-->
+                <!--android:layout_marginEnd="20dp"-->
+                <!--android:background="#cccccc"/>-->
+
+            <FrameLayout
+                android:id="@+id/frame_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="110dp">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view_bottom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="110dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="50dp" />
+
+            </FrameLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/line"/>
+            <!--<View-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="1dp"-->
+                <!--android:layout_marginStart="20dp"-->
+                <!--android:layout_marginEnd="20dp"-->
+                <!--android:background="#cccccc"/>-->
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="bottom"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/edit_word"
+                <Button
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:hint="@string/msg_enter_word_here"
-                    android:textSize="@dimen/text_size_medium" />
+                    android:layout_weight="4"
+                    android:backgroundTint="#3949ab"
+                    android:drawableTint="#1e88e5"
+                    android:drawableTop="@drawable/ic_clear_white_24dp"
+                    android:text="CLEAR"
+                    android:textColor="#1e88e5"
+                    android:textSize="22sp"/>
+
 
                 <Button
-                    android:id="@+id/button_send_word"
-                    android:layout_width="@dimen/send_btn_width"
-                    android:layout_height="@dimen/send_btn_height"
-                    android:layout_gravity="bottom"
-                    android:enabled="false"
-                    android:text="@string/msg_send"
-                    android:textSize="@dimen/text_size_medium"/>
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:backgroundTint="#f50057"
+                    android:drawableTint="#f8bbd0"
+                    android:drawableTop="@drawable/ic_send_white_24dp"
+                    android:text="SEND"
+                    android:textColor="#f8bbd0"
+                    android:textSize="28sp"/>
 
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:backgroundTint="#880e4f"
+                    android:drawableTint="#ff4081"
+                    android:drawableTop="@drawable/ic_swap_horiz_white_24dp"
+                    android:text="SHUFFLE"
+                    android:textColor="#ff4081"
+                    android:textSize="22sp"/>
             </LinearLayout>
 
         </LinearLayout>

@@ -11,12 +11,13 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
-import android.text.Editable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,16 +26,18 @@ import com.julia.android.worderly.R;
 import com.julia.android.worderly.data.database.WordContract;
 import com.julia.android.worderly.data.database.WordContract.WordEntry;
 import com.julia.android.worderly.model.User;
+import com.julia.android.worderly.ui.game.adapter.CustomList;
+import com.julia.android.worderly.ui.game.adapter.WordListAdapter;
 import com.julia.android.worderly.ui.game.presenter.GamePresenter;
 import com.julia.android.worderly.ui.main.view.MainActivity;
 import com.julia.android.worderly.utils.Constants;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.OnTextChanged;
 import butterknife.Unbinder;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -44,13 +47,13 @@ import static com.julia.android.worderly.utils.Constants.PREF_USER;
 import static com.julia.android.worderly.utils.Constants.PREF_WORDS_FOR_LEARNING;
 
 public class GameFragment extends Fragment implements GamePresenter.View,
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>, Listener {
 
     // Constants for logging and referring to a unique loader
     private static final String TAG = GameFragment.class.getSimpleName();
     private static final int CURSOR_LOADER_ID = 0;
 
-    // these indices must match the projection
+    // These indices must match the projection
     private static final int INDEX_WORD = 1;
     private static final int INDEX_SCRAMBLED_WORD = 2;
     private static final int INDEX_DEFINITION = 3;
@@ -58,10 +61,11 @@ public class GameFragment extends Fragment implements GamePresenter.View,
     // Member variables for binding views using ButterKnife
     @BindView(R.id.text_current_user) TextView mCurrentUsernameTextView;
     @BindView(R.id.text_username_opponent) TextView mOpponentUsernameTextView;
-    @BindView(R.id.text_word) TextView mWordTextView;
-    @BindView(R.id.text_word_definition) TextView mWordDefinitionTextView;
-    @BindView(R.id.edit_word) EditText mWordEditText;
-    @BindView(R.id.button_send_word) Button mSendWordButton;
+    @BindView(R.id.recycler_view_top) RecyclerView mRecyclerViewTop;
+    @BindView(R.id.recycler_view_bottom) RecyclerView mRecyclerViewBottom;
+    @BindView(R.id.frame_top) FrameLayout mFrameTop;
+    @BindView(R.id.frame_bottom) FrameLayout mFrameBottom;
+    @BindView(R.id.image_holder) ImageView mImageHolder;
     private Unbinder mUnbinder;
     private GamePresenter mPresenter;
     private SharedPreferences mPrefs;
@@ -86,6 +90,36 @@ public class GameFragment extends Fragment implements GamePresenter.View,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_game, container, false);
         mUnbinder = ButterKnife.bind(this, view);
+
+        LinearLayoutManager layoutManagerTop = new LinearLayoutManager(getContext());
+        layoutManagerTop.setOrientation(LinearLayoutManager.HORIZONTAL);
+        mRecyclerViewTop.setLayoutManager(layoutManagerTop);
+        List<CustomList> customList1 = new ArrayList<>();
+
+        WordListAdapter mTopListAdapter = new WordListAdapter(customList1, this);
+        mRecyclerViewTop.setAdapter(mTopListAdapter);
+        mRecyclerViewTop.setOnDragListener(mTopListAdapter.getDragInstance());
+        mFrameTop.setOnDragListener(mTopListAdapter.getDragInstance());
+
+        LinearLayoutManager layoutManagerBottom = new LinearLayoutManager(getContext());
+        layoutManagerBottom.setOrientation(LinearLayoutManager.HORIZONTAL);
+        mRecyclerViewBottom.setLayoutManager(layoutManagerBottom);
+
+        List<CustomList> customList2 = new ArrayList<>();
+        customList2.add(0, new CustomList("A", R.color.letter0));
+        customList2.add(1, new CustomList("B", R.color.letter1));
+        customList2.add(2, new CustomList("C", R.color.letter2));
+        customList2.add(3, new CustomList("D", R.color.letter3));
+        customList2.add(4, new CustomList("E", R.color.letter4));
+        customList2.add(5, new CustomList("F", R.color.letter5));
+        customList2.add(6, new CustomList("G", R.color.letter6));
+
+        WordListAdapter mBottomListAdapter = new WordListAdapter(customList2, this);
+        mRecyclerViewBottom.setAdapter(mBottomListAdapter);
+        mRecyclerViewBottom.setOnDragListener(mBottomListAdapter.getDragInstance());
+
+        mFrameBottom.setOnDragListener(mBottomListAdapter.getDragInstance());
+        mImageHolder.setOnDragListener(mTopListAdapter.getDragInstance());
         mPresenter.setCurrentUserView();
         mPresenter.setOpponentUserView();
         return view;
@@ -109,12 +143,12 @@ public class GameFragment extends Fragment implements GamePresenter.View,
 
     @Override
     public void showWordView(String word) {
-        mWordTextView.setText(word);
+//        mWordTextView.setText(word);
     }
 
     @Override
     public void showDefinitionView(String definition) {
-        mWordDefinitionTextView.setText(definition);
+//        mWordDefinitionTextView.setText(definition);
     }
 
     /**
@@ -125,7 +159,7 @@ public class GameFragment extends Fragment implements GamePresenter.View,
         Toast.makeText(
                 getActivity(), getString(R.string.msg_wrong_word), Toast.LENGTH_SHORT).show();
         // Remove letters in Edit Text
-        mWordEditText.setText("");
+//        mWordEditText.setText("");
     }
 
     @Override
@@ -210,23 +244,22 @@ public class GameFragment extends Fragment implements GamePresenter.View,
      * Called when the user inputs a text in the text editor.
      * The user is able to send the word only when the length of the word equals 7.
      *
-     * @param editable The editable that is being entered by the user.
      */
-    @OnTextChanged(value = R.id.edit_word)
-    void onWordInput(Editable editable) {
-        int wordLength = editable.toString().trim().length();
-        if (wordLength == Constants.NUMBER_OF_LETTERS
-                || wordLength == Constants.NUMBER_OF_LETTERS + 1) {
-            mSendWordButton.setEnabled(true);
-        } else {
-            mSendWordButton.setEnabled(false);
-        }
-    }
+//    @OnTextChanged(value = R.id.edit_word)
+//    void onWordInput(Editable editable) {
+//        int wordLength = editable.toString().trim().length();
+//        if (wordLength == Constants.NUMBER_OF_LETTERS
+//                || wordLength == Constants.NUMBER_OF_LETTERS + 1) {
+//            mSendWordButton.setEnabled(true);
+//        } else {
+//            mSendWordButton.setEnabled(false);
+//        }
+//    }
 
-    @OnClick(R.id.button_send_word)
-    public void onClick() {
-        mPresenter.onSendWordClick(mWordEditText.getText().toString());
-    }
+//    @OnClick(R.id.button_send_word)
+//    public void onClick() {
+//        mPresenter.onSendWordClick(mWordEditText.getText().toString());
+//    }
 
     public void resign() {
         mPresenter.notifyOpponentAboutResign();
@@ -265,5 +298,17 @@ public class GameFragment extends Fragment implements GamePresenter.View,
             User opponent = new User(id, username, email, photoUrl);
             mPresenter.setOpponentFromBundle(opponent);
         }
+    }
+
+    @Override
+    public void setEmptyListTop(boolean visibility) {
+        mImageHolder.setVisibility(visibility ? View.VISIBLE : View.GONE);
+        mFrameTop.setVisibility(visibility ? View.GONE : View.VISIBLE);
+        mRecyclerViewTop.setVisibility(visibility ? View.GONE : View.VISIBLE);
+    }
+
+    @Override
+    public void setEmptyListBottom(boolean visibility) {
+
     }
 }
