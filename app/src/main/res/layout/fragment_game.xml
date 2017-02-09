@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/LinearLayoutVertical"
     android:background="@color/background_dark_blue"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -15,73 +16,107 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/players"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
+                android:baselineAligned="false"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:visibility="invisible">
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="8dp">
 
-                <TextView
-                    style="@style/PlayersTextView"
-                    android:text="@string/msg_you" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-                <TextView
-                    style="@style/PlayersTextView"
-                    android:text="@string/msg_opponent" />
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:paddingRight="5dp"
+                        android:src="@drawable/ic_account_circle"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="You"
+                        android:textColor="@color/blue_grey_700"
+                        android:textSize="16sp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/text_user_score"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/background_letter"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:text="0"
+                        android:textSize="30sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=":"
+                        android:textColor="@color/blue_grey_800"
+                        android:textSize="30sp"/>
+
+                    <TextView
+                        android:id="@+id/text_opponent_score"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/background_letter"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:text="0"
+                        android:textSize="30sp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:gravity="end|center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/text_username_opponent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLength="14"
+                        android:textColor="@color/blue_grey_700"
+                        android:textSize="16sp"
+                        tools:text="Opponent123111111" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:paddingLeft="5dp"
+                        android:src="@drawable/ic_account_circle"/>
+                </LinearLayout>
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/linear_layout_players"
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:visibility="invisible">
-
-                <android.support.v7.widget.CardView
-                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                    style="@style/PlayerCardView"
-                    card_view:cardCornerRadius="@dimen/card_view_corner_radius"
-                    card_view:cardUseCompatPadding="true">
-
-                    <LinearLayout
-                        style="@style/LinearLayoutVertical">
-
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/image_avatar_current_user"
-                            style="@style/PlayerAvatarImage" />
-
-                        <TextView
-                            android:id="@+id/text_current_user"
-                            style="@style/PlayerUsernameTextView" />
-
-                    </LinearLayout>
-
-                </android.support.v7.widget.CardView>
-
-                <android.support.v7.widget.CardView
-                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                    style="@style/PlayerCardView"
-                    card_view:cardCornerRadius="@dimen/card_view_corner_radius"
-                    card_view:cardUseCompatPadding="true">
-
-                    <LinearLayout
-                        style="@style/LinearLayoutVertical">
-
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/image_avatar_opponent_user"
-                            style="@style/PlayerAvatarImage" />
-
-                        <TextView
-                            android:id="@+id/text_username_opponent"
-                            style="@style/PlayerUsernameTextView" />
-
-                    </LinearLayout>
-
-                </android.support.v7.widget.CardView>
-
-            </LinearLayout>
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="15dp"
+                android:indeterminate="false"
+                android:layoutDirection="rtl"
+                android:max="30"/>
 
             <FrameLayout
                 android:id="@+id/frame_top"
@@ -112,13 +147,6 @@
                 android:contentDescription="@null"
                 android:src="@drawable/line" />
 
-            <!--<View-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="1dp"-->
-            <!--android:layout_marginStart="20dp"-->
-            <!--android:layout_marginEnd="20dp"-->
-            <!--android:background="#cccccc"/>-->
-
             <FrameLayout
                 android:id="@+id/frame_bottom"
                 android:layout_width="match_parent"
@@ -129,7 +157,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="110dp"
                     android:layout_gravity="center"
-                    android:layout_marginTop="50dp" />
+                    android:layout_marginTop="50dp"
+                    tools:listitem="@layout/row_item" />
 
             </FrameLayout>
 
@@ -138,12 +167,6 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@null"
                 android:src="@drawable/line" />
-            <!--<View-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="1dp"-->
-            <!--android:layout_marginStart="20dp"-->
-            <!--android:layout_marginEnd="20dp"-->
-            <!--android:background="#cccccc"/>-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -159,19 +182,18 @@
                     android:drawableTint="#1e88e5"
                     android:drawableTop="@drawable/ic_clear_white_24dp"
                     android:text="CLEAR"
-                    android:textColor="#1e88e5"
-                    android:textSize="22sp"/>
+                    android:textColor="#1e88e5" />
 
                 <Button
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
-                    android:backgroundTint="#f50057"
+                    android:backgroundTint="#D81B60"
                     android:drawableTint="#f8bbd0"
                     android:drawableTop="@drawable/ic_send_white_24dp"
                     android:text="SEND"
                     android:textColor="#f8bbd0"
-                    android:textSize="28sp"/>
+                    android:textSize="20sp"/>
 
                 <Button
                     android:layout_width="0dp"
@@ -181,8 +203,7 @@
                     android:drawableTint="#ff4081"
                     android:drawableTop="@drawable/ic_swap_horiz_white_24dp"
                     android:text="SHUFFLE"
-                    android:textColor="#ff4081"
-                    android:textSize="22sp"/>
+                    android:textColor="#ff4081" />
             </LinearLayout>
 
         </LinearLayout>

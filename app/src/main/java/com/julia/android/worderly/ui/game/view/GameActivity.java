@@ -36,7 +36,7 @@ public class GameActivity extends AppCompatActivity implements GameActivityView 
             setupViewPager(mViewPager);
         }
         mTabLayout.setupWithViewPager(mViewPager);
-        setupTabIcons();
+        //setupTabIcons();
     }
 
     @Override

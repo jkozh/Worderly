@@ -14,8 +14,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textColor="#212121"
-        android:textSize="45sp"
-        android:textStyle="bold"
+        android:textSize="36sp"
         tools:text="A"/>
 
     <TextView
@@ -23,9 +22,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/text_word"
-        android:layout_marginEnd="5dp"
-        android:textColor="#212121"
-        android:textSize="16sp"
+        android:layout_marginEnd="3dp"
+        android:textColor="#424242"
+        android:textSize="14sp"
         tools:text="2"/>
 
 </RelativeLayout>

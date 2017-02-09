@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,13 +61,16 @@ public class GameFragment extends Fragment implements GamePresenter.View,
     private static final int INDEX_DEFINITION = 3;
 
     // Member variables for binding views using ButterKnife
-    @BindView(R.id.text_current_user) TextView mCurrentUsernameTextView;
+    @BindView(R.id.progressBar) ProgressBar mProgressBar;
     @BindView(R.id.text_username_opponent) TextView mOpponentUsernameTextView;
+    @BindView(R.id.text_user_score) TextView mUserScoreTextView;
+    @BindView(R.id.text_opponent_score) TextView mOpponentScoreTextView;
     @BindView(R.id.recycler_view_top) RecyclerView mRecyclerViewTop;
     @BindView(R.id.recycler_view_bottom) RecyclerView mRecyclerViewBottom;
     @BindView(R.id.frame_top) FrameLayout mFrameTop;
     @BindView(R.id.frame_bottom) FrameLayout mFrameBottom;
     @BindView(R.id.image_holder) ImageView mImageHolder;
+    MyCountDownTimer myCountDownTimer;
     private Unbinder mUnbinder;
     private GamePresenter mPresenter;
     private SharedPreferences mPrefs;
@@ -122,6 +127,8 @@ public class GameFragment extends Fragment implements GamePresenter.View,
         mImageHolder.setOnDragListener(mTopListAdapter.getDragInstance());
         mPresenter.setCurrentUserView();
         mPresenter.setOpponentUserView();
+        myCountDownTimer = new MyCountDownTimer(30000, 1);
+        myCountDownTimer.start();
         return view;
     }
 
@@ -133,7 +140,7 @@ public class GameFragment extends Fragment implements GamePresenter.View,
 
     @Override
     public void showCurrentUsernameView(String username) {
-        mCurrentUsernameTextView.setText(username);
+        //mCurrentUsernameTextView.setText(username);
     }
 
     @Override
@@ -310,5 +317,27 @@ public class GameFragment extends Fragment implements GamePresenter.View,
     @Override
     public void setEmptyListBottom(boolean visibility) {
 
+    }
+
+    public class MyCountDownTimer extends CountDownTimer {
+
+        MyCountDownTimer(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            int progress = (int) (millisUntilFinished / 1000);
+            if (mProgressBar != null) {
+                mProgressBar.setProgress(mProgressBar.getMax() - progress);
+                mUserScoreTextView.setText(String.valueOf(progress));
+                mOpponentScoreTextView.setText(String.valueOf(mProgressBar.getMax() - progress));
+            }
+        }
+
+        @Override
+        public void onFinish() {
+            //finish();
+        }
     }
 }

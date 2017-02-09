@@ -9,12 +9,12 @@
 
         <item name="android:colorButtonNormal">@drawable/button_selector</item>
         <item name="colorButtonNormal">@drawable/button_selector</item>
-        <item name="android:buttonStyle">@style/FriendlyButtonStyle</item>
     </style>
 
-    <style name="FriendlyButtonStyle" parent="Widget.AppCompat.Button">
-        <item name="android:textColor">@color/colorPrimaryText</item>
+    <style name="CustomProgressBarHorizontal" parent="@style/Base.Widget.AppCompat.ProgressBar.Horizontal">
 
+        <item name="android:minHeight">40dip</item>
+        <item name="android:maxHeight">50dip</item>
     </style>
 
 </resources>

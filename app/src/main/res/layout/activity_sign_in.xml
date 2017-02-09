@@ -45,7 +45,7 @@
             android:layout_marginBottom="@dimen/sign_in_margin_bottom"
             android:layout_marginTop="@dimen/sign_in_margin_top"
             android:text="@string/msg_sign_in"
-            android:textColor="@color/grey_800"
+            android:textColor="@color/blue_grey_700"
             android:textSize="@dimen/text_size_medium"
             android:textStyle="bold"/>
 
