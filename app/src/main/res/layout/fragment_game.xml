@@ -21,21 +21,21 @@
                 android:baselineAligned="false"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
                 android:paddingTop="8dp">
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <de.hdodenhof.circleimageview.CircleImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:paddingRight="5dp"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:paddingRight="7dp"
                         android:src="@drawable/ic_account_circle"/>
 
                     <TextView
@@ -50,40 +50,6 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/text_user_score"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/background_letter"
-                        android:paddingLeft="4dp"
-                        android:paddingRight="4dp"
-                        android:text="0"
-                        android:textSize="30sp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=":"
-                        android:textColor="@color/blue_grey_800"
-                        android:textSize="30sp"/>
-
-                    <TextView
-                        android:id="@+id/text_opponent_score"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/background_letter"
-                        android:paddingLeft="4dp"
-                        android:paddingRight="4dp"
-                        android:text="0"
-                        android:textSize="30sp"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="5"
                     android:gravity="end|center_vertical"
                     android:orientation="horizontal">
 
@@ -91,15 +57,15 @@
                         android:id="@+id/text_username_opponent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:maxLength="14"
+                        android:maxLength="25"
                         android:textColor="@color/blue_grey_700"
                         android:textSize="16sp"
-                        tools:text="Opponent123111111" />
+                        tools:text="Opponent" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:paddingLeft="5dp"
+                        android:paddingLeft="7dp"
                         android:src="@drawable/ic_account_circle"/>
                 </LinearLayout>
 
@@ -110,13 +76,49 @@
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
+
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="15dp"
+
                 android:indeterminate="false"
                 android:layoutDirection="rtl"
                 android:max="30"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/text_user_score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_letter"
+                    android:paddingLeft="6dp"
+                    android:paddingRight="6dp"
+                    android:text="0"
+                    android:textSize="26sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="6dp"
+                    android:paddingRight="6dp"
+                    android:text=":"
+                    android:textColor="@color/blue_grey_800"
+                    android:textSize="30sp"/>
+
+                <TextView
+                    android:id="@+id/text_opponent_score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_letter"
+                    android:paddingLeft="6dp"
+                    android:paddingRight="6dp"
+                    android:text="0"
+                    android:textSize="26sp"/>
+            </LinearLayout>
 
             <FrameLayout
                 android:id="@+id/frame_top"
@@ -175,6 +177,7 @@
                 android:orientation="horizontal">
 
                 <Button
+                    android:id="@+id/button_clear"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="4"
@@ -185,6 +188,7 @@
                     android:textColor="#1e88e5" />
 
                 <Button
+                    android:id="@+id/button_send"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
@@ -196,6 +200,7 @@
                     android:textSize="20sp"/>
 
                 <Button
+                    android:id="@+id/button_shuffle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="4"

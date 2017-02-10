@@ -1,20 +1,18 @@
-package com.julia.android.worderly.ui.game.view;
+package com.julia.android.worderly.ui.game.dragdrop;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.DragEvent;
 import android.view.View;
 
 import com.julia.android.worderly.R;
-import com.julia.android.worderly.ui.game.adapter.CustomList;
-import com.julia.android.worderly.ui.game.adapter.WordListAdapter;
 
 import java.util.List;
 
-public class DragListener implements View.OnDragListener {
+class DragListener implements View.OnDragListener {
     private boolean isDropped = false;
     private Listener mListener;
 
-    public DragListener(Listener listener) {
+    DragListener(Listener listener) {
         mListener = listener;
     }
 

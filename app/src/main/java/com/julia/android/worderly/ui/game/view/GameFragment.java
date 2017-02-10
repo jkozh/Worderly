@@ -14,6 +14,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,18 +29,22 @@ import com.julia.android.worderly.R;
 import com.julia.android.worderly.data.database.WordContract;
 import com.julia.android.worderly.data.database.WordContract.WordEntry;
 import com.julia.android.worderly.model.User;
-import com.julia.android.worderly.ui.game.adapter.CustomList;
-import com.julia.android.worderly.ui.game.adapter.WordListAdapter;
+import com.julia.android.worderly.ui.game.dragdrop.CustomList;
+import com.julia.android.worderly.ui.game.dragdrop.Listener;
+import com.julia.android.worderly.ui.game.dragdrop.WordListAdapter;
 import com.julia.android.worderly.ui.game.presenter.GamePresenter;
 import com.julia.android.worderly.ui.main.view.MainActivity;
 import com.julia.android.worderly.utils.Constants;
+import com.julia.android.worderly.utils.WordUtility;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -71,6 +76,11 @@ public class GameFragment extends Fragment implements GamePresenter.View,
     @BindView(R.id.frame_bottom) FrameLayout mFrameBottom;
     @BindView(R.id.image_holder) ImageView mImageHolder;
     MyCountDownTimer myCountDownTimer;
+    List<CustomList> customList1;
+    List<CustomList> customList2;
+    WordListAdapter mTopListAdapter;
+    WordListAdapter mBottomListAdapter;
+    String w = "ASDFGHJ";
     private Unbinder mUnbinder;
     private GamePresenter mPresenter;
     private SharedPreferences mPrefs;
@@ -99,9 +109,9 @@ public class GameFragment extends Fragment implements GamePresenter.View,
         LinearLayoutManager layoutManagerTop = new LinearLayoutManager(getContext());
         layoutManagerTop.setOrientation(LinearLayoutManager.HORIZONTAL);
         mRecyclerViewTop.setLayoutManager(layoutManagerTop);
-        List<CustomList> customList1 = new ArrayList<>();
+        customList1 = new ArrayList<>();
 
-        WordListAdapter mTopListAdapter = new WordListAdapter(customList1, this);
+        mTopListAdapter = new WordListAdapter(customList1, this);
         mRecyclerViewTop.setAdapter(mTopListAdapter);
         mRecyclerViewTop.setOnDragListener(mTopListAdapter.getDragInstance());
         mFrameTop.setOnDragListener(mTopListAdapter.getDragInstance());
@@ -110,16 +120,18 @@ public class GameFragment extends Fragment implements GamePresenter.View,
         layoutManagerBottom.setOrientation(LinearLayoutManager.HORIZONTAL);
         mRecyclerViewBottom.setLayoutManager(layoutManagerBottom);
 
-        List<CustomList> customList2 = new ArrayList<>();
-        customList2.add(0, new CustomList("A", R.color.letter0));
-        customList2.add(1, new CustomList("B", R.color.letter1));
-        customList2.add(2, new CustomList("C", R.color.letter2));
-        customList2.add(3, new CustomList("D", R.color.letter3));
-        customList2.add(4, new CustomList("E", R.color.letter4));
-        customList2.add(5, new CustomList("F", R.color.letter5));
-        customList2.add(6, new CustomList("G", R.color.letter6));
-
-        WordListAdapter mBottomListAdapter = new WordListAdapter(customList2, this);
+        shuffleLetters();
+//        char[] c = WordUtility.scrambleWord(w).toCharArray();
+//        customList2 = new ArrayList<>();
+//        customList2.add(0, new CustomList(String.valueOf(c[0]), R.color.letter0));
+//        customList2.add(1, new CustomList(String.valueOf(c[1]), R.color.letter1));
+//        customList2.add(2, new CustomList(String.valueOf(c[2]), R.color.letter2));
+//        customList2.add(3, new CustomList(String.valueOf(c[3]), R.color.letter3));
+//        customList2.add(4, new CustomList(String.valueOf(c[4]), R.color.letter4));
+//        customList2.add(5, new CustomList(String.valueOf(c[5]), R.color.letter5));
+//        customList2.add(6, new CustomList(String.valueOf(c[6]), R.color.letter6));
+//
+        mBottomListAdapter = new WordListAdapter(customList2, this);
         mRecyclerViewBottom.setAdapter(mBottomListAdapter);
         mRecyclerViewBottom.setOnDragListener(mBottomListAdapter.getDragInstance());
 
@@ -267,6 +279,61 @@ public class GameFragment extends Fragment implements GamePresenter.View,
 //    public void onClick() {
 //        mPresenter.onSendWordClick(mWordEditText.getText().toString());
 //    }
+
+    private void shuffleLetters() {
+        char[] c = WordUtility.scrambleWord(w).toCharArray();
+        Log.d("QQQ", Arrays.toString(c));
+        customList2 = new ArrayList<>();
+        customList2.add(0, new CustomList(String.valueOf(c[0]), R.color.letter0));
+        customList2.add(1, new CustomList(String.valueOf(c[1]), R.color.letter1));
+        customList2.add(2, new CustomList(String.valueOf(c[2]), R.color.letter2));
+        customList2.add(3, new CustomList(String.valueOf(c[3]), R.color.letter3));
+        customList2.add(4, new CustomList(String.valueOf(c[4]), R.color.letter4));
+        customList2.add(5, new CustomList(String.valueOf(c[5]), R.color.letter5));
+        customList2.add(6, new CustomList(String.valueOf(c[6]), R.color.letter6));
+
+    }
+
+    @OnClick(R.id.button_clear)
+    public void onClearClick() {
+        if (customList1.size() != 0) {
+            customList1.clear();
+            mTopListAdapter = new WordListAdapter(customList1, this);
+            mRecyclerViewTop.setAdapter(mTopListAdapter);
+            customList2.clear();
+            shuffleLetters();
+            mBottomListAdapter = new WordListAdapter(customList2, this);
+            mRecyclerViewBottom.setAdapter(mBottomListAdapter);
+        }
+    }
+
+    @OnClick(R.id.button_send)
+    public void onSendClick() {
+        if (customList1.size() != 0) {
+            String qwerty = "";
+            for (int i = 0; i < customList1.size(); i++) {
+                CustomList q = customList1.get(i);
+                qwerty += q.letter;
+            }
+            Toast.makeText(getContext(), qwerty, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getContext(), "Nothing to send!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @OnClick(R.id.button_shuffle)
+    public void onShuffleClick() {
+        if (customList2.size() != 0) {
+            customList1.clear();
+            mTopListAdapter = new WordListAdapter(customList1, this);
+            mRecyclerViewTop.setAdapter(mTopListAdapter);
+            customList2.clear();
+            shuffleLetters();
+            mBottomListAdapter = new WordListAdapter(customList2, this);
+            mRecyclerViewBottom.setAdapter(mBottomListAdapter);
+        }
+    }
+
 
     public void resign() {
         mPresenter.notifyOpponentAboutResign();

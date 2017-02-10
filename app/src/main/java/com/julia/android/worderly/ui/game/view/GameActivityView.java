@@ -1,5 +1,5 @@
 package com.julia.android.worderly.ui.game.view;
 
-public interface GameActivityView {
+interface GameActivityView {
     void setChatTabNewMessageTitle();
 }

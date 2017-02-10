@@ -1,7 +1,7 @@
-package com.julia.android.worderly.ui.game.adapter;
+package com.julia.android.worderly.ui.game.dragdrop;
 
 public class CustomList {
-    String letter;
+    public String letter;
     int color;
 
     public CustomList(String letter, int color) {

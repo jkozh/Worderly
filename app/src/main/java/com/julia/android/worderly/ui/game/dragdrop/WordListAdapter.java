@@ -1,4 +1,4 @@
-package com.julia.android.worderly.ui.game.adapter;
+package com.julia.android.worderly.ui.game.dragdrop;
 
 import android.app.Activity;
 import android.content.ClipData;
@@ -12,19 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.julia.android.worderly.R;
-import com.julia.android.worderly.ui.game.view.DragListener;
-import com.julia.android.worderly.ui.game.view.Listener;
 
 import java.util.List;
 
 public class WordListAdapter extends RecyclerView.Adapter<ListViewHolder> {
 
-    //private List<String> mList;
-    List<CustomList> mCustomList;
+    private List<CustomList> mCustomList;
     private Listener mListener;
 
     public WordListAdapter(List<CustomList> customList, Listener listener) {
-        //this.mList = list;
         this.mCustomList = customList;
         this.mListener = listener;
     }
@@ -80,36 +76,12 @@ public class WordListAdapter extends RecyclerView.Adapter<ListViewHolder> {
         return mCustomList.size();
     }
 
-    public List<CustomList> getCustomList() {
+    List<CustomList> getCustomList() {
         return mCustomList;
     }
 
-    public void updateCustomList(List<CustomList> customList) {
+    void updateCustomList(List<CustomList> customList) {
         this.mCustomList = customList;
     }
-//
-//    @Override
-//    public int getItemCount() {
-//        return mList.size();
-//    }
-
-//    public List<String> getList() {
-//        List<String> l = new ArrayList<>();
-//        for (int i = 0; i < mList.size(); i++) {
-//            l.add(mList.get(i).getLetter());
-//        }
-//        return l;
-//        return mList;
-//    }
-
-//    public void updateList(List<String> list) {
-//        for (int i = 0; i < mList.size(); i++) {
-//            Log.d("TTTTTTTT", String.valueOf(mList.size()));
-//            Log.d("TTTTTTTT", String.valueOf(mList.get(i).getLetter()));
-//            Log.d("TTTTTTTT", list.get(i));
-//            mList.get(i).setLetter(list.get(i));
-//        }
-//        mList = list;
-//    }
 }
 

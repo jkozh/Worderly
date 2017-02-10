@@ -1,4 +1,4 @@
-package com.julia.android.worderly.ui.game.adapter;
+package com.julia.android.worderly.ui.game.dragdrop;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
