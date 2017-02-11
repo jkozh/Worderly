@@ -58,35 +58,37 @@ class DragListener implements View.OnDragListener {
                         positionTarget = (int) v.getTag();
                     }
 
-                    RecyclerView source = (RecyclerView) viewSource.getParent();
+                    if (viewSource != null) {
+                        RecyclerView source = (RecyclerView) viewSource.getParent();
 
-                    WordListAdapter adapterSource = (WordListAdapter) source.getAdapter();
-                    int positionSource = (int) viewSource.getTag();
-                    int sourceId = source.getId();
+                        WordListAdapter adapterSource = (WordListAdapter) source.getAdapter();
+                        int positionSource = (int) viewSource.getTag();
+                        int sourceId = source.getId();
 
-                    CustomList customList = adapterSource.getCustomList().get(positionSource);
-                    List<CustomList> customListSource = adapterSource.getCustomList();
+                        CustomList customList = adapterSource.getCustomList().get(positionSource);
+                        List<CustomList> customListSource = adapterSource.getCustomList();
 
-                    customListSource.remove(positionSource);
-                    adapterSource.updateCustomList(customListSource);
-                    adapterSource.notifyDataSetChanged();
+                        customListSource.remove(positionSource);
+                        adapterSource.updateCustomList(customListSource);
+                        adapterSource.notifyDataSetChanged();
 
-                    WordListAdapter adapterTarget = (WordListAdapter) target.getAdapter();
-                    List<CustomList> customListTarget = adapterTarget.getCustomList();
-                    if (positionTarget >= 0) {
-                        customListTarget.add(positionTarget, customList);
-                    } else {
-                        customListTarget.add(customList);
-                    }
-                    adapterTarget.updateCustomList(customListTarget);
-                    adapterTarget.notifyDataSetChanged();
-                    //v.setVisibility(View.VISIBLE);
+                        WordListAdapter adapterTarget = (WordListAdapter) target.getAdapter();
+                        List<CustomList> customListTarget = adapterTarget.getCustomList();
+                        if (positionTarget >= 0) {
+                            customListTarget.add(positionTarget, customList);
+                        } else {
+                            customListTarget.add(customList);
+                        }
+                        adapterTarget.updateCustomList(customListTarget);
+                        adapterTarget.notifyDataSetChanged();
+                        //v.setVisibility(View.VISIBLE);
 
-                    if (sourceId == recyclerViewTopId && adapterSource.getItemCount() < 1) {
-                        mListener.setEmptyListTop(true);
-                    }
-                    if (v.getId() == R.id.image_holder) {
-                        mListener.setEmptyListTop(false);
+                        if (sourceId == recyclerViewTopId && adapterSource.getItemCount() < 1) {
+                            mListener.setEmptyListTop(true);
+                        }
+                        if (v.getId() == R.id.image_holder) {
+                            mListener.setEmptyListTop(false);
+                        }
                     }
 //                    if (sourceId == recyclerViewBottomId && adapterSource.getItemCount() < 1) {
 //                        mListener.setEmptyListBottom(true);
@@ -96,7 +98,9 @@ class DragListener implements View.OnDragListener {
         }
 
         if (!isDropped) {
-            ((View) dragEvent.getLocalState()).setVisibility(View.VISIBLE);
+            if (dragEvent.getLocalState() != null) {
+                ((View) dragEvent.getLocalState()).setVisibility(View.VISIBLE);
+            }
         }
 
         return true;
