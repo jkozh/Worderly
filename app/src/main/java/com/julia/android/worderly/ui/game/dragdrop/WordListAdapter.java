@@ -31,7 +31,7 @@ public class WordListAdapter extends RecyclerView.Adapter<ListViewHolder> {
                 parent.getContext()).inflate(R.layout.row_item, parent, false);
         DisplayMetrics dm = new DisplayMetrics();
         ((Activity)parent.getContext()).getWindowManager().getDefaultDisplay().getMetrics(dm);
-        view.setLayoutParams(new RecyclerView.LayoutParams(dm.widthPixels / 7, dm.widthPixels / 7));
+        view.setLayoutParams(new RecyclerView.LayoutParams((dm.widthPixels-20) / 7, (dm.widthPixels-20) / 7));
         return new ListViewHolder(view);
     }
 

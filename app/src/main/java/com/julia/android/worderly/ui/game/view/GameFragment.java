@@ -12,6 +12,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -121,19 +122,15 @@ public class GameFragment extends Fragment implements GamePresenter.View,
         mRecyclerViewBottom.setLayoutManager(layoutManagerBottom);
 
         shuffleLetters();
-//        char[] c = WordUtility.scrambleWord(w).toCharArray();
-//        customList2 = new ArrayList<>();
-//        customList2.add(0, new CustomList(String.valueOf(c[0]), R.color.letter0));
-//        customList2.add(1, new CustomList(String.valueOf(c[1]), R.color.letter1));
-//        customList2.add(2, new CustomList(String.valueOf(c[2]), R.color.letter2));
-//        customList2.add(3, new CustomList(String.valueOf(c[3]), R.color.letter3));
-//        customList2.add(4, new CustomList(String.valueOf(c[4]), R.color.letter4));
-//        customList2.add(5, new CustomList(String.valueOf(c[5]), R.color.letter5));
-//        customList2.add(6, new CustomList(String.valueOf(c[6]), R.color.letter6));
-//
+
         mBottomListAdapter = new WordListAdapter(customList2, this);
         mRecyclerViewBottom.setAdapter(mBottomListAdapter);
         mRecyclerViewBottom.setOnDragListener(mBottomListAdapter.getDragInstance());
+
+        mRecyclerViewTop.addItemDecoration(
+                new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
+        mRecyclerViewBottom.addItemDecoration(
+                new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
 
         mFrameBottom.setOnDragListener(mBottomListAdapter.getDragInstance());
         mImageHolder.setOnDragListener(mTopListAdapter.getDragInstance());
