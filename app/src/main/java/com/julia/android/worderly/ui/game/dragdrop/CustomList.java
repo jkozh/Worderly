@@ -1,11 +1,13 @@
 package com.julia.android.worderly.ui.game.dragdrop;
 
 public class CustomList {
-    public String letter;
+    public char letter;
     int color;
+    int value;
 
-    public CustomList(String letter, int color) {
+    public CustomList(char letter, int color, int value) {
         this.letter = letter;
         this.color = color;
+        this.value = value;
     }
 }

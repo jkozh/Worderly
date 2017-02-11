@@ -24,7 +24,6 @@ class DragListener implements View.OnDragListener {
 //            case DragEvent.ACTION_DRAG_ENTERED:
 //                View viewSource = (View) dragEvent.getLocalState();
 //                viewSource.setBackgroundColor(RggbChannelVector.BLUE);
-//
 //                return true;
 //            case DragEvent.ACTION_DRAG_EXITED:
 //                break;

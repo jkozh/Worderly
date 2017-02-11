@@ -19,6 +19,7 @@ public class WordListAdapter extends RecyclerView.Adapter<ListViewHolder> {
 
     private List<CustomList> mCustomList;
     private Listener mListener;
+    private boolean colorWhite = false;
 
     public WordListAdapter(List<CustomList> customList, Listener listener) {
         this.mCustomList = customList;
@@ -29,18 +30,26 @@ public class WordListAdapter extends RecyclerView.Adapter<ListViewHolder> {
     public ListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(
                 parent.getContext()).inflate(R.layout.row_item, parent, false);
+        if (parent.getId() == R.id.recycler_view_top) {
+            colorWhite = true;
+        }
         DisplayMetrics dm = new DisplayMetrics();
         ((Activity)parent.getContext()).getWindowManager().getDefaultDisplay().getMetrics(dm);
-        view.setLayoutParams(new RecyclerView.LayoutParams((dm.widthPixels-20) / 7, (dm.widthPixels-20) / 7));
+        view.setLayoutParams(
+                new RecyclerView.LayoutParams((dm.widthPixels-20) / 7, (dm.widthPixels-20) / 7));
         return new ListViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ListViewHolder holder, int position) {
         CustomList customList = mCustomList.get(position);
-        holder.rl.setBackgroundColor(holder.itemView.getResources().getColor(customList.color));
-        holder.textWord.setText(customList.letter);
-        holder.textScore.setText(String.valueOf(position));
+        if (colorWhite) {
+            holder.rl.setBackgroundColor(holder.itemView.getResources().getColor(R.color.blue_grey_100));
+        } else {
+            holder.rl.setBackgroundColor(holder.itemView.getResources().getColor(customList.color));
+        }
+        holder.textTile.setText(String.valueOf(customList.letter));
+        holder.textScore.setText(String.valueOf(customList.value));
         holder.rl.setTag(position);
         holder.rl.setOnTouchListener(new View.OnTouchListener() {
             @Override

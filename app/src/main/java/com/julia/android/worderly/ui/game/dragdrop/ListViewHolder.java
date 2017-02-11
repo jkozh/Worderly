@@ -12,7 +12,7 @@ import butterknife.ButterKnife;
 
 class ListViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.text_word)
-    TextView textWord;
+    TextView textTile;
     @BindView(R.id.text_score)
     TextView textScore;
     @BindView(R.id.relative_layout_item)

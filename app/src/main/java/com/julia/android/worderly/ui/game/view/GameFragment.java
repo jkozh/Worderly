@@ -81,7 +81,6 @@ public class GameFragment extends Fragment implements GamePresenter.View,
     List<CustomList> customList2;
     WordListAdapter mTopListAdapter;
     WordListAdapter mBottomListAdapter;
-    String w = "ASDFGHJ";
     private Unbinder mUnbinder;
     private GamePresenter mPresenter;
     private SharedPreferences mPrefs;
@@ -256,39 +255,15 @@ public class GameFragment extends Fragment implements GamePresenter.View,
     public void onLoaderReset(Loader<Cursor> loader){
     }
 
-    /**
-     * Called when the user inputs a text in the text editor.
-     * The user is able to send the word only when the length of the word equals 7.
-     *
-     */
-//    @OnTextChanged(value = R.id.edit_word)
-//    void onWordInput(Editable editable) {
-//        int wordLength = editable.toString().trim().length();
-//        if (wordLength == Constants.NUMBER_OF_LETTERS
-//                || wordLength == Constants.NUMBER_OF_LETTERS + 1) {
-//            mSendWordButton.setEnabled(true);
-//        } else {
-//            mSendWordButton.setEnabled(false);
-//        }
-//    }
-
-//    @OnClick(R.id.button_send_word)
-//    public void onClick() {
-//        mPresenter.onSendWordClick(mWordEditText.getText().toString());
-//    }
-
     private void shuffleLetters() {
-        char[] c = WordUtility.scrambleWord(w).toCharArray();
-        Log.d("QQQ", Arrays.toString(c));
+        char[] c = WordUtility.scrambleWord("QWERTYU").toCharArray();
+        Log.d(TAG, Arrays.toString(c));
+        int[] color = new int[] { R.color.letter0, R.color.letter1, R.color.letter2,
+                R.color.letter3, R.color.letter4, R.color.letter5, R.color.letter6 };
         customList2 = new ArrayList<>();
-        customList2.add(0, new CustomList(String.valueOf(c[0]), R.color.letter0));
-        customList2.add(1, new CustomList(String.valueOf(c[1]), R.color.letter1));
-        customList2.add(2, new CustomList(String.valueOf(c[2]), R.color.letter2));
-        customList2.add(3, new CustomList(String.valueOf(c[3]), R.color.letter3));
-        customList2.add(4, new CustomList(String.valueOf(c[4]), R.color.letter4));
-        customList2.add(5, new CustomList(String.valueOf(c[5]), R.color.letter5));
-        customList2.add(6, new CustomList(String.valueOf(c[6]), R.color.letter6));
-
+        for (int i = 0; i < Constants.NUMBER_OF_LETTERS; i++) {
+            customList2.add(i, new CustomList(c[i], color[i], WordUtility.getTileValue(c[i])));
+        }
     }
 
     @OnClick(R.id.button_clear)
@@ -312,6 +287,7 @@ public class GameFragment extends Fragment implements GamePresenter.View,
                 CustomList q = customList1.get(i);
                 qwerty += q.letter;
             }
+            //mPresenter.onSendWordClick(mWordEditText.getText().toString());
             Toast.makeText(getContext(), qwerty, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getContext(), "Nothing to send!", Toast.LENGTH_SHORT).show();
