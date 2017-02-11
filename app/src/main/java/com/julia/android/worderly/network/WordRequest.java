@@ -1,7 +1,5 @@
 package com.julia.android.worderly.network;
 
-import android.content.ContentValues;
-import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
@@ -15,10 +13,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.julia.android.worderly.BuildConfig;
-import com.julia.android.worderly.data.database.WordContract.WordEntry;
 import com.julia.android.worderly.model.Result;
 import com.julia.android.worderly.model.Word;
-import com.julia.android.worderly.utils.WordUtility;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,7 +41,7 @@ public class WordRequest {
 
     private final String TAG = WordRequest.class.getSimpleName();
 
-    public WordRequest(RequestQueue requestQueue, final Context context) {
+    public WordRequest(RequestQueue requestQueue, final DataCallback callback) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         final Gson gson = gsonBuilder.create();
 
@@ -60,10 +56,9 @@ public class WordRequest {
                         Word word = gson.fromJson(response, Word.class);
                         List<Result> results = word.getResults();
                         Log.i(TAG, "word: " + word.getWord());
-                        for (Result result : results) {
-                            Log.i(TAG, "definition: " + result.getDefinition());
-                        }
-                        setContentValues(context, word.getWord(), results.get(0).getDefinition());
+                        Log.i(TAG, "definition: " + results.get(0).getDefinition());
+                        callback.onSuccess(word.getWord(), results.get(0).getDefinition());
+                        //setContentValues(context, word.getWord(), results.get(0).getDefinition());
                     }
 
                 }, new Response.ErrorListener() {
@@ -96,22 +91,22 @@ public class WordRequest {
         requestQueue.add(stringRequest);
     }
 
-    private void setContentValues(Context context, String word, String definition) {
-        // Insert new word data via a ContentResolver
-        // Create new empty ContentValues object
-        ContentValues contentValues = new ContentValues();
-        // Put the word, scrambled, and definition into the ContentValues
-        contentValues.put(WordEntry.COLUMN_WORD, word);
-        contentValues.put(WordEntry.COLUMN_SCRAMBLED_WORD, WordUtility.scrambleWord(word));
-        contentValues.put(WordEntry.COLUMN_DEFINITION, definition);
-        // Insert the content values via a ContentResolver
-        Uri uri = context.getContentResolver().insert(WordEntry.CONTENT_URI, contentValues);
-
-        // The URI that's returned
-        if(uri != null) {
-            Log.d(TAG, "uri.toString()=" + uri.toString());
-        }
-    }
+//    private void setContentValues(Context context, String word, String definition) {
+//        // Insert new word data via a ContentResolver
+//        // Create new empty ContentValues object
+//        ContentValues contentValues = new ContentValues();
+//        // Put the word, scrambled, and definition into the ContentValues
+//        contentValues.put(WordEntry.COLUMN_WORD, word);
+//        contentValues.put(WordEntry.COLUMN_SCRAMBLED_WORD, WordUtility.scrambleWord(word));
+//        contentValues.put(WordEntry.COLUMN_DEFINITION, definition);
+//        // Insert the content values via a ContentResolver
+//        Uri uri = context.getContentResolver().insert(WordEntry.CONTENT_URI, contentValues);
+//
+//        // The URI that's returned
+//        if(uri != null) {
+//            Log.d(TAG, "uri.toString()=" + uri.toString());
+//        }
+//    }
 
     private void getNetworkResponseApi(int statusCode) {
         switch (statusCode) {
