@@ -16,7 +16,8 @@ import com.julia.android.worderly.R;
 
 import java.util.List;
 
-public class WordListAdapter extends RecyclerView.Adapter<ListViewHolder> implements View.OnTouchListener {
+public class WordListAdapter extends RecyclerView.Adapter<ListViewHolder>
+        implements View.OnTouchListener {
 
     private static final String TAG = WordListAdapter.class.getSimpleName();
     private List<CustomList> mCustomList;
