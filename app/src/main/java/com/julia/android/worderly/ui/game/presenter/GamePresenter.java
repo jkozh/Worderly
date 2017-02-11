@@ -75,7 +75,7 @@ public class GamePresenter {
                 mInteractor.notifyOpponentUserWin(mCurrentUser.getId(), mOpponentUser.getId());
                 // Clean the database from finished game room
                 mInteractor.deleteGameRoom(mCurrentUser.getId(), mOpponentUser.getId());
-                view.showEndGameDialog(true, mWord);
+                view.showRoundFinishedDialog(true, mWord);
             } else {
                 view.showWrongWordToast();
             }
@@ -86,7 +86,7 @@ public class GamePresenter {
         GamePresenter.View view = mWeakView.get();
         if (view != null) {
             deleteGameRoom();
-            view.showEndGameDialog(false, mWord);
+            view.showRoundFinishedDialog(false, mWord);
         }
     }
 
@@ -94,7 +94,7 @@ public class GamePresenter {
         GamePresenter.View view = mWeakView.get();
         if (view != null) {
             deleteGameRoom();
-            view.showEndGameDialog(true, mWord);
+            view.showRoundFinishedDialog(true, mWord);
         }
     }
 
@@ -121,6 +121,6 @@ public class GamePresenter {
         void showWordView(String word);
         void showDefinitionView(String definition);
         void showWrongWordToast();
-        void showEndGameDialog(boolean isWon, String word);
+        void showRoundFinishedDialog(boolean isWon, String word);
     }
 }

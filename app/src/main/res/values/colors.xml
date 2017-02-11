@@ -14,13 +14,13 @@
     <color name="background_dark_blue">#1c233f</color>
 
     <!-- Colors for letters -->
-    <color name="letter0">#fcc397</color>
-    <color name="letter1">#fc9f95</color>
-    <color name="letter2">#f77c88</color>
-    <color name="letter3">#f25192</color>
-    <color name="letter4">#d34ca3</color>
-    <color name="letter5">#9a50a5</color>
-    <color name="letter6">#59569e</color>
+    <color name="tile0">#fcc397</color>
+    <color name="tile1">#fc9f95</color>
+    <color name="tile2">#f77c88</color>
+    <color name="tile3">#f25192</color>
+    <color name="tile4">#d34ca3</color>
+    <color name="tile5">#9a50a5</color>
+    <color name="tile6">#59569e</color>
     <color name="deep_purple_500">#673AB7</color>
     <color name="deep_purple_700">#512DA8</color>
 </resources>

@@ -1,17 +1,15 @@
 package com.julia.android.worderly.ui.game.view;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -52,7 +50,6 @@ import static android.content.Context.MODE_PRIVATE;
 import static com.julia.android.worderly.utils.Constants.ACTION_DATA_UPDATED;
 import static com.julia.android.worderly.utils.Constants.PREF_NAME;
 import static com.julia.android.worderly.utils.Constants.PREF_USER;
-import static com.julia.android.worderly.utils.Constants.PREF_WORDS_FOR_LEARNING;
 
 public class GameFragment extends Fragment implements GamePresenter.View,
         LoaderManager.LoaderCallbacks<Cursor>, Listener {
@@ -76,7 +73,6 @@ public class GameFragment extends Fragment implements GamePresenter.View,
     @BindView(R.id.frame_top) FrameLayout mFrameTop;
     @BindView(R.id.frame_bottom) FrameLayout mFrameBottom;
     @BindView(R.id.image_holder) ImageView mImageHolder;
-    MyCountDownTimer myCountDownTimer;
     List<CustomList> customList1;
     List<CustomList> customList2;
     WordListAdapter mTopListAdapter;
@@ -135,8 +131,7 @@ public class GameFragment extends Fragment implements GamePresenter.View,
         mImageHolder.setOnDragListener(mTopListAdapter.getDragInstance());
         mPresenter.setCurrentUserView();
         mPresenter.setOpponentUserView();
-        myCountDownTimer = new MyCountDownTimer(30000, 1);
-        myCountDownTimer.start();
+        new GameCountDownTimer(30000, 1).start();
         return view;
     }
 
@@ -178,37 +173,12 @@ public class GameFragment extends Fragment implements GamePresenter.View,
     }
 
     @Override
-    public void showEndGameDialog(boolean isWon, String word) {
+    public void showRoundFinishedDialog(boolean isWon, String word) {
         if (getActivity() != null) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            if (isWon) {
-                builder.setTitle(getString(R.string.title_you_won));
-                builder.setMessage(getString(R.string.msg_good_game));
-            } else {
-                builder.setTitle(getString(R.string.title_you_lose));
-                builder.setMessage(getString(R.string.msg_opponent_faster));
-                builder.setMessage(getString(R.string.msg_word_was, word));
-                String prefs = mPrefs.getString(PREF_WORDS_FOR_LEARNING, Constants.PREF_USER_DEFAULT_VALUE);
-                if (!Objects.equals(prefs, Constants.PREF_USER_DEFAULT_VALUE)) {
-                    mPrefs.edit().putString(PREF_WORDS_FOR_LEARNING, prefs + word + ",").apply();
-                } else {
-                    mPrefs.edit().putString(PREF_WORDS_FOR_LEARNING, word + ",").apply();
-                }
-                // Updating the widget
-                updateWidget();
-            }
-
-            builder.setPositiveButton(getString(R.string.action_ok),
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            deleteWord();
-                            navigateToMainActivity();
-                        }
-                    });
-            final AlertDialog dialog = builder.create();
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.show();
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+            RoundFinishedDialogFragment alertDialog =
+                    RoundFinishedDialogFragment.newInstance("Round finished");
+            alertDialog.show(fm, "fragment_alert");
         }
     }
 
@@ -258,11 +228,10 @@ public class GameFragment extends Fragment implements GamePresenter.View,
     private void shuffleLetters() {
         char[] c = WordUtility.scrambleWord("QWERTYU").toCharArray();
         Log.d(TAG, Arrays.toString(c));
-        int[] color = new int[] { R.color.letter0, R.color.letter1, R.color.letter2,
-                R.color.letter3, R.color.letter4, R.color.letter5, R.color.letter6 };
         customList2 = new ArrayList<>();
         for (int i = 0; i < Constants.NUMBER_OF_LETTERS; i++) {
-            customList2.add(i, new CustomList(c[i], color[i], WordUtility.getTileValue(c[i])));
+            int color = getResources().getIdentifier("tile" + i, "color", getContext().getPackageName());
+            customList2.add(i, new CustomList(c[i], color, WordUtility.getTileValue(c[i])));
         }
     }
 
@@ -356,28 +325,5 @@ public class GameFragment extends Fragment implements GamePresenter.View,
 
     @Override
     public void setEmptyListBottom(boolean visibility) {
-
-    }
-
-    public class MyCountDownTimer extends CountDownTimer {
-
-        MyCountDownTimer(long millisInFuture, long countDownInterval) {
-            super(millisInFuture, countDownInterval);
-        }
-
-        @Override
-        public void onTick(long millisUntilFinished) {
-            int progress = (int) (millisUntilFinished / 1000);
-            if (mProgressBar != null) {
-                mProgressBar.setProgress(mProgressBar.getMax() - progress);
-                mUserScoreTextView.setText(String.valueOf(progress));
-                mOpponentScoreTextView.setText(String.valueOf(mProgressBar.getMax() - progress));
-            }
-        }
-
-        @Override
-        public void onFinish() {
-            //finish();
-        }
     }
 }
