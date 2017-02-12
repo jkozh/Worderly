@@ -18,7 +18,7 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.julia.android.worderly.R;
 import com.julia.android.worderly.model.User;
-import com.julia.android.worderly.network.DataCallback;
+import com.julia.android.worderly.network.WordCallback;
 import com.julia.android.worderly.network.WordRequest;
 import com.julia.android.worderly.ui.game.view.GameActivity;
 import com.julia.android.worderly.ui.search.presenter.SearchOpponentPresenter;
@@ -93,7 +93,7 @@ public class SearchOpponentActivity extends AppCompatActivity implements SearchO
     public void navigateToGameActivity(final User opponentUser) {
         // Fetching word from API
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        new WordRequest(requestQueue, new DataCallback() {
+        new WordRequest(requestQueue, new WordCallback() {
             @Override
             public void onSuccess(String word, String definition) {
                 Log.d(TAG, "WORD:" + word + " DEF:" + definition);
@@ -102,6 +102,8 @@ public class SearchOpponentActivity extends AppCompatActivity implements SearchO
                 i.putExtra(Constants.EXTRA_OPPONENT_USERNAME, opponentUser.getUsername());
                 i.putExtra(Constants.EXTRA_OPPONENT_EMAIL, opponentUser.getEmail());
                 i.putExtra(Constants.EXTRA_OPPONENT_PHOTO_URL, opponentUser.getPhotoUrl());
+                i.putExtra("EXTRA_WORD", word.toUpperCase());
+                i.putExtra("EXTRA_DEF", definition);
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                 startActivity(i);
                 finish();

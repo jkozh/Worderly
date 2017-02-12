@@ -20,12 +20,12 @@ public class WordListAdapter extends RecyclerView.Adapter<ListViewHolder>
         implements View.OnTouchListener {
 
     private static final String TAG = WordListAdapter.class.getSimpleName();
-    private List<CustomList> mCustomList;
+    private List<TilesList> mTilesList;
     private Listener mListener;
     private int colorTile;
 
-    public WordListAdapter(List<CustomList> customList, Listener listener) {
-        this.mCustomList = customList;
+    public WordListAdapter(List<TilesList> tilesList, Listener listener) {
+        this.mTilesList = tilesList;
         this.mListener = listener;
     }
 
@@ -45,14 +45,14 @@ public class WordListAdapter extends RecyclerView.Adapter<ListViewHolder>
 
     @Override
     public void onBindViewHolder(ListViewHolder holder, int position) {
-        CustomList customList = mCustomList.get(position);
+        TilesList tilesList = mTilesList.get(position);
         if (colorTile != R.color.blue_grey_100) {
-            colorTile = customList.color;
+            colorTile = tilesList.color;
         }
         holder.rl.setBackgroundColor(
                 ContextCompat.getColor(holder.itemView.getContext(), colorTile));
-        holder.textTile.setText(String.valueOf(customList.letter));
-        holder.textScore.setText(String.valueOf(customList.value));
+        holder.textTile.setText(String.valueOf(tilesList.letter));
+        holder.textScore.setText(String.valueOf(tilesList.value));
         holder.rl.setTag(position);
         holder.rl.setOnTouchListener(this);
         holder.rl.setOnDragListener(new DragListener(mListener));
@@ -60,7 +60,7 @@ public class WordListAdapter extends RecyclerView.Adapter<ListViewHolder>
 
     @Override
     public int getItemCount() {
-        return mCustomList.size();
+        return mTilesList.size();
     }
     @Override
     public boolean onTouch(View v, MotionEvent event) {
@@ -87,12 +87,12 @@ public class WordListAdapter extends RecyclerView.Adapter<ListViewHolder>
         }
     }
 
-    List<CustomList> getCustomList() {
-        return mCustomList;
+    List<TilesList> getCustomList() {
+        return mTilesList;
     }
 
-    void updateCustomList(List<CustomList> customList) {
-        this.mCustomList = customList;
+    void updateCustomList(List<TilesList> tilesList) {
+        this.mTilesList = tilesList;
     }
 
 }

@@ -8,7 +8,6 @@ import com.julia.android.worderly.ui.game.interactor.GameInteractor;
 import com.julia.android.worderly.ui.game.interactor.GameInteractorImpl;
 
 import java.lang.ref.WeakReference;
-import java.util.Objects;
 
 public class GamePresenter {
 
@@ -68,20 +67,6 @@ public class GamePresenter {
         }
     }
 
-    public void onSendWordClick(String sendWord) {
-        GamePresenter.View view = mWeakView.get();
-        if (view != null) {
-            if (Objects.equals(sendWord.toUpperCase(), mWord.toUpperCase())) {
-                mInteractor.notifyOpponentUserWin(mCurrentUser.getId(), mOpponentUser.getId());
-                // Clean the database from finished game room
-                mInteractor.deleteGameRoom(mCurrentUser.getId(), mOpponentUser.getId());
-                view.showRoundFinishedDialog(true, mWord);
-            } else {
-                view.showWrongWordToast();
-            }
-        }
-    }
-
     public void showLoseDialog() {
         GamePresenter.View view = mWeakView.get();
         if (view != null) {
@@ -113,6 +98,27 @@ public class GamePresenter {
             return null;
         }
         return mWeakView.get();
+    }
+
+    public void onSendClick(String word) {
+        GamePresenter.View view = mWeakView.get();
+        if (view != null) {
+//            RequestQueue requestQueue = Volley.newRequestQueue(this);
+//            new CheckWordRequest(requestQueue, word, new CheckWordCallback() {
+//                @Override
+//                public void onSuccess(String definition) {
+//
+//                }
+//            });
+//            if (Objects.equals(word, mWord)) {
+//                mInteractor.notifyOpponentUserWin(mCurrentUser.getId(), mOpponentUser.getId());
+//                // Clean the database from finished game room
+//                mInteractor.deleteGameRoom(mCurrentUser.getId(), mOpponentUser.getId());
+//                view.showRoundFinishedDialog(true, mWord);
+//            } else {
+//                view.showWrongWordToast();
+//            }
+        }
     }
 
     public interface View {

@@ -1,5 +1,6 @@
 package com.julia.android.worderly.network;
 
+
 import android.net.Uri;
 import android.util.Log;
 
@@ -24,28 +25,20 @@ import java.util.List;
 import java.util.Map;
 
 import static com.julia.android.worderly.utils.Constants.ACCEPT_PARAM;
-import static com.julia.android.worderly.utils.Constants.HAS_DEFINITION;
-import static com.julia.android.worderly.utils.Constants.HAS_DETAILS_PARAM;
-import static com.julia.android.worderly.utils.Constants.LETTERS_PARAM;
 import static com.julia.android.worderly.utils.Constants.MASHAPE_KEY_PARAM;
 import static com.julia.android.worderly.utils.Constants.MESSAGE;
-import static com.julia.android.worderly.utils.Constants.NUMBER_OF_LETTERS;
-import static com.julia.android.worderly.utils.Constants.PART_OF_SPEECH;
-import static com.julia.android.worderly.utils.Constants.PART_OF_SPEECH_PARAM;
-import static com.julia.android.worderly.utils.Constants.RANDOM;
-import static com.julia.android.worderly.utils.Constants.RANDOM_PARAM;
 import static com.julia.android.worderly.utils.Constants.TEXT_PLAIN;
 import static com.julia.android.worderly.utils.Constants.WORDS_API_BASE_URL;
 
-public class WordRequest {
+public class CheckWordRequest {
 
-    private final String TAG = WordRequest.class.getSimpleName();
+    private final String TAG = CheckWordRequest.class.getSimpleName();
 
-    public WordRequest(RequestQueue requestQueue, final WordCallback callback) {
+    public CheckWordRequest(RequestQueue requestQueue, String word, final CheckWordCallback callback) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         final Gson gson = gsonBuilder.create();
 
-        String uri = getUri();
+        String uri = Uri.parse(WORDS_API_BASE_URL).buildUpon().appendPath(word).build().toString();
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, uri,
                 new Response.Listener<String>() {
@@ -57,13 +50,14 @@ public class WordRequest {
                         List<Result> results = word.getResults();
                         Log.i(TAG, "word: " + word.getWord());
                         Log.i(TAG, "definition: " + results.get(0).getDefinition());
-                        callback.onSuccess(word.getWord(), results.get(0).getDefinition());
+                        callback.onSuccess(results.get(0).getDefinition());
                     }
 
                 }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
+                callback.onError();
                 NetworkResponse networkResponse = error.networkResponse;
                 if (networkResponse != null && networkResponse.data != null) {
                     String json = new String(networkResponse.data);
@@ -114,13 +108,14 @@ public class WordRequest {
         }
     }
 
-    private String getUri() {
-        return Uri.parse(WORDS_API_BASE_URL).buildUpon()
-                .appendQueryParameter(RANDOM_PARAM, RANDOM)
-                .appendQueryParameter(LETTERS_PARAM, Integer.toString(NUMBER_OF_LETTERS))
-                .appendQueryParameter(PART_OF_SPEECH_PARAM, PART_OF_SPEECH)
-                .appendQueryParameter(HAS_DETAILS_PARAM, HAS_DEFINITION)
+//    private String getUri() {
+//        return Uri.parse(WORDS_API_BASE_URL).buildUpon()
+//                .appendQueryParameter(RANDOM_PARAM, RANDOM)
+//                .appendQueryParameter(LETTERS_PARAM, Integer.toString(NUMBER_OF_LETTERS))
+//                .appendQueryParameter(PART_OF_SPEECH_PARAM, PART_OF_SPEECH)
+//                .appendQueryParameter(HAS_DETAILS_PARAM, HAS_DEFINITION)
                 //.appendQueryParameter(LETTERS_PATTERN_PARAM, lettersPattern)
-                .build().toString();
-    }
+//                .build().toString();
+//    }
+
 }

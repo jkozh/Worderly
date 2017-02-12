@@ -64,21 +64,21 @@ class DragListener implements View.OnDragListener {
                         int positionSource = (int) viewSource.getTag();
                         int sourceId = source.getId();
 
-                        CustomList customList = adapterSource.getCustomList().get(positionSource);
-                        List<CustomList> customListSource = adapterSource.getCustomList();
+                        TilesList tilesList = adapterSource.getCustomList().get(positionSource);
+                        List<TilesList> tilesListSource = adapterSource.getCustomList();
 
-                        customListSource.remove(positionSource);
-                        adapterSource.updateCustomList(customListSource);
+                        tilesListSource.remove(positionSource);
+                        adapterSource.updateCustomList(tilesListSource);
                         adapterSource.notifyDataSetChanged();
 
                         WordListAdapter adapterTarget = (WordListAdapter) target.getAdapter();
-                        List<CustomList> customListTarget = adapterTarget.getCustomList();
+                        List<TilesList> tilesListTarget = adapterTarget.getCustomList();
                         if (positionTarget >= 0) {
-                            customListTarget.add(positionTarget, customList);
+                            tilesListTarget.add(positionTarget, tilesList);
                         } else {
-                            customListTarget.add(customList);
+                            tilesListTarget.add(tilesList);
                         }
-                        adapterTarget.updateCustomList(customListTarget);
+                        adapterTarget.updateCustomList(tilesListTarget);
                         adapterTarget.notifyDataSetChanged();
                         //v.setVisibility(View.VISIBLE);
 

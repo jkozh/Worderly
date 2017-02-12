@@ -19,12 +19,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.julia.android.worderly.R;
 import com.julia.android.worderly.data.database.WordContract;
 import com.julia.android.worderly.model.User;
-import com.julia.android.worderly.ui.game.dragdrop.CustomList;
+import com.julia.android.worderly.network.CheckWordCallback;
+import com.julia.android.worderly.network.CheckWordRequest;
 import com.julia.android.worderly.ui.game.dragdrop.Listener;
+import com.julia.android.worderly.ui.game.dragdrop.TilesList;
 import com.julia.android.worderly.ui.game.dragdrop.WordListAdapter;
 import com.julia.android.worderly.ui.game.presenter.GamePresenter;
 import com.julia.android.worderly.ui.main.view.MainActivity;
@@ -45,17 +49,9 @@ import static android.content.Context.MODE_PRIVATE;
 import static com.julia.android.worderly.utils.Constants.PREF_NAME;
 import static com.julia.android.worderly.utils.Constants.PREF_USER;
 
-public class GameFragment extends Fragment implements GamePresenter.View
-        /*LoaderManager.LoaderCallbacks<Cursor>*/, Listener {
+public class GameFragment extends Fragment implements GamePresenter.View, Listener {
 
-    // Constants for logging and referring to a unique loader
     private static final String TAG = GameFragment.class.getSimpleName();
-//    private static final int CURSOR_LOADER_ID = 0;
-
-    // These indices must match the projection
-//    private static final int INDEX_WORD = 1;
-//    private static final int INDEX_SCRAMBLED_WORD = 2;
-//    private static final int INDEX_DEFINITION = 3;
 
     // Member variables for binding views using ButterKnife
     @BindView(R.id.progressBar) ProgressBar mProgressBar;
@@ -67,11 +63,11 @@ public class GameFragment extends Fragment implements GamePresenter.View
     @BindView(R.id.frame_top) FrameLayout mFrameTop;
     @BindView(R.id.frame_bottom) FrameLayout mFrameBottom;
     @BindView(R.id.image_holder) ImageView mImageHolder;
-    List<CustomList> customList1;
-    List<CustomList> customList2;
     WordListAdapter mTopListAdapter;
     WordListAdapter mBottomListAdapter;
     String shuffledWord = "";
+    private List<TilesList> mTilesListTop;
+    private List<TilesList> mTilesListBottom;
     private Unbinder mUnbinder;
     private GamePresenter mPresenter;
     private SharedPreferences mPrefs;
@@ -83,12 +79,6 @@ public class GameFragment extends Fragment implements GamePresenter.View
         mPrefs = getActivity().getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         getUserPrefs();
         getOpponentBundleExtras();
-
-        /*
-         Ensure a loader is initialized and active. If the loader doesn't already exist, one is
-         created, otherwise the last created loader is re-used.
-         */
-//        getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
     }
 
     @Override
@@ -100,9 +90,9 @@ public class GameFragment extends Fragment implements GamePresenter.View
         LinearLayoutManager layoutManagerTop = new LinearLayoutManager(getContext());
         layoutManagerTop.setOrientation(LinearLayoutManager.HORIZONTAL);
         mRecyclerViewTop.setLayoutManager(layoutManagerTop);
-        customList1 = new ArrayList<>();
+        mTilesListTop = new ArrayList<>();
 
-        mTopListAdapter = new WordListAdapter(customList1, this);
+        mTopListAdapter = new WordListAdapter(mTilesListTop, this);
         mRecyclerViewTop.setAdapter(mTopListAdapter);
         mRecyclerViewTop.setOnDragListener(mTopListAdapter.getDragInstance());
         mFrameTop.setOnDragListener(mTopListAdapter.getDragInstance());
@@ -113,7 +103,7 @@ public class GameFragment extends Fragment implements GamePresenter.View
 
         shuffleLetters();
 
-        mBottomListAdapter = new WordListAdapter(customList2, this);
+        mBottomListAdapter = new WordListAdapter(mTilesListBottom, this);
         mRecyclerViewBottom.setAdapter(mBottomListAdapter);
         mRecyclerViewBottom.setOnDragListener(mBottomListAdapter.getDragInstance());
 
@@ -177,83 +167,60 @@ public class GameFragment extends Fragment implements GamePresenter.View
         }
     }
 
-//    private void updateWidget() {
-//        Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED)
-//                .setPackage(getContext().getPackageName());
-//        getContext().sendBroadcast(dataUpdatedIntent);
-//    }
-
-    /**
-     * This loader will return words data as a Cursor or null if an error occurs.
-     */
-//    @Override
-//    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-//        return new CursorLoader(getActivity(), WordEntry.CONTENT_URI, null, null, null, null);
-//    }
-
-    /**
-     * Called when a previously created loader has finished its load.
-     *
-     * @param loader The Loader that has finished.
-     * @param data The data generated by the Loader.
-     */
-//    @Override
-//    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-//        if (data != null && data.moveToFirst()) {
-//            String word = data.getString(INDEX_WORD);
-//            String scrambledWord = data.getString(INDEX_SCRAMBLED_WORD);
-//            String definition = data.getString(INDEX_DEFINITION);
-//            mPresenter.setWord(word);
-//            mPresenter.setScrambledWord(scrambledWord);
-//            shuffledWord = scrambledWord;
-//            mPresenter.setDefinition(definition);
-//        }
-//    }
-
-    /**
-     * Called when a previously created loader is being reset, and thus
-     * making its data unavailable.
-     * onLoaderReset removes any references this activity had to the loader's data.
-     *
-     *  loader The Loader that is being reset.
-     */
-//    @Override
-//    public void onLoaderReset(Loader<Cursor> loader){
-//    }
+    @Override
+    public void setEmptyListTop(boolean visibility) {
+        mImageHolder.setVisibility(visibility ? View.VISIBLE : View.GONE);
+        mFrameTop.setVisibility(visibility ? View.GONE : View.VISIBLE);
+        mRecyclerViewTop.setVisibility(visibility ? View.GONE : View.VISIBLE);
+    }
 
     private void shuffleLetters() {
-        char[] c = WordUtility.scrambleWord("ABDYUFD").toCharArray();
+        char[] c = WordUtility.scrambleWord(shuffledWord).toCharArray();
         Log.d(TAG, Arrays.toString(c));
-        customList2 = new ArrayList<>();
+        mTilesListBottom = new ArrayList<>();
         for (int i = 0; i < Constants.NUMBER_OF_LETTERS; i++) {
-            int color = getResources().getIdentifier("tile" + i, "color", getContext().getPackageName());
-            customList2.add(i, new CustomList(c[i], color, WordUtility.getTileValue(c[i])));
+            int color = getResources().getIdentifier(
+                    "tile" + i, "color", getContext().getPackageName());
+            mTilesListBottom.add(i, new TilesList(c[i], color, WordUtility.getTileValue(c[i])));
         }
     }
 
     @OnClick(R.id.button_clear)
     public void onClearClick() {
-        if (customList1.size() != 0) {
-            customList1.clear();
-            mTopListAdapter = new WordListAdapter(customList1, this);
+        if (mTilesListTop.size() != 0) {
+            mTilesListTop.clear();
+            mTopListAdapter = new WordListAdapter(mTilesListTop, this);
             mRecyclerViewTop.setAdapter(mTopListAdapter);
-            customList2.clear();
+            mTilesListBottom.clear();
             shuffleLetters();
-            mBottomListAdapter = new WordListAdapter(customList2, this);
+            mBottomListAdapter = new WordListAdapter(mTilesListBottom, this);
             mRecyclerViewBottom.setAdapter(mBottomListAdapter);
         }
     }
 
     @OnClick(R.id.button_send)
     public void onSendClick() {
-        if (customList1.size() != 0) {
-            String qwerty = "";
-            for (int i = 0; i < customList1.size(); i++) {
-                CustomList q = customList1.get(i);
-                qwerty += q.letter;
+        // Check if length of tiles is not empty
+        if (mTilesListTop.size() != 0) {
+            String word = "";
+            for (int i = 0; i < mTilesListTop.size(); i++) {
+                TilesList q = mTilesListTop.get(i);
+                word += q.letter;
             }
-            //mPresenter.onSendWordClick(mWordEditText.getText().toString());
-            Toast.makeText(getContext(), qwerty, Toast.LENGTH_SHORT).show();
+            RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+            new CheckWordRequest(requestQueue, word, new CheckWordCallback() {
+                @Override
+                public void onSuccess(String definition) {
+                    Toast.makeText(getContext(), "YEP", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onError() {
+                    Toast.makeText(getContext(), "NOPE", Toast.LENGTH_SHORT).show();
+                }
+            });
+            //mPresenter.onSendClick(qwerty);
+
         } else {
             Toast.makeText(getContext(), "Nothing to send!", Toast.LENGTH_SHORT).show();
         }
@@ -261,17 +228,16 @@ public class GameFragment extends Fragment implements GamePresenter.View
 
     @OnClick(R.id.button_shuffle)
     public void onShuffleClick() {
-        if (customList2.size() != 0) {
-            customList1.clear();
-            mTopListAdapter = new WordListAdapter(customList1, this);
+        if (mTilesListBottom.size() != 0) {
+            mTilesListTop.clear();
+            mTopListAdapter = new WordListAdapter(mTilesListTop, this);
             mRecyclerViewTop.setAdapter(mTopListAdapter);
-            customList2.clear();
+            mTilesListBottom.clear();
             shuffleLetters();
-            mBottomListAdapter = new WordListAdapter(customList2, this);
+            mBottomListAdapter = new WordListAdapter(mTilesListBottom, this);
             mRecyclerViewBottom.setAdapter(mBottomListAdapter);
         }
     }
-
 
     public void resign() {
         mPresenter.notifyOpponentAboutResign();
@@ -309,17 +275,8 @@ public class GameFragment extends Fragment implements GamePresenter.View
             String photoUrl = extras.getString(Constants.EXTRA_OPPONENT_PHOTO_URL);
             User opponent = new User(id, username, email, photoUrl);
             mPresenter.setOpponentFromBundle(opponent);
+            shuffledWord = extras.getString("EXTRA_WORD");
         }
     }
 
-    @Override
-    public void setEmptyListTop(boolean visibility) {
-        mImageHolder.setVisibility(visibility ? View.VISIBLE : View.GONE);
-        mFrameTop.setVisibility(visibility ? View.GONE : View.VISIBLE);
-        mRecyclerViewTop.setVisibility(visibility ? View.GONE : View.VISIBLE);
-    }
-
-    @Override
-    public void setEmptyListBottom(boolean visibility) {
-    }
 }
