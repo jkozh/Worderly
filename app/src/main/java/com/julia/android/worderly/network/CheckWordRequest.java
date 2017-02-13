@@ -17,16 +17,12 @@ import com.julia.android.worderly.BuildConfig;
 import com.julia.android.worderly.model.Result;
 import com.julia.android.worderly.model.Word;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.julia.android.worderly.utils.Constants.ACCEPT_PARAM;
 import static com.julia.android.worderly.utils.Constants.MASHAPE_KEY_PARAM;
-import static com.julia.android.worderly.utils.Constants.MESSAGE;
 import static com.julia.android.worderly.utils.Constants.TEXT_PLAIN;
 import static com.julia.android.worderly.utils.Constants.WORDS_API_BASE_URL;
 
@@ -45,30 +41,41 @@ public class CheckWordRequest {
 
                     @Override
                     public void onResponse(String response) {
+
                         Log.d(TAG, "response: " + response);
                         Word word = gson.fromJson(response, Word.class);
                         List<Result> results = word.getResults();
-                        Log.i(TAG, "word: " + word.getWord());
-                        Log.i(TAG, "definition: " + results.get(0).getDefinition());
-                        callback.onSuccess(results.get(0).getDefinition());
+                        if (results != null) {
+                            Log.i(TAG, "word: " + word.getWord());
+                            if (results.get(0) != null) {
+                                Log.i(TAG, "definition: " + results.get(0).getDefinition());
+                            } else {
+                                callback.onFail();
+                            }
+                            callback.onSuccess(results.get(0).getDefinition());
+                        } else {
+                            callback.onFail();
+                        }
                     }
 
                 }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                callback.onError();
                 NetworkResponse networkResponse = error.networkResponse;
                 if (networkResponse != null && networkResponse.data != null) {
                     String json = new String(networkResponse.data);
-                    try{
-                        JSONObject obj = new JSONObject(json);
-                        json = obj.getString(MESSAGE);
-                        Log.e(TAG, "Status code: " + Integer.toString(networkResponse.statusCode));
-                        Log.e(TAG, "Message: " + json);
-                    } catch(JSONException e){
-                        e.printStackTrace();
+                    if (networkResponse.statusCode == 404) {
+                        callback.onFail();
                     }
+//                    try{
+//                        JSONObject obj = new JSONObject(json);
+//                        json = obj.getString(MESSAGE);
+//                        Log.e(TAG, "Status code: " + Integer.toString(networkResponse.statusCode));
+//                        Log.e(TAG, "Message: " + json);
+//                    } catch(JSONException e){
+//                        e.printStackTrace();
+//                    }
                     getNetworkResponseApi(networkResponse.statusCode);
                 }
             }

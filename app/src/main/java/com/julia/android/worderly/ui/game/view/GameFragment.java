@@ -211,11 +211,13 @@ public class GameFragment extends Fragment implements GamePresenter.View, Listen
             new CheckWordRequest(requestQueue, word, new CheckWordCallback() {
                 @Override
                 public void onSuccess(String definition) {
-                    Toast.makeText(getContext(), "YEP", Toast.LENGTH_SHORT).show();
+                    if (definition != null) {
+                        Toast.makeText(getContext(), definition, Toast.LENGTH_SHORT).show();
+                    }
                 }
 
                 @Override
-                public void onError() {
+                public void onFail() {
                     Toast.makeText(getContext(), "NOPE", Toast.LENGTH_SHORT).show();
                 }
             });
