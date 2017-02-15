@@ -5,6 +5,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.julia.android.worderly.model.Move;
 import com.julia.android.worderly.ui.game.presenter.GamePresenter;
 import com.julia.android.worderly.utils.FirebaseConstants;
 
@@ -95,5 +96,11 @@ public class GameInteractorImpl implements GameInteractor {
     public void notifyOpponentAboutResign(String currentUserId, String opponentUserId) {
         mGamesChildRef.child(currentUserId + "_" + opponentUserId)
                 .child(FIREBASE_RESIGN_CHILD).push().setValue(true);
+    }
+
+    @Override
+    public void notifyOpponentAboutWordAndScore(String currentUserId, String opponentUserId, Move move) {
+        mGamesChildRef.child(currentUserId + "_" + opponentUserId)
+                .child("moves").push().setValue(move);
     }
 }

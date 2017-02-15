@@ -51,4 +51,13 @@ public class WordUtility {
             return 0;
         }
     }
+
+    public static int getWordValue(String word) {
+        char[] wordToArray = word.toCharArray();
+        int value = 0;
+        for (char c : wordToArray) {
+            value += getTileValue(c);
+        }
+        return value;
+    }
 }

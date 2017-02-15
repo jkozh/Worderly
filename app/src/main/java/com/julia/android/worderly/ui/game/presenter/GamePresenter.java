@@ -3,11 +3,13 @@ package com.julia.android.worderly.ui.game.presenter;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.julia.android.worderly.model.Move;
 import com.julia.android.worderly.model.User;
 import com.julia.android.worderly.ui.game.interactor.GameInteractor;
 import com.julia.android.worderly.ui.game.interactor.GameInteractorImpl;
 
 import java.lang.ref.WeakReference;
+import java.util.Objects;
 
 public class GamePresenter {
 
@@ -119,6 +121,14 @@ public class GamePresenter {
 //                view.showWrongWordToast();
 //            }
         }
+    }
+
+    public boolean isWordsEquals(String word) {
+        return Objects.equals(word, mWord);
+    }
+
+    public void sendUserScoreAndWord(Move move) {
+        mInteractor.notifyOpponentAboutWordAndScore(mCurrentUser.getId(), mOpponentUser.getId(), move);
     }
 
     public interface View {

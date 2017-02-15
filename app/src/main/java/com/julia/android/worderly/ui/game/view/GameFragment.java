@@ -24,6 +24,7 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.julia.android.worderly.R;
 import com.julia.android.worderly.data.database.WordContract;
+import com.julia.android.worderly.model.Move;
 import com.julia.android.worderly.model.User;
 import com.julia.android.worderly.network.CheckWordCallback;
 import com.julia.android.worderly.network.CheckWordRequest;
@@ -46,6 +47,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.julia.android.worderly.utils.Constants.NUMBER_OF_LETTERS;
 import static com.julia.android.worderly.utils.Constants.PREF_NAME;
 import static com.julia.android.worderly.utils.Constants.PREF_USER;
 
@@ -116,6 +118,7 @@ public class GameFragment extends Fragment implements GamePresenter.View, Listen
         mImageHolder.setOnDragListener(mTopListAdapter.getDragInstance());
         mPresenter.setCurrentUserView();
         mPresenter.setOpponentUserView();
+        mUserScoreTextView.setText("0");
         new GameCountDownTimer(30000, 1).start();
         return view;
     }
@@ -167,6 +170,10 @@ public class GameFragment extends Fragment implements GamePresenter.View, Listen
         }
     }
 
+    public void setUserScoreTextView(String score) {
+        mUserScoreTextView.setText(score);
+    }
+
     @Override
     public void setEmptyListTop(boolean visibility) {
         mImageHolder.setVisibility(visibility ? View.VISIBLE : View.GONE);
@@ -207,25 +214,40 @@ public class GameFragment extends Fragment implements GamePresenter.View, Listen
                 TilesList q = mTilesListTop.get(i);
                 word += q.letter;
             }
-            RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-            new CheckWordRequest(requestQueue, word, new CheckWordCallback() {
-                @Override
-                public void onSuccess(String definition) {
-                    if (definition != null) {
-                        Toast.makeText(getContext(), definition, Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onFail() {
-                    Toast.makeText(getContext(), "NOPE", Toast.LENGTH_SHORT).show();
-                }
-            });
-            //mPresenter.onSendClick(qwerty);
-
+            // check if that word equals to fetched word, if yes - no need to do the request
+            if (mTilesListTop.size() == NUMBER_OF_LETTERS && mPresenter.isWordsEquals(word)) {
+                Toast.makeText(getContext(), "YOU GUESSED THE WHOLE WORD RIGHT!", Toast.LENGTH_SHORT).show();
+                String score = String.valueOf(WordUtility.getWordValue(word));
+                setUserScoreTextView(String.valueOf(score));
+                mPresenter.sendUserScoreAndWord(new Move(word, score));
+            } else {
+                getVolleyRequest(word);
+            }
         } else {
             Toast.makeText(getContext(), "Nothing to send!", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void getVolleyRequest(final String word) {
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        new CheckWordRequest(requestQueue, word, new CheckWordCallback() {
+            @Override
+            public void onSuccess(String definition) {
+                if (definition != null) {
+                    Toast.makeText(getContext(), definition, Toast.LENGTH_SHORT).show();
+                    // check if new word score not less than old one
+                    int wordValue = WordUtility.getWordValue(word);
+                    if (Integer.parseInt(mUserScoreTextView.getText().toString()) < wordValue) {
+                        setUserScoreTextView(String.valueOf(wordValue));
+                    }
+                }
+            }
+
+            @Override
+            public void onFail() {
+                Toast.makeText(getContext(), "NOPE", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @OnClick(R.id.button_shuffle)
@@ -278,6 +300,7 @@ public class GameFragment extends Fragment implements GamePresenter.View, Listen
             User opponent = new User(id, username, email, photoUrl);
             mPresenter.setOpponentFromBundle(opponent);
             shuffledWord = extras.getString("EXTRA_WORD");
+            mPresenter.setWord(shuffledWord);
         }
     }
 

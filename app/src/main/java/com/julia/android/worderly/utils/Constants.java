@@ -37,7 +37,8 @@ public class Constants {
     public static final int NUMBER_OF_LETTERS = 7;
     public static final String PART_OF_SPEECH = "noun";
     public static final String HAS_DEFINITION = "hasDefinition";
-    //String lettersPattern = "^[^\\d\\s]+$\"";
+    // parameter to exclude words with spaces
+    public static final String lettersPattern = "^((?! ).)*$";
 
     // Construct the URL for the WordsApi query
     // Possible parameters are available at WordsApi page, at
@@ -47,6 +48,6 @@ public class Constants {
     public static final String LETTERS_PARAM = "letters";
     public static final String PART_OF_SPEECH_PARAM = "partOfSpeech";
     public static final String HAS_DETAILS_PARAM = "hasDetails";
-    //final String LETTERS_PATTERN_PARAM = "lettersPattern";
+    public static final String LETTERS_PATTERN_PARAM = "lettersPattern";
 
 }

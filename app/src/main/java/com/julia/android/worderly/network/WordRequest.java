@@ -27,6 +27,7 @@ import static com.julia.android.worderly.utils.Constants.ACCEPT_PARAM;
 import static com.julia.android.worderly.utils.Constants.HAS_DEFINITION;
 import static com.julia.android.worderly.utils.Constants.HAS_DETAILS_PARAM;
 import static com.julia.android.worderly.utils.Constants.LETTERS_PARAM;
+import static com.julia.android.worderly.utils.Constants.LETTERS_PATTERN_PARAM;
 import static com.julia.android.worderly.utils.Constants.MASHAPE_KEY_PARAM;
 import static com.julia.android.worderly.utils.Constants.MESSAGE;
 import static com.julia.android.worderly.utils.Constants.NUMBER_OF_LETTERS;
@@ -36,6 +37,7 @@ import static com.julia.android.worderly.utils.Constants.RANDOM;
 import static com.julia.android.worderly.utils.Constants.RANDOM_PARAM;
 import static com.julia.android.worderly.utils.Constants.TEXT_PLAIN;
 import static com.julia.android.worderly.utils.Constants.WORDS_API_BASE_URL;
+import static com.julia.android.worderly.utils.Constants.lettersPattern;
 
 public class WordRequest {
 
@@ -120,7 +122,7 @@ public class WordRequest {
                 .appendQueryParameter(LETTERS_PARAM, Integer.toString(NUMBER_OF_LETTERS))
                 .appendQueryParameter(PART_OF_SPEECH_PARAM, PART_OF_SPEECH)
                 .appendQueryParameter(HAS_DETAILS_PARAM, HAS_DEFINITION)
-                //.appendQueryParameter(LETTERS_PATTERN_PARAM, lettersPattern)
+                .appendQueryParameter(LETTERS_PATTERN_PARAM, lettersPattern)
                 .build().toString();
     }
 }
