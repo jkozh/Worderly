@@ -118,7 +118,6 @@ public class GameFragment extends Fragment implements GamePresenter.View, Listen
 
         mFrameBottom.setOnDragListener(mBottomListAdapter.getDragInstance());
         mImageHolder.setOnDragListener(mTopListAdapter.getDragInstance());
-        mPresenter.setCurrentUserView();
         mPresenter.setOpponentUserView();
         mUserScoreTextView.setText("0");
         return view;
@@ -140,7 +139,6 @@ public class GameFragment extends Fragment implements GamePresenter.View, Listen
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.d(TAG, "SAVE!!!!!!" + mProgressBar.getProgress());
         outState.putInt("progress", mProgressBar.getProgress());
     }
 
@@ -150,27 +148,13 @@ public class GameFragment extends Fragment implements GamePresenter.View, Listen
         if (savedInstanceState != null) {
             int progress = savedInstanceState.getInt("progress");
             mProgressBar.setProgress(progress);
+            mTextProgressView.setText(String.valueOf(mProgressBar.getMax() - progress));
         }
-    }
-
-    @Override
-    public void showCurrentUsernameView(String username) {
-        //mCurrentUsernameTextView.setText(username);
     }
 
     @Override
     public void showOpponentUsernameView(String username) {
         mOpponentUsernameTextView.setText(username);
-    }
-
-    @Override
-    public void showWordView(String word) {
-//        mWordTextView.setText(word);
-    }
-
-    @Override
-    public void showDefinitionView(String definition) {
-//        mWordDefinitionTextView.setText(definition);
     }
 
     /**
@@ -180,8 +164,6 @@ public class GameFragment extends Fragment implements GamePresenter.View, Listen
     public void showWrongWordToast() {
         Toast.makeText(
                 getActivity(), getString(R.string.msg_wrong_word), Toast.LENGTH_SHORT).show();
-        // Remove letters in Edit Text
-//        mWordEditText.setText("");
     }
 
     @Override

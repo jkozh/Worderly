@@ -9,7 +9,8 @@ class GameCountDownTimer extends CountDownTimer {
     private ProgressBar mProgressBar;
     private TextView mTextProgress;
 
-    GameCountDownTimer(long millisInFuture, long countDownInterval, ProgressBar progressBar, TextView textProgress) {
+    GameCountDownTimer(long millisInFuture, long countDownInterval, ProgressBar progressBar,
+                       TextView textProgress) {
         super(millisInFuture, countDownInterval);
         mProgressBar = progressBar;
         mTextProgress = textProgress;

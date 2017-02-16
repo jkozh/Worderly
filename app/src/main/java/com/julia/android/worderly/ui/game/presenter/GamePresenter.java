@@ -1,6 +1,5 @@
 package com.julia.android.worderly.ui.game.presenter;
 
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.julia.android.worderly.model.Move;
@@ -32,13 +31,6 @@ public class GamePresenter {
         mOpponentUser = opponent;
     }
 
-    public void setCurrentUserView() {
-        GamePresenter.View view = mWeakView.get();
-        if (view != null) {
-            view.showCurrentUsernameView(mCurrentUser.getUsername());
-        }
-    }
-
     public void setOpponentUserView() {
         GamePresenter.View view = mWeakView.get();
         if (view != null) {
@@ -52,22 +44,6 @@ public class GamePresenter {
         mInteractor.listenOpponentUserWin(mCurrentUser.getId(), mOpponentUser.getId());
         mInteractor.listenOpponentUserResign(mCurrentUser.getId(), mOpponentUser.getId());
         mInteractor.listenOpponentWordAndScore(mCurrentUser.getId(), mOpponentUser.getId());
-    }
-
-    public void setScrambledWord(String scrambledWord) {
-        GamePresenter.View view = mWeakView.get();
-        if (view != null) {
-            Log.d("GAME PRESENTER", "setScrambledWord scrambledWord:" + scrambledWord);
-            view.showWordView(scrambledWord);
-        }
-    }
-
-    public void setDefinition(String definition) {
-        GamePresenter.View view = mWeakView.get();
-        if (view != null) {
-            Log.d("GAME PRESENTER", "setDefinition definition:" + definition);
-            view.showDefinitionView(definition);
-        }
     }
 
     public void showLoseDialog() {
@@ -93,14 +69,6 @@ public class GamePresenter {
 
     public void notifyOpponentAboutResign() {
         mInteractor.notifyOpponentAboutResign(mCurrentUser.getId(), mOpponentUser.getId());
-    }
-
-    @Nullable
-    private GamePresenter.View getView() {
-        if (mWeakView == null) {
-            return null;
-        }
-        return mWeakView.get();
     }
 
     public void onSendClick(String word) {
@@ -140,10 +108,7 @@ public class GamePresenter {
     }
 
     public interface View {
-        void showCurrentUsernameView(String username);
         void showOpponentUsernameView(String username);
-        void showWordView(String word);
-        void showDefinitionView(String definition);
         void showWrongWordToast();
         void showRoundFinishedDialog(boolean isWon, String word);
         void showOpponentScore(String score);
