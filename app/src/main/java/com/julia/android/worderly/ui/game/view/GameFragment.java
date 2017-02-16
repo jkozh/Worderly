@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DividerItemDecoration;
@@ -57,6 +58,7 @@ public class GameFragment extends Fragment implements GamePresenter.View, Listen
 
     // Member variables for binding views using ButterKnife
     @BindView(R.id.progressBar) ProgressBar mProgressBar;
+    @BindView(R.id.text_progress) TextView mTextProgressView;
     @BindView(R.id.text_username_opponent) TextView mOpponentUsernameTextView;
     @BindView(R.id.text_user_score) TextView mUserScoreTextView;
     @BindView(R.id.text_opponent_score) TextView mOpponentScoreTextView;
@@ -119,14 +121,36 @@ public class GameFragment extends Fragment implements GamePresenter.View, Listen
         mPresenter.setCurrentUserView();
         mPresenter.setOpponentUserView();
         mUserScoreTextView.setText("0");
-        new GameCountDownTimer(30000, 1).start();
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        new GameCountDownTimer((mProgressBar.getMax() - mProgressBar.getProgress())*1000, 1,
+                mProgressBar, mTextProgressView).start();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         mUnbinder.unbind();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d(TAG, "SAVE!!!!!!" + mProgressBar.getProgress());
+        outState.putInt("progress", mProgressBar.getProgress());
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null) {
+            int progress = savedInstanceState.getInt("progress");
+            mProgressBar.setProgress(progress);
+        }
     }
 
     @Override
