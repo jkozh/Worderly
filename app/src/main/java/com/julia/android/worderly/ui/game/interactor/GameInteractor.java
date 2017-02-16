@@ -9,4 +9,5 @@ public interface GameInteractor {
     void listenOpponentUserResign(String currentUserId, String opponentUserId);
     void notifyOpponentAboutResign(String currentUserId, String opponentUserId);
     void notifyOpponentAboutWordAndScore(String currentUserId, String opponentUserId, Move move);
+    void listenOpponentWordAndScore(String currentUserId, String opponentUserId);
 }

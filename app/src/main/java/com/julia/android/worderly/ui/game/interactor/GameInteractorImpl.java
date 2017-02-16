@@ -1,5 +1,7 @@
 package com.julia.android.worderly.ui.game.interactor;
 
+import android.util.Log;
+
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -94,13 +96,51 @@ public class GameInteractorImpl implements GameInteractor {
 
     @Override
     public void notifyOpponentAboutResign(String currentUserId, String opponentUserId) {
-        mGamesChildRef.child(currentUserId + "_" + opponentUserId)
-                .child(FIREBASE_RESIGN_CHILD).push().setValue(true);
+        mGamesChildRef
+                .child(currentUserId + "_" + opponentUserId)
+                .child(FIREBASE_RESIGN_CHILD)
+                .push()
+                .setValue(true);
     }
 
     @Override
     public void notifyOpponentAboutWordAndScore(String currentUserId, String opponentUserId, Move move) {
-        mGamesChildRef.child(currentUserId + "_" + opponentUserId)
-                .child("moves").push().setValue(move);
+        mGamesChildRef
+                .child(currentUserId + "_" + opponentUserId)
+                .child("moves")
+                .push()
+                .setValue(move);
     }
+
+    @Override
+    public void listenOpponentWordAndScore(String currentUserId, String opponentUserId) {
+        mGamesChildRef.child(opponentUserId + "_" + currentUserId)
+                .child("moves").addChildEventListener(
+                new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        Move move = dataSnapshot.getValue(Move.class);
+                        Log.d(TAG, move.getWord() + " score:" + move.getScore());
+                        mPresenter.setOpponentScore(move.getScore());
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+    }
+
+
 }

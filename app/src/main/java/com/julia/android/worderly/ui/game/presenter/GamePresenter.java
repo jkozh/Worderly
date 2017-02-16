@@ -51,6 +51,7 @@ public class GamePresenter {
         Log.d("GAME PRESENTER", "setWord mWord:" + mWord);
         mInteractor.listenOpponentUserWin(mCurrentUser.getId(), mOpponentUser.getId());
         mInteractor.listenOpponentUserResign(mCurrentUser.getId(), mOpponentUser.getId());
+        mInteractor.listenOpponentWordAndScore(mCurrentUser.getId(), mOpponentUser.getId());
     }
 
     public void setScrambledWord(String scrambledWord) {
@@ -104,7 +105,7 @@ public class GamePresenter {
 
     public void onSendClick(String word) {
         GamePresenter.View view = mWeakView.get();
-        if (view != null) {
+//        if (view != null) {
 //            RequestQueue requestQueue = Volley.newRequestQueue(this);
 //            new CheckWordRequest(requestQueue, word, new CheckWordCallback() {
 //                @Override
@@ -120,7 +121,7 @@ public class GamePresenter {
 //            } else {
 //                view.showWrongWordToast();
 //            }
-        }
+//        }
     }
 
     public boolean isWordsEquals(String word) {
@@ -131,6 +132,13 @@ public class GamePresenter {
         mInteractor.notifyOpponentAboutWordAndScore(mCurrentUser.getId(), mOpponentUser.getId(), move);
     }
 
+    public void setOpponentScore(String score) {
+        GamePresenter.View view = mWeakView.get();
+        if (view != null) {
+            view.showOpponentScore(score);
+        }
+    }
+
     public interface View {
         void showCurrentUsernameView(String username);
         void showOpponentUsernameView(String username);
@@ -138,5 +146,6 @@ public class GamePresenter {
         void showDefinitionView(String definition);
         void showWrongWordToast();
         void showRoundFinishedDialog(boolean isWon, String word);
+        void showOpponentScore(String score);
     }
 }

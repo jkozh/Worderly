@@ -170,6 +170,11 @@ public class GameFragment extends Fragment implements GamePresenter.View, Listen
         }
     }
 
+    @Override
+    public void showOpponentScore(String score) {
+        mOpponentScoreTextView.setText(score);
+    }
+
     public void setUserScoreTextView(String score) {
         mUserScoreTextView.setText(score);
     }
@@ -239,6 +244,7 @@ public class GameFragment extends Fragment implements GamePresenter.View, Listen
                     int wordValue = WordUtility.getWordValue(word);
                     if (Integer.parseInt(mUserScoreTextView.getText().toString()) < wordValue) {
                         setUserScoreTextView(String.valueOf(wordValue));
+                        mPresenter.sendUserScoreAndWord(new Move(word, String.valueOf(wordValue)));
                     }
                 }
             }
