@@ -85,7 +85,7 @@
                     android:layout_marginRight="15dp"
                     android:layout_weight="1"
                     android:indeterminate="false"
-                    android:max="45"/>
+                    android:max="5"/>
 
                 <TextView
                     android:id="@+id/text_progress"

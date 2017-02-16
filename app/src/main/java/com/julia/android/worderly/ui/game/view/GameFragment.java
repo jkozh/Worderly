@@ -52,7 +52,7 @@ import static com.julia.android.worderly.utils.Constants.NUMBER_OF_LETTERS;
 import static com.julia.android.worderly.utils.Constants.PREF_NAME;
 import static com.julia.android.worderly.utils.Constants.PREF_USER;
 
-public class GameFragment extends Fragment implements GamePresenter.View, Listener {
+public class GameFragment extends Fragment implements GamePresenter.View, Listener, DialogListener {
 
     private static final String TAG = GameFragment.class.getSimpleName();
 
@@ -127,7 +127,7 @@ public class GameFragment extends Fragment implements GamePresenter.View, Listen
     public void onStart() {
         super.onStart();
         new GameCountDownTimer((mProgressBar.getMax() - mProgressBar.getProgress())*1000, 1,
-                mProgressBar, mTextProgressView).start();
+                mProgressBar, mTextProgressView, this).start();
     }
 
     @Override
@@ -316,4 +316,10 @@ public class GameFragment extends Fragment implements GamePresenter.View, Listen
         }
     }
 
+    @Override
+    public void showRoundFinishedDialog() {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        RoundFinishedDialogFragment alertDialog = RoundFinishedDialogFragment.newInstance("title");
+        alertDialog.show(fm, "fragment_round");
+    }
 }

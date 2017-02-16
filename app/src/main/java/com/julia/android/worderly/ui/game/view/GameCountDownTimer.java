@@ -8,12 +8,14 @@ class GameCountDownTimer extends CountDownTimer {
 
     private ProgressBar mProgressBar;
     private TextView mTextProgress;
+    private DialogListener dialogListener;
 
     GameCountDownTimer(long millisInFuture, long countDownInterval, ProgressBar progressBar,
-                       TextView textProgress) {
+                       TextView textProgress, DialogListener dialogListener) {
         super(millisInFuture, countDownInterval);
-        mProgressBar = progressBar;
-        mTextProgress = textProgress;
+        this.mProgressBar = progressBar;
+        this.mTextProgress = textProgress;
+        this.dialogListener = dialogListener;
     }
 
     @Override
@@ -28,6 +30,6 @@ class GameCountDownTimer extends CountDownTimer {
 
     @Override
     public void onFinish() {
-        //finish();
+        dialogListener.showRoundFinishedDialog();
     }
 }
