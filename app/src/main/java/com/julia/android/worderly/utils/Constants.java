@@ -38,6 +38,7 @@ public class Constants {
     public static final String PART_OF_SPEECH = "noun";
     public static final String HAS_DEFINITION = "hasDefinition";
     // parameter to exclude words with spaces
+    // (?!X)	X, via zero-width negative lookahead
     public static final String lettersPattern = "^((?! ).)*$";
 
     // Construct the URL for the WordsApi query
