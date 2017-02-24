@@ -48,4 +48,5 @@
     <string name="msg_enter_word_here">Guess word by definition…</string>
     <string name="msg_you">You:</string>
     <string name="msg_opponent">Opponent:</string>
+    <string name="text_you">You</string>
 </resources>

@@ -45,5 +45,7 @@
     <dimen name="widget_padding_start">5dp</dimen>
     <dimen name="widget_padding_end">5dp</dimen>
     <dimen name="widget_image_size">32dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
 
 </resources>

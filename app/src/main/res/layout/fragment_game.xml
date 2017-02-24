@@ -142,7 +142,9 @@
                     android:id="@+id/recycler_view_top"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal|bottom" />
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:orientation="horizontal"
+                    app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
 
             </FrameLayout>
 
@@ -171,6 +173,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal|bottom"
+                    android:orientation="horizontal"
+                    app:layoutManager="android.support.v7.widget.LinearLayoutManager"
                     tools:listitem="@layout/row_item" />
 
             </FrameLayout>

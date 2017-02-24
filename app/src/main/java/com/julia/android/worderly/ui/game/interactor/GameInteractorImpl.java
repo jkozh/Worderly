@@ -40,7 +40,7 @@ public class GameInteractorImpl implements GameInteractor {
                 new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        mPresenter.showLoseDialog();
+//                        mPresenter.showLoseDialog();
                     }
 
                     @Override
@@ -73,7 +73,7 @@ public class GameInteractorImpl implements GameInteractor {
                 new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        mPresenter.showWinDialog();
+//                        mPresenter.showWinDialog();
                     }
 
                     @Override
