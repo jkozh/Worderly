@@ -19,7 +19,6 @@ package com.julia.android.worderly.ui.game.view;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -36,17 +35,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.julia.android.worderly.R;
-import com.julia.android.worderly.data.database.WordContract;
 import com.julia.android.worderly.model.Move;
 import com.julia.android.worderly.model.Player;
 import com.julia.android.worderly.model.Round;
 import com.julia.android.worderly.model.User;
-import com.julia.android.worderly.network.CheckWordCallback;
-import com.julia.android.worderly.network.CheckWordRequest;
 import com.julia.android.worderly.ui.game.dragdrop.Listener;
 import com.julia.android.worderly.ui.game.dragdrop.TilesList;
 import com.julia.android.worderly.ui.game.dragdrop.WordListAdapter;
@@ -192,6 +186,11 @@ public class GameFragment extends Fragment implements GamePresenter.View, Listen
         mOpponentScoreTextView.setText(score);
     }
 
+    @Override
+    public String getUserScoreText() {
+        return mUserScoreTextView.getText().toString();
+    }
+
 
     public void setUserScoreTextView(String score) {
         mUserScoreTextView.setText(score);
@@ -248,35 +247,11 @@ public class GameFragment extends Fragment implements GamePresenter.View, Listen
                 setUserScoreTextView(String.valueOf(score));
                 mPresenter.sendUserScoreAndWord(new Move(word, score));
             } else {
-                getVolleyRequest(word);
+                mPresenter.getVolleyRequest(getContext(), word);
             }
         } else {
             Toast.makeText(getContext(), "Nothing to send!", Toast.LENGTH_SHORT).show();
         }
-    }
-
-
-    private void getVolleyRequest(final String word) {
-        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-        new CheckWordRequest(requestQueue, word, new CheckWordCallback() {
-            @Override
-            public void onSuccess(String definition) {
-                if (definition != null) {
-                    Toast.makeText(getContext(), definition, Toast.LENGTH_SHORT).show();
-                    // check if new word score not less than old one
-                    int wordValue = WordUtility.getWordValue(word);
-                    if (Integer.parseInt(mUserScoreTextView.getText().toString()) < wordValue) {
-                        setUserScoreTextView(String.valueOf(wordValue));
-                        mPresenter.sendUserScoreAndWord(new Move(word, String.valueOf(wordValue)));
-                    }
-                }
-            }
-
-            @Override
-            public void onFail() {
-                Toast.makeText(getContext(), "NOPE", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
 
@@ -304,13 +279,6 @@ public class GameFragment extends Fragment implements GamePresenter.View, Listen
         Intent i = new Intent(getActivity(), MainActivity.class);
         startActivity(i);
         getActivity().finish();
-    }
-
-
-    private void deleteWord() {
-        // Remove word from database
-        Uri uri = WordContract.WordEntry.CONTENT_URI;
-        getContext().getContentResolver().delete(uri, null, null);
     }
 
 
