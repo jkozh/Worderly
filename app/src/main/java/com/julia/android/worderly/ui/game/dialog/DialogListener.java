@@ -1,7 +1,7 @@
 package com.julia.android.worderly.ui.game.dialog;
 
 
-interface DialogListener {
+public interface DialogListener {
 
     void showRoundFinishedDialog();
 
