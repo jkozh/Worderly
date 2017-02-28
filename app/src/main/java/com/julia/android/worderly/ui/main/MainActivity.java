@@ -1,4 +1,4 @@
-package com.julia.android.worderly.ui.main.view;
+package com.julia.android.worderly.ui.main;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,8 +22,6 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.julia.android.worderly.R;
 import com.julia.android.worderly.model.User;
-import com.julia.android.worderly.ui.main.presenter.MainPresenter;
-import com.julia.android.worderly.ui.main.presenter.MainPresenterImpl;
 import com.julia.android.worderly.ui.search.view.SearchOpponentActivity;
 import com.julia.android.worderly.ui.signin.SignInActivity;
 import com.julia.android.worderly.utils.Constants;
@@ -38,19 +36,20 @@ import butterknife.OnClick;
 import static com.julia.android.worderly.utils.Constants.PREF_NAME;
 import static com.julia.android.worderly.utils.Constants.PREF_USER;
 
+
 /**
  * MainActivity shows a screen after SignIn. It contains some buttons to start a game.
  * Also the left Drawer contains some info about the logged in mUser, and statistics of games.
  */
 public class MainActivity extends AbstractMainActivity {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
     @BindView(R.id.coordinator_layout_main) CoordinatorLayout mCoordinatorLayout;
     @BindView(R.id.button_random_play) Button mRandomPlayButton;
     @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view) NavigationView mNavigationView;
     @BindView(R.id.toolbar_main_activity) Toolbar mToolbar;
     private MainPresenter mPresenter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,11 +63,13 @@ public class MainActivity extends AbstractMainActivity {
         mPresenter.showUserInfoInDrawer();
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -85,6 +86,7 @@ public class MainActivity extends AbstractMainActivity {
         }
     }
 
+
     @Override
     public void setUpDrawer(String username, String photoUrl) {
         if (mNavigationView != null) {
@@ -98,10 +100,12 @@ public class MainActivity extends AbstractMainActivity {
         }
     }
 
+
     @Override
     public void signInFail(String errorMessage) {
         Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
     }
+
 
     /**
      * Not signed in, launch the Sign In activity
@@ -111,6 +115,7 @@ public class MainActivity extends AbstractMainActivity {
         startActivity(new Intent(this, SignInActivity.class));
         finish();
     }
+
 
     /**
      * On click start the game with random opponent when network is available
@@ -126,6 +131,7 @@ public class MainActivity extends AbstractMainActivity {
         }
     }
 
+
     private void getSharedPrefs() {
         SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         Gson gson = new Gson();
@@ -136,6 +142,7 @@ public class MainActivity extends AbstractMainActivity {
         }
     }
 
+
     private void setUpActionBar() {
         setSupportActionBar(mToolbar);
         final ActionBar ab = getSupportActionBar();
@@ -145,12 +152,14 @@ public class MainActivity extends AbstractMainActivity {
         }
     }
 
+
     private void setUsernameInDrawer(TextView usernameTextView, String username) {
         if (username == null) {
             username = Constants.GUEST;
         }
         usernameTextView.setText(username);
     }
+
 
     private void setUserPhotoInDrawer(ImageView avatarImageView, String photoUrl ) {
         if (photoUrl == null) {
@@ -160,4 +169,5 @@ public class MainActivity extends AbstractMainActivity {
                 .load(photoUrl)
                 .into(avatarImageView);
     }
+
 }

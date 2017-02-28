@@ -1,13 +1,12 @@
 package com.julia.android.worderly.ui.chat.presenter;
 
-import android.support.annotation.Nullable;
-
 import com.julia.android.worderly.model.Message;
 import com.julia.android.worderly.model.User;
 import com.julia.android.worderly.ui.chat.interactor.ChatInteractor;
 import com.julia.android.worderly.ui.chat.interactor.ChatInteractorImpl;
 
 import java.lang.ref.WeakReference;
+
 
 public class ChatPresenter {
 
@@ -18,27 +17,34 @@ public class ChatPresenter {
     private String mChatRoomChild;
     private String mChatRoomInvertChild;
 
+
     public ChatPresenter(ChatPresenter.View view) {
         mWeakView = new WeakReference<>(view);
         mInteractor = new ChatInteractorImpl(this);
     }
 
+
     public void setUserFromJson(User user) {
         this.mCurrentUser = user;
     }
+
 
     public void setOpponentFromBundle(User opponent) {
         mOpponent = opponent;
         setChatRoomChilds();
     }
 
+
     public void onDetach() {
         mWeakView = null;
     }
 
+
     public String getChatRoomChild() {
         return mChatRoomChild;
     }
+
+
     private String getChatRoomChildInverted() {
         return mChatRoomInvertChild;
     }
@@ -49,22 +55,17 @@ public class ChatPresenter {
         mInteractor.sendMessage(msg, mChatRoomChild, mChatRoomInvertChild);
     }
 
+
     private void setChatRoomChilds() {
         mChatRoomChild = mCurrentUser.getId() + "_" + mOpponent.getId();
         mChatRoomInvertChild = mOpponent.getId() + "_" + mCurrentUser.getId();
     }
 
-    @Nullable
-    private ChatPresenter.View getView() {
-        if (mWeakView == null) {
-            return null;
-        }
-        return mWeakView.get();
-    }
 
     public void addListenerForNewMessage() {
         mInteractor.onNewMessageReceived(getChatRoomChildInverted());
     }
+
 
     public void notifyChatTabTitle() {
         ChatPresenter.View view = mWeakView.get();
@@ -73,8 +74,10 @@ public class ChatPresenter {
         }
     }
 
+
     public interface View {
         void hideProgressBar();
         void setChatTabTitleText();
     }
+
 }

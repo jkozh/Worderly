@@ -2,6 +2,7 @@ package com.julia.android.worderly.model;
 
 import com.julia.android.worderly.utils.Constants;
 
+
 public class User {
 
     private String mId;
@@ -9,9 +10,11 @@ public class User {
     private String mEmail;
     private String mPhotoUrl;
 
+
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
+
 
     public User(String id, String username, String email, String photoUrl) {
         this.mId = id;
@@ -20,17 +23,21 @@ public class User {
         this.mPhotoUrl = photoUrl;
     }
 
+
     public String getId() {
         return mId;
     }
+
 
     public void setId(String id) {
         this.mId = id;
     }
 
+
     public String getUsername() {
         return mUsername;
     }
+
 
     public void setUsername(String username) {
         if (username != null) {
@@ -40,9 +47,11 @@ public class User {
         }
     }
 
+
     public String getEmail() {
         return mEmail;
     }
+
 
     public void setEmail(String email) {
         if (email != null) {
@@ -52,9 +61,11 @@ public class User {
         }
     }
 
+
     public String getPhotoUrl() {
         return mPhotoUrl;
     }
+
 
     public void setPhotoUrl(String photoUrl) {
         if (photoUrl != null) {
@@ -63,4 +74,5 @@ public class User {
             this.mPhotoUrl = Constants.DEFAULT_USER_PHOTO_URL;
         }
     }
+
 }

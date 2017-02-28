@@ -4,11 +4,15 @@ import android.os.CountDownTimer;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.julia.android.worderly.ui.game.dialog.DialogListener;
+
+
 class GameCountDownTimer extends CountDownTimer {
 
     private ProgressBar mProgressBar;
     private TextView mTextProgress;
     private DialogListener dialogListener;
+
 
     GameCountDownTimer(long millisInFuture, long countDownInterval, ProgressBar progressBar,
                        TextView textProgress, DialogListener dialogListener) {
@@ -17,6 +21,7 @@ class GameCountDownTimer extends CountDownTimer {
         this.mTextProgress = textProgress;
         this.dialogListener = dialogListener;
     }
+
 
     @Override
     public void onTick(long millisUntilFinished) {
@@ -28,8 +33,10 @@ class GameCountDownTimer extends CountDownTimer {
         }
     }
 
+
     @Override
     public void onFinish() {
         dialogListener.showRoundFinishedDialog();
     }
+
 }

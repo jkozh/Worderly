@@ -7,12 +7,16 @@ import com.julia.android.worderly.model.User;
 import com.julia.android.worderly.utils.Constants;
 import com.julia.android.worderly.utils.FirebaseConstants;
 
+
 public class FirebaseUserService {
+
     private DatabaseReference mDatabase;
+
 
     public FirebaseUserService() {
         this.mDatabase = FirebaseDatabase.getInstance().getReference();
     }
+
 
     public User createUser(FirebaseUser firebaseUser) {
         User user = new User();
@@ -29,13 +33,17 @@ public class FirebaseUserService {
         return user;
     }
 
+
     public DatabaseReference getUser(String userUid) {
         return mDatabase.child(FirebaseConstants.FIREBASE_USERS_CHILD).child(userUid);
     }
 
+
     public void updateUser(FirebaseUser user) {
     }
 
+
     public void deleteUser(String userUid) {
     }
+
 }

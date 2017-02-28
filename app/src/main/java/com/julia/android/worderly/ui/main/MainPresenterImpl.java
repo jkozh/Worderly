@@ -1,18 +1,16 @@
-package com.julia.android.worderly.ui.main.presenter;
+package com.julia.android.worderly.ui.main;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.julia.android.worderly.model.User;
-import com.julia.android.worderly.ui.main.view.MainView;
 
 public class MainPresenterImpl implements MainPresenter {
-
-    private static final String TAG = MainPresenterImpl.class.getSimpleName();
 
     // Firebase instance variables
     private FirebaseAuth mFirebaseAuth;
     private MainView mMainView;
     private User mUser;
+
 
     public MainPresenterImpl(MainView mainView) {
         this.mMainView = mainView;
@@ -26,6 +24,7 @@ public class MainPresenterImpl implements MainPresenter {
         }
     }
 
+
     @Override
     public void onSignOutClicked() {
         mFirebaseAuth.signOut();
@@ -33,6 +32,8 @@ public class MainPresenterImpl implements MainPresenter {
             mMainView.navigateToSignInActivity();
         }
     }
+
+
     @Override
     public void showUserInfoInDrawer() {
         if (mMainView != null && mUser != null) {
@@ -40,12 +41,10 @@ public class MainPresenterImpl implements MainPresenter {
         }
     }
 
+
     @Override
     public void setUserFromJson(User user) {
         mUser = user;
     }
 
-    public MainView getMainView() {
-        return mMainView;
-    }
 }

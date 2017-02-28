@@ -45,4 +45,5 @@ class WordDbHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + WordContract.WordEntry.TABLE_NAME);
         onCreate(db);
     }
+
 }

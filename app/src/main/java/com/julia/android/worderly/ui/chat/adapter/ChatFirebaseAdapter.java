@@ -10,12 +10,15 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+
 public class ChatFirebaseAdapter extends FirebaseRecyclerAdapter<Message, MessageViewHolder> {
+
 
     public ChatFirebaseAdapter(Class<Message> modelClass, int modelLayout,
                                Class<MessageViewHolder> viewHolderClass, Query ref) {
         super(modelClass, modelLayout, viewHolderClass, ref);
     }
+
 
     @Override
     protected void populateViewHolder(MessageViewHolder viewHolder, Message message, int position) {
@@ -37,4 +40,5 @@ public class ChatFirebaseAdapter extends FirebaseRecyclerAdapter<Message, Messag
         }
         return time;
     }
+
 }

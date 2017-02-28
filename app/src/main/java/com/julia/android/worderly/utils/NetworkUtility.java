@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 
 public class NetworkUtility {
 
+
     /**
      * Returns true if the network is available or about to become available.
      *

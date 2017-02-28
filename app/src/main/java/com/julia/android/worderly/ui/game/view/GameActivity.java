@@ -16,15 +16,15 @@ import com.julia.android.worderly.ui.game.adapter.GamePagerAdapter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class GameActivity extends AppCompatActivity implements GameActivityView {
 
-    private static final String TAG = GameActivity.class.getSimpleName();
-    private final int GAME_TAB = 0;
-    private final int CHAT_TAB = 1;
+public class GameActivity extends AppCompatActivity {
+
+    private final int GAME_TAB = 1;
     @BindView(R.id.toolbar_game_activity) Toolbar mToolbar;
     @BindView(R.id.viewpager) ViewPager mViewPager;
     @BindView(R.id.tabs) TabLayout mTabLayout;
     GameFragment mGameFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +36,8 @@ public class GameActivity extends AppCompatActivity implements GameActivityView 
             setupViewPager(mViewPager);
         }
         mTabLayout.setupWithViewPager(mViewPager);
-        //setupTabIcons();
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -45,6 +45,7 @@ public class GameActivity extends AppCompatActivity implements GameActivityView 
         inflater.inflate(R.menu.game_menu, menu);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -57,6 +58,7 @@ public class GameActivity extends AppCompatActivity implements GameActivityView 
         }
     }
 
+
     /**
      * When back button pressed - don't close the current game, just minimize it.
      */
@@ -65,23 +67,6 @@ public class GameActivity extends AppCompatActivity implements GameActivityView 
         moveTaskToBack(true);
     }
 
-    /**
-     * Method used to indicate the new message received.
-     */
-    @Override
-    public void setChatTabNewMessageTitle() {
-        TabLayout.Tab chatTab = mTabLayout.getTabAt(CHAT_TAB);
-        if (chatTab != null) {
-            chatTab.setText(getString(R.string.title_chat_new));
-        }
-    }
-
-    private void setupTabIcons() {
-        TabLayout.Tab chatTab = mTabLayout.getTabAt(CHAT_TAB);
-        if (chatTab != null) {
-            chatTab.setIcon(R.drawable.ic_tab_chat);
-        }
-    }
 
     /**
      * This method will call Adapter for ViewPager.
@@ -93,4 +78,5 @@ public class GameActivity extends AppCompatActivity implements GameActivityView 
         viewPager.setAdapter(adapter);
         mGameFragment = (GameFragment) adapter.getItem(GAME_TAB);
     }
+
 }

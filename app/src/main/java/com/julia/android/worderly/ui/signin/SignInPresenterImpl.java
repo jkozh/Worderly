@@ -1,7 +1,6 @@
 package com.julia.android.worderly.ui.signin;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -15,41 +14,29 @@ import com.julia.android.worderly.R;
 import com.julia.android.worderly.data.remote.FirebaseUserService;
 import com.julia.android.worderly.model.User;
 
+import timber.log.Timber;
+
+
 class SignInPresenterImpl implements SignInPresenter {
 
-    private static final String TAG = SignInPresenterImpl.class.getSimpleName();
     private FirebaseUser mFirebaseUser;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private SignInView mSignInView;
 
+
     SignInPresenterImpl(SignInView signInView) {
         this.mSignInView = signInView;
-
         mAuth = FirebaseAuth.getInstance();
         setAuthStateListener();
     }
 
-    private void setAuthStateListener() {
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                mFirebaseUser = firebaseAuth.getCurrentUser();
-                if (mFirebaseUser != null) {
-                    // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + mFirebaseUser.getUid());
-                } else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                }
-            }
-        };
-    }
 
     @Override
     public void onStart() {
         mAuth.addAuthStateListener(mAuthListener);
     }
+
 
     @Override
     public void onStop() {
@@ -61,14 +48,16 @@ class SignInPresenterImpl implements SignInPresenter {
         }
     }
 
+
     @Override
     public void onDestroy() {
         mSignInView = null;
     }
 
+
     @Override
     public void firebaseAuthWithGoogle(GoogleSignInAccount account) {
-        Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
+        Timber.d("firebaseAuthWithGoogle:%s", account.getId());
 
         if (mSignInView != null) {
             mSignInView.showProgressDialog();
@@ -79,11 +68,47 @@ class SignInPresenterImpl implements SignInPresenter {
                 new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+                        Timber.d("signInWithCredential:onComplete:%s", task.isSuccessful());
                         handleFirebaseAuthResult(task);
                     }
                 });
     }
+
+
+    @Override
+    public void firebaseAuthAnonymous() {
+        if (mSignInView != null) {
+            mSignInView.showProgressDialog();
+        }
+
+        mAuth.signInAnonymously()
+                .addOnCompleteListener((SignInActivity) mSignInView,
+                        new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                Timber.d("signInAnonymously:onComplete:%s", task.isSuccessful());
+                                handleFirebaseAuthResult(task);
+                            }
+                        });
+    }
+
+
+    private void setAuthStateListener() {
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                mFirebaseUser = firebaseAuth.getCurrentUser();
+                if (mFirebaseUser != null) {
+                    // User is signed in
+                    Timber.d("onAuthStateChanged:signed_in:%s", mFirebaseUser.getUid());
+                } else {
+                    // User is signed out
+                    Timber.d("onAuthStateChanged:signed_out");
+                }
+            }
+        };
+    }
+
 
     /**
      * If sign in fails, display a message to the user. If sign in succeeds
@@ -92,7 +117,7 @@ class SignInPresenterImpl implements SignInPresenter {
      */
     private void handleFirebaseAuthResult(Task<AuthResult> task) {
         if (!task.isSuccessful()) {
-            Log.w(TAG, "signIn", task.getException());
+            Timber.e("signIn %s", task.getException());
             if (mSignInView != null) {
                 mSignInView.signInFail(((SignInActivity) mSignInView).getResources()
                         .getString(R.string.error_sign_in_failed));
@@ -110,24 +135,4 @@ class SignInPresenterImpl implements SignInPresenter {
         }
     }
 
-    @Override
-    public void firebaseAuthAnonymous() {
-        if (mSignInView != null) {
-            mSignInView.showProgressDialog();
-        }
-
-        mAuth.signInAnonymously()
-                .addOnCompleteListener((SignInActivity) mSignInView,
-                        new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                Log.d(TAG, "signInAnonymously:onComplete:" + task.isSuccessful());
-                                handleFirebaseAuthResult(task);
-                            }
-                        });
-    }
-
-    public SignInView getSignInView() {
-        return mSignInView;
-    }
 }

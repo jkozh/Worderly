@@ -10,6 +10,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+
 public class MessageViewHolder extends RecyclerView.ViewHolder{
 
     @BindView(R.id.text_messenger)
@@ -21,8 +22,10 @@ public class MessageViewHolder extends RecyclerView.ViewHolder{
     @BindView(R.id.text_time)
     TextView timeTextView;
 
+
     public MessageViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
     }
+
 }

@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-package com.julia.android.worderly.ui.game.view;
+package com.julia.android.worderly.ui.game.dialog;
 
 
 import android.app.Dialog;

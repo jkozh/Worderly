@@ -25,7 +25,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,11 +40,13 @@ import com.julia.android.worderly.model.Move;
 import com.julia.android.worderly.model.Player;
 import com.julia.android.worderly.model.Round;
 import com.julia.android.worderly.model.User;
+import com.julia.android.worderly.ui.game.dialog.DialogListener;
+import com.julia.android.worderly.ui.game.dialog.GameRoundDialogFragment;
 import com.julia.android.worderly.ui.game.dragdrop.Listener;
 import com.julia.android.worderly.ui.game.dragdrop.TilesList;
-import com.julia.android.worderly.ui.game.dragdrop.WordListAdapter;
+import com.julia.android.worderly.ui.game.dragdrop.TilesListAdapter;
 import com.julia.android.worderly.ui.game.presenter.GamePresenter;
-import com.julia.android.worderly.ui.main.view.MainActivity;
+import com.julia.android.worderly.ui.main.MainActivity;
 import com.julia.android.worderly.utils.Constants;
 import com.julia.android.worderly.utils.WordUtility;
 
@@ -58,6 +59,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import timber.log.Timber;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.julia.android.worderly.utils.Constants.NUMBER_OF_LETTERS;
@@ -65,11 +67,9 @@ import static com.julia.android.worderly.utils.Constants.PREF_NAME;
 import static com.julia.android.worderly.utils.Constants.PREF_USER;
 
 
-public class GameFragment extends Fragment implements GamePresenter.View, Listener, DialogListener {
+public class GameFragment extends Fragment implements GamePresenter.View, Listener,
+        DialogListener {
 
-    private static final String TAG = GameFragment.class.getSimpleName();
-
-    // Member variables for binding views using ButterKnife
     @BindView(R.id.progressBar) ProgressBar mProgressBar;
     @BindView(R.id.text_progress) TextView mTextProgressView;
     @BindView(R.id.text_username_opponent) TextView mOpponentUsernameTextView;
@@ -80,8 +80,8 @@ public class GameFragment extends Fragment implements GamePresenter.View, Listen
     @BindView(R.id.frame_top) FrameLayout mFrameTop;
     @BindView(R.id.frame_bottom) FrameLayout mFrameBottom;
     @BindView(R.id.image_holder) ImageView mImageHolder;
-    WordListAdapter mTopListAdapter;
-    WordListAdapter mBottomListAdapter;
+    TilesListAdapter mTopListAdapter;
+    TilesListAdapter mBottomListAdapter;
     String shuffledWord = "";
     private List<TilesList> mTilesListTop;
     private List<TilesList> mTilesListBottom;
@@ -108,14 +108,14 @@ public class GameFragment extends Fragment implements GamePresenter.View, Listen
 
         mTilesListTop = new ArrayList<>();
 
-        mTopListAdapter = new WordListAdapter(mTilesListTop, this);
+        mTopListAdapter = new TilesListAdapter(mTilesListTop, this);
         mRecyclerViewTop.setAdapter(mTopListAdapter);
         mRecyclerViewTop.setOnDragListener(mTopListAdapter.getDragInstance());
         mFrameTop.setOnDragListener(mTopListAdapter.getDragInstance());
 
         shuffleLetters();
 
-        mBottomListAdapter = new WordListAdapter(mTilesListBottom, this);
+        mBottomListAdapter = new TilesListAdapter(mTilesListBottom, this);
         mRecyclerViewBottom.setAdapter(mBottomListAdapter);
         mRecyclerViewBottom.setOnDragListener(mBottomListAdapter.getDragInstance());
 
@@ -207,7 +207,7 @@ public class GameFragment extends Fragment implements GamePresenter.View, Listen
 
     private void shuffleLetters() {
         char[] c = WordUtility.scrambleWord(shuffledWord).toCharArray();
-        Log.d(TAG, Arrays.toString(c));
+        Timber.d(Arrays.toString(c));
         mTilesListBottom = new ArrayList<>();
         for (int i = 0; i < Constants.NUMBER_OF_LETTERS; i++) {
             int color = getResources().getIdentifier(
@@ -221,11 +221,11 @@ public class GameFragment extends Fragment implements GamePresenter.View, Listen
     public void onClearClick() {
         if (mTilesListTop.size() != 0) {
             mTilesListTop.clear();
-            mTopListAdapter = new WordListAdapter(mTilesListTop, this);
+            mTopListAdapter = new TilesListAdapter(mTilesListTop, this);
             mRecyclerViewTop.setAdapter(mTopListAdapter);
             mTilesListBottom.clear();
             shuffleLetters();
-            mBottomListAdapter = new WordListAdapter(mTilesListBottom, this);
+            mBottomListAdapter = new TilesListAdapter(mTilesListBottom, this);
             mRecyclerViewBottom.setAdapter(mBottomListAdapter);
         }
     }
@@ -259,11 +259,11 @@ public class GameFragment extends Fragment implements GamePresenter.View, Listen
     public void onShuffleClick() {
         if (mTilesListBottom.size() != 0) {
             mTilesListTop.clear();
-            mTopListAdapter = new WordListAdapter(mTilesListTop, this);
+            mTopListAdapter = new TilesListAdapter(mTilesListTop, this);
             mRecyclerViewTop.setAdapter(mTopListAdapter);
             mTilesListBottom.clear();
             shuffleLetters();
-            mBottomListAdapter = new WordListAdapter(mTilesListBottom, this);
+            mBottomListAdapter = new TilesListAdapter(mTilesListBottom, this);
             mRecyclerViewBottom.setAdapter(mBottomListAdapter);
         }
     }
@@ -319,4 +319,5 @@ public class GameFragment extends Fragment implements GamePresenter.View, Listen
             alertDialog.show(fm, "fragment_dialog_round_finished");
         }
     }
+
 }

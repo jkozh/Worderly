@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -30,19 +29,21 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+import timber.log.Timber;
 
 import static com.julia.android.worderly.utils.Constants.PREF_NAME;
 import static com.julia.android.worderly.utils.Constants.PREF_USER;
 
+
 public class SearchOpponentActivity extends AppCompatActivity implements SearchOpponentView {
 
-    private static final String TAG = SearchOpponentActivity.class.getSimpleName();
     @BindView(R.id.toolbar_randomopponent_activity) Toolbar mToolbar;
     @BindView(R.id.progressBar) ProgressBar mProgressBar;
     @BindView(R.id.text_searching_opponent) TextView mSearchingOpponentTextView;
     @BindView(R.id.image_avatar_opponent) CircleImageView mAvatarOpponentImageView;
     @BindView(R.id.text_username_opponent) TextView mUsernameOpponentTextView;
     private SearchOpponentPresenter mPresenter;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,17 +55,20 @@ public class SearchOpponentActivity extends AppCompatActivity implements SearchO
         setUpActionBar();
     }
 
+
     @Override
     protected void onStart() {
         super.onStart();
         mPresenter.onStart();
     }
 
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mPresenter.onDestroy();
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -76,6 +80,7 @@ public class SearchOpponentActivity extends AppCompatActivity implements SearchO
         return super.onOptionsItemSelected(item);
     }
 
+
     @Override
     public void addOpponentFoundView(final String username, final String photoUrl) {
         mSearchingOpponentTextView.setText(R.string.msg_opponent_found);
@@ -85,6 +90,7 @@ public class SearchOpponentActivity extends AppCompatActivity implements SearchO
         }
         mUsernameOpponentTextView.setText(username);
     }
+
 
     /**
      * Opponent found -> launch the Game activity
@@ -96,7 +102,7 @@ public class SearchOpponentActivity extends AppCompatActivity implements SearchO
         new WordRequest(requestQueue, new WordCallback() {
             @Override
             public void onSuccess(String word, String definition) {
-                Log.d(TAG, "WORD:" + word + " DEF:" + definition);
+                Timber.d("WORD: %s, DEFINITION: %s", word, definition);
                 Intent i = new Intent(SearchOpponentActivity.this, GameActivity.class);
                 i.putExtra(Constants.EXTRA_OPPONENT_ID, opponentUser.getId());
                 i.putExtra(Constants.EXTRA_OPPONENT_USERNAME, opponentUser.getUsername());
@@ -111,6 +117,7 @@ public class SearchOpponentActivity extends AppCompatActivity implements SearchO
         });
     }
 
+
     private void getSharedPrefs() {
         SharedPreferences mPrefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         Gson gson = new Gson();
@@ -121,6 +128,7 @@ public class SearchOpponentActivity extends AppCompatActivity implements SearchO
         }
     }
 
+
     private void setUpActionBar() {
         setSupportActionBar(mToolbar);
         final ActionBar ab = getSupportActionBar();
@@ -128,4 +136,5 @@ public class SearchOpponentActivity extends AppCompatActivity implements SearchO
             ab.setDisplayHomeAsUpEnabled(true);
         }
     }
+
 }

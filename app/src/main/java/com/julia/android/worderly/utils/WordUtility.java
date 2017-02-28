@@ -4,6 +4,7 @@ import java.util.Random;
 
 public class WordUtility {
 
+
     /**
      * Scramble the letters using the standard Fisher-Yates shuffle.
      * @param word to be scrambled
@@ -20,6 +21,7 @@ public class WordUtility {
         return new String(w);
     }
 
+
     // Implementing Fisher–Yates shuffle
     public static void shuffleArray(int[] ar) {
         for (int i = ar.length - 1; i > 0; i--) {
@@ -29,6 +31,7 @@ public class WordUtility {
             ar[i] = a;
         }
     }
+
 
     public static int getTileValue(char c) {
         if (c == 'A' || c == 'E' || c == 'I' || c == 'O'
@@ -51,6 +54,7 @@ public class WordUtility {
             return 0;
         }
     }
+
 
     public static int getWordValue(String word) {
         char[] wordToArray = word.toCharArray();

@@ -5,6 +5,7 @@ import com.julia.android.worderly.ui.search.interactor.SearchOpponentInteractor;
 import com.julia.android.worderly.ui.search.interactor.SearchOpponentInteractorImpl;
 import com.julia.android.worderly.ui.search.view.SearchOpponentView;
 
+
 public class SearchOpponentPresenterImpl implements SearchOpponentPresenter {
 
     private final SearchOpponentInteractor mInteractor;
@@ -12,25 +13,30 @@ public class SearchOpponentPresenterImpl implements SearchOpponentPresenter {
     private User mOpponentUser;
     private User mCurrentUser;
 
+
     public SearchOpponentPresenterImpl(SearchOpponentView randomOpponentView) {
         this.mSearchOpponentView = randomOpponentView;
         this.mInteractor = new SearchOpponentInteractorImpl(this);
     }
+
 
     @Override
     public void addUserToOnlineUsers(User user){
         mInteractor.addUser(user);
     }
 
+
     @Override
     public void removeUserFromOnlineUsers(String uid) {
         mInteractor.removeUser(uid);
     }
 
+
     @Override
     public void searchForOpponent(User user) {
         mInteractor.searchForOpponent(user);
     }
+
 
     @Override
     public void sendOpponentUser(User opponentUser) {
@@ -42,15 +48,18 @@ public class SearchOpponentPresenterImpl implements SearchOpponentPresenter {
         }
     }
 
+
     @Override
     public void setUserFromJson(User user) {
         this.mCurrentUser = user;
     }
 
+
     @Override
     public void startGame() {
         mSearchOpponentView.navigateToGameActivity(mOpponentUser);
     }
+
 
     @Override
     public void onStart() {
@@ -60,6 +69,7 @@ public class SearchOpponentPresenterImpl implements SearchOpponentPresenter {
         }
     }
 
+
     @Override
     public void onDestroy() {
         if (mCurrentUser != null) {
@@ -68,7 +78,4 @@ public class SearchOpponentPresenterImpl implements SearchOpponentPresenter {
         mSearchOpponentView = null;
     }
 
-    public SearchOpponentView getRandomOpponentView() {
-        return mSearchOpponentView;
-    }
 }

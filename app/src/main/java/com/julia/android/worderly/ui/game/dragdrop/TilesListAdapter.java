@@ -6,7 +6,6 @@ import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,18 +15,22 @@ import com.julia.android.worderly.R;
 
 import java.util.List;
 
-public class WordListAdapter extends RecyclerView.Adapter<ListViewHolder>
+import timber.log.Timber;
+
+
+public class TilesListAdapter extends RecyclerView.Adapter<ListViewHolder>
         implements View.OnTouchListener {
 
-    private static final String TAG = WordListAdapter.class.getSimpleName();
     private List<TilesList> mTilesList;
     private Listener mListener;
     private int colorTile;
 
-    public WordListAdapter(List<TilesList> tilesList, Listener listener) {
+
+    public TilesListAdapter(List<TilesList> tilesList, Listener listener) {
         this.mTilesList = tilesList;
         this.mListener = listener;
     }
+
 
     @Override
     public ListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -43,6 +46,7 @@ public class WordListAdapter extends RecyclerView.Adapter<ListViewHolder>
         return new ListViewHolder(view);
     }
 
+
     @Override
     public void onBindViewHolder(ListViewHolder holder, int position) {
         TilesList tilesList = mTilesList.get(position);
@@ -57,6 +61,7 @@ public class WordListAdapter extends RecyclerView.Adapter<ListViewHolder>
         holder.rl.setOnTouchListener(this);
         holder.rl.setOnDragListener(new DragListener(mListener));
     }
+
 
     @Override
     public int getItemCount() {
@@ -78,18 +83,21 @@ public class WordListAdapter extends RecyclerView.Adapter<ListViewHolder>
         return false;
     }
 
+
     public DragListener getDragInstance() {
         if (mListener != null) {
             return new DragListener(mListener);
         } else {
-            Log.e(TAG, "Listener wasn't initialized!");
+            Timber.e("Listener wasn't initialized!");
             return null;
         }
     }
 
+
     List<TilesList> getCustomList() {
         return mTilesList;
     }
+
 
     void updateCustomList(List<TilesList> tilesList) {
         this.mTilesList = tilesList;

@@ -24,7 +24,6 @@ import com.julia.android.worderly.model.User;
 import com.julia.android.worderly.ui.chat.adapter.ChatFirebaseAdapter;
 import com.julia.android.worderly.ui.chat.adapter.MessageViewHolder;
 import com.julia.android.worderly.ui.chat.presenter.ChatPresenter;
-import com.julia.android.worderly.ui.game.view.GameActivity;
 import com.julia.android.worderly.utils.Constants;
 import com.julia.android.worderly.utils.FirebaseConstants;
 
@@ -43,7 +42,6 @@ import static com.julia.android.worderly.utils.Constants.PREF_USER;
 
 public class ChatFragment extends Fragment implements ChatPresenter.View {
 
-    private static final String TAG = ChatFragment.class.getSimpleName();
     @BindView(R.id.progressBar) ProgressBar mProgressBar;
     @BindView(R.id.messageRecyclerView) RecyclerView mMessageRecyclerView;
     @BindView(R.id.messageEditText) EditText mMessageEditText;
@@ -54,6 +52,7 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
     private ChatPresenter mPresenter;
     private SharedPreferences mPrefs;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +62,7 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
         getOpponentBundleExtras();
         mPresenter.addListenerForNewMessage();
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -85,11 +85,13 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
         return view;
     }
 
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         mUnbinder.unbind();
     }
+
 
     @Override
     public void onDestroy() {
@@ -97,11 +99,13 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
         mFirebaseAdapter.cleanup();
     }
 
+
     @Override
     public void onDetach() {
         super.onDetach();
         mPresenter.onDetach();
     }
+
 
     @Override
     public void hideProgressBar() {
@@ -110,12 +114,14 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
         }
     }
 
+
     @Override
     public void setChatTabTitleText() {
-        if (getActivity() != null) {
-            ((GameActivity) getActivity()).setChatTabNewMessageTitle();
-        }
+//        if (getActivity() != null) {
+//            ((GameActivity) getActivity()).setChatTabNewMessageTitle();
+//        }
     }
+
 
     @OnTextChanged(value = R.id.messageEditText)
     void onMessageInput(Editable editable) {
@@ -126,11 +132,13 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
         }
     }
 
+
     @OnClick(R.id.button_send)
     void onClick() {
         mPresenter.onSendButtonClick(mMessageEditText.getText().toString());
         mMessageEditText.setText("");
     }
+
 
     private void setUpFirebaseAdapter() {
         mFirebaseAdapter = new ChatFirebaseAdapter(
@@ -165,6 +173,7 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
         hideProgressBar();
     }
 
+
     private void getUserPrefs() {
         Gson gson = new Gson();
         String json = mPrefs.getString(PREF_USER, Constants.PREF_USER_DEFAULT_VALUE);
@@ -173,6 +182,7 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
             mPresenter.setUserFromJson(user);
         }
     }
+
 
     private void getOpponentBundleExtras() {
         Bundle extras = getActivity().getIntent().getExtras();
@@ -185,4 +195,5 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
             mPresenter.setOpponentFromBundle(opponent);
         }
     }
+
 }

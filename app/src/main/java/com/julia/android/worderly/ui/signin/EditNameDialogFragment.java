@@ -16,11 +16,13 @@ public class EditNameDialogFragment extends DialogFragment {
 
     private EditText mEditText;
 
+
     public EditNameDialogFragment() {
         // Empty constructor is required for DialogFragment
         // Make sure not to add arguments to the constructor
         // Use `newInstance` instead as shown below
     }
+
 
     public static EditNameDialogFragment newInstance(String title) {
         EditNameDialogFragment frag = new EditNameDialogFragment();
@@ -30,11 +32,13 @@ public class EditNameDialogFragment extends DialogFragment {
         return frag;
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_edit_name, container);
     }
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -49,4 +53,5 @@ public class EditNameDialogFragment extends DialogFragment {
         getDialog().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
+
 }

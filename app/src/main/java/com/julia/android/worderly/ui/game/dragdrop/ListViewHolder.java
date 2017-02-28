@@ -10,7 +10,9 @@ import com.julia.android.worderly.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+
 class ListViewHolder extends RecyclerView.ViewHolder {
+
     @BindView(R.id.text_word)
     TextView textTile;
     @BindView(R.id.text_score)
@@ -18,8 +20,10 @@ class ListViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.relative_layout_item)
     RelativeLayout rl;
 
+
     ListViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
     }
+
 }

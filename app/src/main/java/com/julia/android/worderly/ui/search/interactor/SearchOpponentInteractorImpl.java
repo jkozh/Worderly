@@ -1,7 +1,5 @@
 package com.julia.android.worderly.ui.search.interactor;
 
-import android.util.Log;
-
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -14,14 +12,16 @@ import com.julia.android.worderly.utils.FirebaseConstants;
 
 import java.util.Objects;
 
+import timber.log.Timber;
+
 public class SearchOpponentInteractorImpl implements SearchOpponentInteractor {
 
-    private static final String TAG = SearchOpponentInteractorImpl.class.getSimpleName();
     private final SearchOpponentPresenter mPresenter;
     private DatabaseReference mDatabase;
     private DatabaseReference mUsersOnlineChildRef;
     private DatabaseReference mGamesChildRef;
     private boolean mOpponentFound;
+
 
     public SearchOpponentInteractorImpl(SearchOpponentPresenter presenter) {
         this.mPresenter = presenter;
@@ -31,15 +31,18 @@ public class SearchOpponentInteractorImpl implements SearchOpponentInteractor {
         mOpponentFound = false;
     }
 
+
     @Override
     public void addUser(User user) {
         mUsersOnlineChildRef.child(user.getId()).setValue(user);
     }
 
+
     @Override
     public void removeUser(String uid) {
         mUsersOnlineChildRef.child(uid).removeValue();
     }
+
 
     @Override
     public void searchForOpponent(final User user) {
@@ -50,7 +53,7 @@ public class SearchOpponentInteractorImpl implements SearchOpponentInteractor {
                 if (!mOpponentFound && !Objects.equals(user.getId(), opponentUid)) {
                     mOpponentFound = true;
                     User opponentUser = dataSnapshot.getValue(User.class);
-                    Log.d(TAG, "Random opponent found: " + opponentUser.getUsername());
+                    Timber.d("Random opponent found: %s", opponentUser.getUsername());
                     mPresenter.sendOpponentUser(opponentUser);
                 }
             }
@@ -80,6 +83,7 @@ public class SearchOpponentInteractorImpl implements SearchOpponentInteractor {
         listenForOpponentGameRoom(currentUserId, opponentUserId);
     }
 
+
     @Override
     public void listenForOpponentGameRoom(final String currentUserId, String opponentUserId) {
         final String gameRoomOpponentChild = opponentUserId + "_" + currentUserId;
@@ -96,4 +100,5 @@ public class SearchOpponentInteractorImpl implements SearchOpponentInteractor {
                     }
                 });
     }
+
 }

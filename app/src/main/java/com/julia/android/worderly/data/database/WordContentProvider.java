@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 
 import static com.julia.android.worderly.data.database.WordContract.WordEntry.TABLE_NAME;
 
+
 public class WordContentProvider extends ContentProvider {
 
     // Define final integer constants for the directory of words and a single item.
@@ -24,6 +25,7 @@ public class WordContentProvider extends ContentProvider {
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     // Member variable for a WordDbHelper that's initialized in the onCreate() method
     private WordDbHelper mWordDbHelper;
+
 
     /**
      Initialize a new matcher object without any matches,
@@ -45,6 +47,7 @@ public class WordContentProvider extends ContentProvider {
         return uriMatcher;
     }
 
+
     /* onCreate() is where you should initialize anything you’ll need to setup
       your underlying data source.
       In this case, you’re working with a SQLite database, so you’ll need to
@@ -56,6 +59,7 @@ public class WordContentProvider extends ContentProvider {
         mWordDbHelper = new WordDbHelper(context);
         return true;
     }
+
 
     // Implement insert to handle requests to insert a single new row of data
     @Override
@@ -90,6 +94,7 @@ public class WordContentProvider extends ContentProvider {
         // Return constructed uri (this points to the newly inserted row of data)
         return returnUri;
     }
+
 
     // Implement query to handle requests for data by URI
     @Override
@@ -126,6 +131,7 @@ public class WordContentProvider extends ContentProvider {
         // Return the desired Cursor
         return retCursor;
     }
+
 
     // Implement delete to delete a single row of data
     @Override
@@ -166,6 +172,7 @@ public class WordContentProvider extends ContentProvider {
         return wordsDeleted;
     }
 
+
     @Override
     public int update(@NonNull Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
@@ -173,9 +180,11 @@ public class WordContentProvider extends ContentProvider {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
+
     @Override
     public String getType(@NonNull Uri uri) {
 
         throw new UnsupportedOperationException("Not yet implemented");
     }
+
 }

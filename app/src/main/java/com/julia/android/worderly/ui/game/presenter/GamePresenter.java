@@ -1,7 +1,6 @@
 package com.julia.android.worderly.ui.game.presenter;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -16,6 +15,8 @@ import com.julia.android.worderly.utils.WordUtility;
 
 import java.lang.ref.WeakReference;
 import java.util.Objects;
+
+import timber.log.Timber;
 
 
 public class GamePresenter {
@@ -53,7 +54,7 @@ public class GamePresenter {
 
     public void setWord(String word) {
         mWord = word;
-        Log.d("GAME PRESENTER", "setWord mWord:" + mWord);
+        Timber.d("setWord mWord: %s", mWord);
         mInteractor.listenOpponentUserWin(mCurrentUser.getId(), mOpponentUser.getId());
         mInteractor.listenOpponentUserResign(mCurrentUser.getId(), mOpponentUser.getId());
         mInteractor.listenOpponentWordAndScore(mCurrentUser.getId(), mOpponentUser.getId());

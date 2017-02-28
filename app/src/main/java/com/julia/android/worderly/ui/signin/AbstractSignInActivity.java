@@ -2,7 +2,6 @@ package com.julia.android.worderly.ui.signin;
 
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -10,11 +9,14 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.julia.android.worderly.R;
 
+import timber.log.Timber;
+
+
 public abstract class AbstractSignInActivity extends AppCompatActivity implements SignInView,
         GoogleApiClient.OnConnectionFailedListener {
 
-    private static final String TAG = AbstractSignInActivity.class.getSimpleName();
     protected GoogleApiClient mGoogleApiClient;
+
 
     protected void setUpGoogleSignIn() {
         // Configure sign-in to request the user's ID, email address, and basic
@@ -34,11 +36,12 @@ public abstract class AbstractSignInActivity extends AppCompatActivity implement
                 .build();
     }
 
+
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
-        Log.d(TAG, "onConnectionFailed:" + connectionResult);
+        Timber.e("onConnectionFailed: %s", connectionResult);
         signInFail("Google Play Services error.");
     }
 
