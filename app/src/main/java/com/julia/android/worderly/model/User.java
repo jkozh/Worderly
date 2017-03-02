@@ -1,9 +1,12 @@
 package com.julia.android.worderly.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.julia.android.worderly.utils.Constants;
 
 
-public class User {
+public class User implements Parcelable {
 
     private String mId;
     private String mUsername;
@@ -23,6 +26,25 @@ public class User {
         this.mPhotoUrl = photoUrl;
     }
 
+
+    protected User(Parcel in) {
+        mId = in.readString();
+        mUsername = in.readString();
+        mEmail = in.readString();
+        mPhotoUrl = in.readString();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     public String getId() {
         return mId;
@@ -75,4 +97,18 @@ public class User {
         }
     }
 
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mId);
+        dest.writeString(mUsername);
+        dest.writeString(mEmail);
+        dest.writeString(mPhotoUrl);
+    }
 }

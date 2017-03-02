@@ -104,12 +104,9 @@ public class SearchOpponentActivity extends AppCompatActivity implements SearchO
             public void onSuccess(String word, String definition) {
                 Timber.d("WORD: %s, DEFINITION: %s", word, definition);
                 Intent i = new Intent(SearchOpponentActivity.this, GameActivity.class);
-                i.putExtra(Constants.EXTRA_OPPONENT_ID, opponentUser.getId());
-                i.putExtra(Constants.EXTRA_OPPONENT_USERNAME, opponentUser.getUsername());
-                i.putExtra(Constants.EXTRA_OPPONENT_EMAIL, opponentUser.getEmail());
-                i.putExtra(Constants.EXTRA_OPPONENT_PHOTO_URL, opponentUser.getPhotoUrl());
+                i.putExtra(Constants.EXTRA_OPPONENT, opponentUser);
                 i.putExtra("EXTRA_WORD", word.toUpperCase());
-                i.putExtra("EXTRA_DEF", definition);
+                i.putExtra("EXTRA_DEFINITION", definition);
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                 startActivity(i);
                 finish();

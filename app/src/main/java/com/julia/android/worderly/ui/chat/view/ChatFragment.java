@@ -37,6 +37,7 @@ import butterknife.Unbinder;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.julia.android.worderly.utils.Constants.DEFAULT_MSG_LENGTH_LIMIT;
+import static com.julia.android.worderly.utils.Constants.EXTRA_OPPONENT;
 import static com.julia.android.worderly.utils.Constants.PREF_NAME;
 import static com.julia.android.worderly.utils.Constants.PREF_USER;
 
@@ -58,8 +59,8 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
         super.onCreate(savedInstanceState);
         mPresenter = new ChatPresenter(this);
         mPrefs = getActivity().getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-        getUserPrefs();
-        getOpponentBundleExtras();
+        mPresenter.setUserFromJson(getUserPrefs());
+        mPresenter.setOpponentFromBundle(getOpponentBundleExtras());
         mPresenter.addListenerForNewMessage();
     }
 
@@ -174,26 +175,22 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
     }
 
 
-    private void getUserPrefs() {
+    private User getUserPrefs() {
         Gson gson = new Gson();
         String json = mPrefs.getString(PREF_USER, Constants.PREF_USER_DEFAULT_VALUE);
         if (!Objects.equals(json, Constants.PREF_USER_DEFAULT_VALUE)) {
-            User user = gson.fromJson(json, User.class);
-            mPresenter.setUserFromJson(user);
+            return gson.fromJson(json, User.class);
         }
+        return null;
     }
 
 
-    private void getOpponentBundleExtras() {
+    private User getOpponentBundleExtras() {
         Bundle extras = getActivity().getIntent().getExtras();
         if (extras != null) {
-            String id = extras.getString(Constants.EXTRA_OPPONENT_ID);
-            String username = extras.getString(Constants.EXTRA_OPPONENT_USERNAME);
-            String email = extras.getString(Constants.EXTRA_OPPONENT_EMAIL);
-            String photoUrl = extras.getString(Constants.EXTRA_OPPONENT_PHOTO_URL);
-            User opponent = new User(id, username, email, photoUrl);
-            mPresenter.setOpponentFromBundle(opponent);
+            return extras.getParcelable(EXTRA_OPPONENT);
         }
+        return null;
     }
 
 }

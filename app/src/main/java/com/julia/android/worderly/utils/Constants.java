@@ -22,10 +22,7 @@ public class Constants {
             "com.julia.android.worderly.ACTION_DATA_UPDATED";
 
     // Extra from SearchOpponentActivity -> GameActivity
-    public static final String EXTRA_OPPONENT_ID = "EXTRA_OPPONENT_ID";
-    public static final String EXTRA_OPPONENT_PHOTO_URL = "EXTRA_OPPONENT_PHOTO_URL";
-    public static final String EXTRA_OPPONENT_USERNAME = "EXTRA_OPPONENT_USERNAME";
-    public static final String EXTRA_OPPONENT_EMAIL = "EXTRA_OPPONENT_EMAIL";
+    public static final String EXTRA_OPPONENT = "EXTRA_OPPONENT";
 
     // Words Api Constants
     public static final String MASHAPE_KEY_PARAM = "X-Mashape-Key";

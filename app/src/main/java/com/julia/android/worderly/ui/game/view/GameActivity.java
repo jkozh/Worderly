@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
 
 public class GameActivity extends AppCompatActivity {
 
-    private final int GAME_TAB = 1;
+    private final int GAME_TAB = 0;
     @BindView(R.id.toolbar_game_activity) Toolbar mToolbar;
     @BindView(R.id.viewpager) ViewPager mViewPager;
     @BindView(R.id.tabs) TabLayout mTabLayout;
