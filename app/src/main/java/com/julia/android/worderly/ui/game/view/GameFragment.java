@@ -18,7 +18,6 @@ package com.julia.android.worderly.ui.game.view;
 
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -35,7 +34,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.julia.android.worderly.App;
 import com.julia.android.worderly.R;
+import com.julia.android.worderly.StringPreference;
 import com.julia.android.worderly.model.Move;
 import com.julia.android.worderly.model.Player;
 import com.julia.android.worderly.model.Round;
@@ -55,17 +56,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import timber.log.Timber;
 
-import static android.content.Context.MODE_PRIVATE;
 import static com.julia.android.worderly.utils.Constants.EXTRA_OPPONENT;
 import static com.julia.android.worderly.utils.Constants.NUMBER_OF_LETTERS;
-import static com.julia.android.worderly.utils.Constants.PREF_NAME;
-import static com.julia.android.worderly.utils.Constants.PREF_USER;
 
 
 public class GameFragment extends Fragment implements GamePresenter.View, Listener,
@@ -81,6 +81,7 @@ public class GameFragment extends Fragment implements GamePresenter.View, Listen
     @BindView(R.id.frame_top) FrameLayout mFrameTop;
     @BindView(R.id.frame_bottom) FrameLayout mFrameBottom;
     @BindView(R.id.image_holder) ImageView mImageHolder;
+    @Inject StringPreference mPrefs;
     TilesListAdapter mTopListAdapter;
     TilesListAdapter mBottomListAdapter;
     String shuffledWord = "";
@@ -88,15 +89,13 @@ public class GameFragment extends Fragment implements GamePresenter.View, Listen
     private List<TilesList> mTilesListBottom;
     private Unbinder mUnbinder;
     private GamePresenter mPresenter;
-    private SharedPreferences mPrefs;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        App.get(getContext()).component().inject(this);
         mPresenter = new GamePresenter(this);
-        mPrefs = getActivity().getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-        mPresenter.setUserFromJson(getUserPrefs());
         mPresenter.setOpponentFromBundle(getOpponentBundleExtras());
         mPresenter.setWord(shuffledWord);
     }
@@ -188,9 +187,20 @@ public class GameFragment extends Fragment implements GamePresenter.View, Listen
         mOpponentScoreTextView.setText(score);
     }
 
+
     @Override
     public String getUserScoreText() {
         return mUserScoreTextView.getText().toString();
+    }
+
+
+    @Override
+    public User getUserPrefs() {
+        String json = mPrefs.get();
+        if (!Objects.equals(json, Constants.PREF_USER_DEFAULT_VALUE)) {
+            return new Gson().fromJson(json, User.class);
+        }
+        return null;
     }
 
 
@@ -281,16 +291,6 @@ public class GameFragment extends Fragment implements GamePresenter.View, Listen
         Intent i = new Intent(getActivity(), MainActivity.class);
         startActivity(i);
         getActivity().finish();
-    }
-
-
-    private User getUserPrefs() {
-        Gson gson = new Gson();
-        String json = mPrefs.getString(PREF_USER, Constants.PREF_USER_DEFAULT_VALUE);
-        if (!Objects.equals(json, Constants.PREF_USER_DEFAULT_VALUE)) {
-            return gson.fromJson(json, User.class);
-        }
-        return null;
     }
 
 

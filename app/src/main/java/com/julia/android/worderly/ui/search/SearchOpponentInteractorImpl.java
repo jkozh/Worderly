@@ -1,4 +1,4 @@
-package com.julia.android.worderly.ui.search.interactor;
+package com.julia.android.worderly.ui.search;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -7,7 +7,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.julia.android.worderly.model.User;
-import com.julia.android.worderly.ui.search.presenter.SearchOpponentPresenter;
 import com.julia.android.worderly.utils.FirebaseConstants;
 
 import java.util.Objects;

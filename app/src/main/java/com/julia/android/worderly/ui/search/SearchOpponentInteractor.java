@@ -1,4 +1,4 @@
-package com.julia.android.worderly.ui.search.interactor;
+package com.julia.android.worderly.ui.search;
 
 import com.julia.android.worderly.model.User;
 

@@ -18,14 +18,13 @@ public class ChatPresenter {
     private String mChatRoomInvertChild;
 
 
-    public ChatPresenter(ChatPresenter.View view) {
-        mWeakView = new WeakReference<>(view);
+    public ChatPresenter(ChatPresenter.View v) {
+        mWeakView = new WeakReference<>(v);
         mInteractor = new ChatInteractorImpl(this);
-    }
-
-
-    public void setUserFromJson(User user) {
-        this.mCurrentUser = user;
+        ChatPresenter.View view = mWeakView.get();
+        if (view != null) {
+            mCurrentUser = view.getUserFromPrefs();
+        }
     }
 
 
@@ -76,8 +75,13 @@ public class ChatPresenter {
 
 
     public interface View {
+
         void hideProgressBar();
+
         void setChatTabTitleText();
+
+        User getUserFromPrefs();
+
     }
 
 }

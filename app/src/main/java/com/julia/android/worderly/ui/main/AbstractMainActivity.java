@@ -9,7 +9,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import timber.log.Timber;
 
-public abstract class AbstractMainActivity extends AppCompatActivity implements MainView,
+
+public abstract class AbstractMainActivity extends AppCompatActivity implements MainPresenter.View,
         GoogleApiClient.OnConnectionFailedListener {
 
     protected GoogleApiClient mGoogleApiClient;

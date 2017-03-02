@@ -1,7 +1,6 @@
 package com.julia.android.worderly.ui.main;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
@@ -20,34 +19,36 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.julia.android.worderly.App;
 import com.julia.android.worderly.R;
+import com.julia.android.worderly.StringPreference;
 import com.julia.android.worderly.model.User;
-import com.julia.android.worderly.ui.search.view.SearchOpponentActivity;
+import com.julia.android.worderly.ui.search.SearchOpponentActivity;
 import com.julia.android.worderly.ui.signin.SignInActivity;
 import com.julia.android.worderly.utils.Constants;
 import com.julia.android.worderly.utils.NetworkUtility;
 
 import java.util.Objects;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.julia.android.worderly.utils.Constants.PREF_NAME;
-import static com.julia.android.worderly.utils.Constants.PREF_USER;
-
 
 /**
- * MainActivity shows a screen after SignIn. It contains some buttons to start a game.
+ * MainActivity shows a screen after successful SignIn. It contains some buttons to start a game.
  * Also the left Drawer contains some info about the logged in mUser, and statistics of games.
  */
-public class MainActivity extends AbstractMainActivity {
+public class MainActivity extends AbstractMainActivity implements MainPresenter.View {
 
     @BindView(R.id.coordinator_layout_main) CoordinatorLayout mCoordinatorLayout;
     @BindView(R.id.button_random_play) Button mRandomPlayButton;
     @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view) NavigationView mNavigationView;
     @BindView(R.id.toolbar_main_activity) Toolbar mToolbar;
+    @Inject StringPreference mPrefs;
     private MainPresenter mPresenter;
 
 
@@ -56,8 +57,8 @@ public class MainActivity extends AbstractMainActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        mPresenter = new MainPresenterImpl(this);
-        getSharedPrefs();
+        App.get(this).component().inject(this);
+        mPresenter = new MainPresenter(this);
         setGoogleApiClient();
         setUpActionBar();
         mPresenter.showUserInfoInDrawer();
@@ -101,12 +102,6 @@ public class MainActivity extends AbstractMainActivity {
     }
 
 
-    @Override
-    public void signInFail(String errorMessage) {
-        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
-    }
-
-
     /**
      * Not signed in, launch the Sign In activity
      */
@@ -114,6 +109,22 @@ public class MainActivity extends AbstractMainActivity {
     public void navigateToSignInActivity() {
         startActivity(new Intent(this, SignInActivity.class));
         finish();
+    }
+
+
+    @Override
+    public User getUserFromPrefs() {
+        String json = mPrefs.get();
+        if (!Objects.equals(json, Constants.PREF_USER_DEFAULT_VALUE)) {
+            return new Gson().fromJson(json, User.class);
+        }
+        return null;
+    }
+
+
+    @Override
+    public void signInFail(String errorMessage) {
+        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -128,17 +139,6 @@ public class MainActivity extends AbstractMainActivity {
         } else {
             Snackbar.make(mCoordinatorLayout, getString(R.string.error_network_offline),
                     Snackbar.LENGTH_LONG).show();
-        }
-    }
-
-
-    private void getSharedPrefs() {
-        SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-        Gson gson = new Gson();
-        String json = prefs.getString(PREF_USER, Constants.PREF_USER_DEFAULT_VALUE);
-        if (!Objects.equals(json, Constants.PREF_USER_DEFAULT_VALUE)) {
-            User user = gson.fromJson(json, User.class);
-            mPresenter.setUserFromJson(user);
         }
     }
 

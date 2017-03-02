@@ -28,14 +28,13 @@ public class GamePresenter {
     private String mWord;
 
 
-    public GamePresenter(GamePresenter.View view) {
-        mWeakView = new WeakReference<>(view);
+    public GamePresenter(GamePresenter.View v) {
+        mWeakView = new WeakReference<>(v);
         mInteractor = new GameInteractorImpl(this);
-    }
-
-
-    public void setUserFromJson(User user) {
-        mCurrentUser = user;
+        GamePresenter.View view = mWeakView.get();
+        if (view != null) {
+            mCurrentUser = view.getUserPrefs();
+        }
     }
 
 
@@ -130,6 +129,8 @@ public class GamePresenter {
         String getUserScoreText();
 
         void setUserScoreTextView(String score);
+
+        User getUserPrefs();
 
     }
 

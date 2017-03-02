@@ -2,7 +2,6 @@ package com.julia.android.worderly.ui.signin;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
@@ -11,10 +10,13 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.gson.Gson;
+import com.julia.android.worderly.App;
 import com.julia.android.worderly.R;
+import com.julia.android.worderly.StringPreference;
 import com.julia.android.worderly.model.User;
 import com.julia.android.worderly.ui.main.MainActivity;
-import com.julia.android.worderly.utils.Constants;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,6 +27,7 @@ import timber.log.Timber;
 public class SignInActivity extends AbstractSignInActivity {
 
     private static final int REQUEST_SIGN_IN_GOOGLE = 9001;
+    @Inject StringPreference mPrefs;
     @BindView(R.id.toolbar_signin_activity)
     Toolbar mToolbar;
     private ProgressDialog mProgressDialog;
@@ -36,6 +39,7 @@ public class SignInActivity extends AbstractSignInActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
         ButterKnife.bind(this);
+        App.get(this).component().inject(this);
         // Configure Google Sign In
         setUpGoogleSignIn();
         mPresenter = new SignInPresenterImpl(this);
@@ -75,6 +79,7 @@ public class SignInActivity extends AbstractSignInActivity {
         }
     }
 
+
     @Override
     public void signInFail(String errorMessage) {
         Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
@@ -95,13 +100,9 @@ public class SignInActivity extends AbstractSignInActivity {
 
 
     @Override
-    public void setSharedPrefs(User user) {
-        SharedPreferences mPrefs = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor prefsEditor = mPrefs.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(user);
-        prefsEditor.putString(Constants.PREF_USER, json);
-        prefsEditor.apply();
+    public void setSharedPrefs(User u) {
+        String userStr = new Gson().toJson(u);
+        mPrefs.set(userStr);
     }
 
 

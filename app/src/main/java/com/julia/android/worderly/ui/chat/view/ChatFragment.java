@@ -1,6 +1,5 @@
 package com.julia.android.worderly.ui.chat.view;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -18,7 +17,9 @@ import android.widget.ProgressBar;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
+import com.julia.android.worderly.App;
 import com.julia.android.worderly.R;
+import com.julia.android.worderly.StringPreference;
 import com.julia.android.worderly.model.Message;
 import com.julia.android.worderly.model.User;
 import com.julia.android.worderly.ui.chat.adapter.ChatFirebaseAdapter;
@@ -29,17 +30,16 @@ import com.julia.android.worderly.utils.FirebaseConstants;
 
 import java.util.Objects;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import butterknife.Unbinder;
 
-import static android.content.Context.MODE_PRIVATE;
 import static com.julia.android.worderly.utils.Constants.DEFAULT_MSG_LENGTH_LIMIT;
 import static com.julia.android.worderly.utils.Constants.EXTRA_OPPONENT;
-import static com.julia.android.worderly.utils.Constants.PREF_NAME;
-import static com.julia.android.worderly.utils.Constants.PREF_USER;
 
 public class ChatFragment extends Fragment implements ChatPresenter.View {
 
@@ -47,19 +47,18 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
     @BindView(R.id.messageRecyclerView) RecyclerView mMessageRecyclerView;
     @BindView(R.id.messageEditText) EditText mMessageEditText;
     @BindView(R.id.button_send) Button mSendButton;
+    @Inject StringPreference mPrefs;
     private Unbinder mUnbinder;
     private LinearLayoutManager mLinearLayoutManager;
     private FirebaseRecyclerAdapter<Message, MessageViewHolder> mFirebaseAdapter;
     private ChatPresenter mPresenter;
-    private SharedPreferences mPrefs;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        App.get(getContext()).component().inject(this);
         mPresenter = new ChatPresenter(this);
-        mPrefs = getActivity().getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-        mPresenter.setUserFromJson(getUserPrefs());
         mPresenter.setOpponentFromBundle(getOpponentBundleExtras());
         mPresenter.addListenerForNewMessage();
     }
@@ -124,6 +123,16 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
     }
 
 
+    @Override
+    public User getUserFromPrefs() {
+        String json = mPrefs.get();
+        if (!Objects.equals(json, Constants.PREF_USER_DEFAULT_VALUE)) {
+            return new Gson().fromJson(json, User.class);
+        }
+        return null;
+    }
+
+
     @OnTextChanged(value = R.id.messageEditText)
     void onMessageInput(Editable editable) {
         if (editable.toString().trim().length() > 0) {
@@ -172,16 +181,6 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
 
         // Hide ProgressBar when empty chat log
         hideProgressBar();
-    }
-
-
-    private User getUserPrefs() {
-        Gson gson = new Gson();
-        String json = mPrefs.getString(PREF_USER, Constants.PREF_USER_DEFAULT_VALUE);
-        if (!Objects.equals(json, Constants.PREF_USER_DEFAULT_VALUE)) {
-            return gson.fromJson(json, User.class);
-        }
-        return null;
     }
 
 

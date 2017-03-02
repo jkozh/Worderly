@@ -1,7 +1,6 @@
-package com.julia.android.worderly.ui.search.view;
+package com.julia.android.worderly.ui.search;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -15,33 +14,34 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.julia.android.worderly.App;
 import com.julia.android.worderly.R;
+import com.julia.android.worderly.StringPreference;
 import com.julia.android.worderly.model.User;
 import com.julia.android.worderly.network.WordCallback;
 import com.julia.android.worderly.network.WordRequest;
 import com.julia.android.worderly.ui.game.view.GameActivity;
-import com.julia.android.worderly.ui.search.presenter.SearchOpponentPresenter;
-import com.julia.android.worderly.ui.search.presenter.SearchOpponentPresenterImpl;
 import com.julia.android.worderly.utils.Constants;
 
 import java.util.Objects;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
 
-import static com.julia.android.worderly.utils.Constants.PREF_NAME;
-import static com.julia.android.worderly.utils.Constants.PREF_USER;
 
-
-public class SearchOpponentActivity extends AppCompatActivity implements SearchOpponentView {
+public class SearchOpponentActivity extends AppCompatActivity
+        implements SearchOpponentPresenter.View {
 
     @BindView(R.id.toolbar_randomopponent_activity) Toolbar mToolbar;
     @BindView(R.id.progressBar) ProgressBar mProgressBar;
     @BindView(R.id.text_searching_opponent) TextView mSearchingOpponentTextView;
     @BindView(R.id.image_avatar_opponent) CircleImageView mAvatarOpponentImageView;
     @BindView(R.id.text_username_opponent) TextView mUsernameOpponentTextView;
+    @Inject StringPreference mPrefs;
     private SearchOpponentPresenter mPresenter;
 
 
@@ -50,8 +50,8 @@ public class SearchOpponentActivity extends AppCompatActivity implements SearchO
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_opponent);
         ButterKnife.bind(this);
-        mPresenter = new SearchOpponentPresenterImpl(this);
-        getSharedPrefs();
+        App.get(this).component().inject(this);
+        mPresenter = new SearchOpponentPresenter(this);
         setUpActionBar();
     }
 
@@ -115,14 +115,13 @@ public class SearchOpponentActivity extends AppCompatActivity implements SearchO
     }
 
 
-    private void getSharedPrefs() {
-        SharedPreferences mPrefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-        Gson gson = new Gson();
-        String json = mPrefs.getString(PREF_USER, Constants.PREF_USER_DEFAULT_VALUE);
+    @Override
+    public User getUserFromPrefs() {
+        String json = mPrefs.get();
         if (!Objects.equals(json, Constants.PREF_USER_DEFAULT_VALUE)) {
-            User user = gson.fromJson(json, User.class);
-            mPresenter.setUserFromJson(user);
+            return new Gson().fromJson(json, User.class);
         }
+        return null;
     }
 
 
