@@ -46,6 +46,7 @@ android {
 ext {
     supportLibVersion = '25.2.0'
     firebaseVersion = '10.2.0'
+    daggerVersion = '2.9'
 }
 
 dependencies {
@@ -78,6 +79,11 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.4.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     compile 'com.jakewharton.timber:timber:4.5.1'
+
+    // Dependency Injection
+    compile "com.google.dagger:dagger:${daggerVersion}"
+    annotationProcessor "com.google.dagger:dagger-compiler:${daggerVersion}"
+    provided 'javax.annotation:jsr250-api:1.0'
 
     // Tests
     testCompile 'junit:junit:4.12'
