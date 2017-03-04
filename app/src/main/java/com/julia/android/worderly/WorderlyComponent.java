@@ -27,6 +27,7 @@ public interface WorderlyComponent {
 
     void inject(ChatFragment fragment);
 
+
     /**
      * An initializer that creates the graph from an application.
      */
